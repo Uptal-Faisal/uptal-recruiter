@@ -295,6 +295,9 @@ html[dir=rtl] .hl-wipe::after{--seal-origin:0% 50%}
   .hero-copy{justify-content:flex-start;gap:6px}
   .gate-chips{padding-block-start:22px}
   .mp-wrap{padding-block-end:34px}
+  /* the deck's cards are absolutely stacked, so the stage must own its height
+     once the hero stops stretching the panel */
+  .mp .mp-body{min-height:clamp(420px,118vw,520px)}
 }
 /* short desktop viewports scroll instead of clipping the demo's action bar */
 @media (max-height:660px){.hero-in{height:auto;max-height:none;min-height:0}}
