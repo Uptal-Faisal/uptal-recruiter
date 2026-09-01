@@ -1,0 +1,632 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Uptal Private Board · Legal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *,*::before,*::after{box-sizing:border-box}
+  :root{
+    --ink:#061430; --slate:#33405C; --muted:#7C8496; --hair:#E4E7EF; --hair-2:#D3D8E6;
+    --paper:#F6F7FB; --persian:#3730D8; --persian-tint:#EEEEFD; --red-ink:#B23C39;
+    --r-card:14px; --maxw:760px;
+  }
+  html{-webkit-text-size-adjust:100%}
+  body{margin:0;background:var(--paper);color:var(--ink);
+    font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;font-size:15px;line-height:1.75;
+    font-feature-settings:"kern","liga"}
+  html[lang=ar] body{font-family:"IBM Plex Sans Arabic",system-ui,sans-serif;line-height:1.95}
+  .num{font-variant-numeric:tabular-nums}
+
+  .topbar{position:sticky;inset-block-start:0;z-index:20;background:var(--ink);color:#fff;
+    display:flex;align-items:center;gap:12px;padding:14px 20px}
+  .logo{font-weight:700;font-size:17px;letter-spacing:-.01em}
+  .logo span{opacity:.62;font-weight:500}
+  .lang{margin-inline-start:auto;background:transparent;color:#fff;border:1px solid rgba(255,255,255,.28);
+    border-radius:999px;padding:7px 15px;font:inherit;font-size:13px;font-weight:600;cursor:pointer}
+  .lang:hover{background:rgba(255,255,255,.1)}
+
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:26px 20px 80px}
+  .head{margin-block-end:22px}
+  .eyebrow{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--persian);margin:0 0 8px}
+  html[lang=ar] .eyebrow{letter-spacing:0;text-transform:none;font-size:12.5px}
+  h1{font-size:29px;line-height:1.25;margin:0 0 8px;letter-spacing:-.02em}
+  html[lang=ar] h1{letter-spacing:0}
+  .lead{color:var(--slate);margin:0}
+  .stamp{margin-block-start:12px;font-size:12.5px;color:var(--muted);border-top:1px solid var(--hair);padding-block-start:12px}
+
+  .docnav{display:flex;flex-wrap:wrap;gap:8px;margin-block:20px 26px}
+  .docnav button{background:#fff;border:1px solid var(--hair-2);border-radius:999px;padding:8px 15px;
+    font:inherit;font-size:13px;font-weight:600;color:var(--slate);cursor:pointer}
+  .docnav button.on{background:var(--ink);border-color:var(--ink);color:#fff}
+
+  .doc{display:none}
+  .doc.on{display:block}
+  .card{background:#fff;border:1px solid var(--hair);border-radius:var(--r-card);padding:22px 24px;margin-block-end:14px}
+  h2{font-size:19px;margin:0 0 4px;letter-spacing:-.01em}
+  html[lang=ar] h2{letter-spacing:0}
+  .sub{color:var(--muted);font-size:13.5px;margin:0 0 4px}
+  section{margin-block-start:26px}
+  h3{font-size:15.5px;margin:0 0 6px;display:flex;gap:9px;align-items:baseline}
+  h3 i{font-style:normal;color:var(--persian);font-weight:700;font-size:13px;flex:none}
+  p{margin:0 0 11px;color:var(--slate)}
+  ul{margin:0 0 11px;padding-inline-start:20px;color:var(--slate)}
+  li{margin-block-end:6px}
+  strong{color:var(--ink);font-weight:600}
+  .note{background:var(--persian-tint);border:1px solid #DCDCFA;border-radius:10px;padding:13px 15px;margin-block:14px 0}
+  .note p{margin:0;color:var(--ink);font-size:13.5px}
+  .warn{background:#FDF3F2;border-color:#F3D9D7}
+  .warn p{color:var(--red-ink)}
+  .foot{margin-block-start:30px;padding-block-start:16px;border-top:1px solid var(--hair);
+    font-size:12.5px;color:var(--muted)}
+  @media (max-width:560px){
+    .wrap{padding:20px 15px 64px}
+    h1{font-size:24px}
+    .card{padding:18px 16px}
+  }
+</style>
+</head>
+<body>
+<header class="topbar">
+  <span class="logo">Uptal <span data-i18n="brand_sub"></span></span>
+  <button class="lang" id="langBtn" type="button">عربي</button>
+</header>
+
+<div class="wrap">
+  <div class="head">
+    <p class="eyebrow" data-i18n="eyebrow"></p>
+    <h1 data-i18n="h1"></h1>
+    <p class="lead" data-i18n="lead"></p>
+    <p class="stamp" data-i18n="stamp"></p>
+  </div>
+
+  <nav class="docnav" id="docNav"></nav>
+
+  <div class="doc" id="doc-terms"></div>
+  <div class="doc" id="doc-privacy"></div>
+  <div class="doc" id="doc-dpa"></div>
+  <div class="doc" id="doc-aup"></div>
+
+  <p class="foot" data-i18n="foot"></p>
+</div>
+
+<script>
+"use strict";
+var LANG = "en";
+
+var UI = {
+  en: {
+    brand_sub: "Private Board",
+    eyebrow: "Legal",
+    h1: "Uptal Private Board legal terms",
+    lead: "The agreements that govern every dashboard on the private board, for companies and government entities in the Kingdom of Saudi Arabia.",
+    stamp: "Version 2.0 · Effective 2 August 2026 · Governed by the laws of the Kingdom of Saudi Arabia",
+    foot: "Uptal Information Technology Company, Riyadh, Kingdom of Saudi Arabia. Questions about these documents: private@uptal.com",
+    nav_terms: "Terms of Service",
+    nav_privacy: "Privacy Policy",
+    nav_dpa: "Data Processing Terms",
+    nav_aup: "Acceptable Use"
+  },
+  ar: {
+    brand_sub: "اللوحة الخاصة",
+    eyebrow: "الشؤون النظامية",
+    h1: "الشروط النظامية للوحة أبتال الخاصة",
+    lead: "الاتفاقيات التي تحكم كل لوحة تحكم على اللوحة الخاصة، للشركات والجهات الحكومية في المملكة العربية السعودية.",
+    stamp: "الإصدار 2.0 · يسري في 2 أغسطس 2026 · يخضع لأنظمة المملكة العربية السعودية",
+    foot: "شركة أبتال لتقنية المعلومات، الرياض، المملكة العربية السعودية. للاستفسار عن هذه المستندات: private@uptal.com",
+    nav_terms: "شروط الخدمة",
+    nav_privacy: "سياسة الخصوصية",
+    nav_dpa: "شروط معالجة البيانات",
+    nav_aup: "الاستخدام المقبول"
+  }
+};
+
+/* Each document is a list of [heading, [paragraph | {ul:[...]} | {note:"..."} | {warn:"..."}]] */
+var DOCS = { terms: {}, privacy: {}, dpa: {}, aup: {} };
+
+DOCS.terms.en = {
+  title: "Terms of Service",
+  sub: "Between Uptal Information Technology Company and the subscribing entity.",
+  intro: "These terms form a binding agreement between Uptal Information Technology Company, a company registered in the Kingdom of Saudi Arabia (“Uptal”), and the entity that registers a dashboard on the Uptal Private Board (“the Customer”). By completing registration, or by using the board, the Customer accepts these terms in full through its authorized signer.",
+  s: [
+    ["Eligibility and verification", [
+      "The board serves companies and government entities that hire for their own vacancies. Recruitment agencies, staffing firms, outsourcing providers and any party hiring on behalf of a third party may not register.",
+      "Every application is verified before a dashboard is activated. Uptal decides, at its sole discretion, whether an entity qualifies, and may decline any application without stating reasons and without liability.",
+      "The authorized signer warrants that they hold the authority to bind the Customer and that every detail provided at registration is accurate. Uptal may re-verify a dashboard at any time and may suspend it pending re-verification."
+    ]],
+    ["The service", [
+      "Uptal matches candidates from its own network to the Customer's postings and presents pre-screened applicants inside the dashboard. The board is private: postings are never listed publicly, never indexed and never visible to other employers.",
+      "Uptal provides the service on an <strong>as is</strong> and <strong>as available</strong> basis to the fullest extent permitted by the applicable laws of the Kingdom.",
+      {warn: "Uptal does not promise, guarantee or warrant any hire, any offer, any interview, any number of applicants or any hiring outcome. The service is an effort to present suitable candidates, and nothing in these terms or in any Uptal communication constitutes a guarantee of a result."},
+      "Uptal may change, add to, or withdraw features at any time. Where a change materially reduces a paid feature, the Customer's exclusive remedy is to stop renewing."
+    ]],
+    ["Accounts, seats and access", [
+      "Each dashboard includes two user seats. Additional seats are charged at the published price per seat per month, exclusive of value added tax.",
+      "Team invitations are limited to addresses on the Customer's own verified domain. The Customer is responsible for every action taken under its dashboard, including actions by its team members, and must notify Uptal immediately of any suspected unauthorized access.",
+      "Credentials are personal and may not be shared. Access rights follow the role assigned in the dashboard, and only an administrator may change plan, seats or slots."
+    ]],
+    ["Postings and slots", [
+      "Each activated dashboard includes one job slot. A slot carries one live posting at a time and may be reused without limit. Additional slots are charged at the published price per slot per month, exclusive of value added tax.",
+      "Every posting must be a real, budgeted vacancy the Customer is presently hiring for. Postings must be accurate, must relate to the Customer's own entity, and must not be used to collect profiles, to benchmark salaries, or to build a pipeline for a future need.",
+      "Uptal may remove any posting that breaches these terms, without notice and without refund."
+    ]],
+    ["Candidate protections", [
+      "Candidate identities remain sealed while the Customer reviews. An interview invitation is the single act that reveals a candidate's name and contact details.",
+      "Applicants must be decided one at a time and every decision is recorded in a signed audit log. Every candidate receives an answer within the decision window the Customer set.",
+      "Candidate personal data is disclosed to the Customer for the sole purpose of the specific vacancy it relates to. The Customer may not reuse it for another vacancy, transfer it to any affiliate or third party, add it to a database or applicant tracking system beyond what is necessary for that vacancy, or retain it beyond the retention schedule."
+    ]],
+    ["Hiring integrity", [
+      "Uptal measures conduct on the board continuously and maintains an integrity record for each dashboard. Conduct that lowers the record includes shortlisting candidates who are never contacted, leaving postings without decisions, allowing decision windows to lapse, and posting roles that are not genuinely being filled.",
+      "Where the record falls, Uptal may warn the Customer, request an explanation, restrict posting, suspend the dashboard, or terminate it. Restrictions apply automatically and do not require notice.",
+      "Uptal decides all integrity matters at its sole discretion. An explanation submitted by the Customer does not suspend a deduction or a restriction while it is reviewed."
+    ]],
+    ["Non-circumvention", [
+      "Candidates presented through the board are introduced by Uptal. For twelve months from the date a candidate is presented to the Customer, the Customer may not engage that candidate, whether as an employee, contractor, consultant or through any affiliate or intermediary, other than through the board.",
+      "Where the Customer engages a presented candidate outside the board during that period, the Customer shall pay Uptal an introduction fee equal to twelve and one half percent of the candidate's first year total compensation, payable within thirty days of the engagement date, in addition to any other remedy available to Uptal."
+    ]],
+    ["Fees, invoicing and taxes", [
+      "Fees are payable in Saudi riyals in advance of the period they cover, by the payment methods offered in the dashboard. Value added tax is added at the prevailing statutory rate and shown separately on every tax invoice.",
+      "<strong>All fees are non refundable.</strong> No refund, credit or pro rata adjustment is given for unused slots, unused seats, removed slots, downgrades, suspension, termination for breach, or any period in which the Customer chose not to use the service.",
+      "<strong>Prices may change at any time without prior notice.</strong> A price change takes effect at the Customer's next renewal, and continued use after that renewal constitutes acceptance.",
+      "Where an invoice is settled by SADAD or bank transfer, capacity activates once funds are confirmed received. Late payment entitles Uptal to suspend the dashboard without notice until settlement.",
+      "Uptal may set off any amount the Customer owes against any amount payable to the Customer."
+    ]],
+    ["Intellectual property", [
+      "The board, its software, interfaces, matching technology, integrity models, documentation and all related intellectual property are and remain the exclusive property of Uptal. Nothing in these terms transfers any ownership to the Customer.",
+      "The Customer receives a limited, non exclusive, non transferable, revocable right to use the board for its own hiring for the duration of its subscription, and no other right.",
+      "The Customer may not copy, adapt, reverse engineer, decompile, scrape, benchmark, resell, sublicense or create derivative works from any part of the board, nor allow any third party to do so.",
+      "Uptal may use anonymised and aggregated data derived from use of the board to operate, secure, analyse and improve its services and to produce market insights, provided no such use identifies the Customer or any candidate.",
+      "Any feedback, suggestion or idea the Customer provides may be used by Uptal without restriction, attribution or compensation."
+    ]],
+    ["Confidentiality", [
+      "Each party shall protect the other's confidential information with no less care than it applies to its own, and shall not disclose it except to those who need it to perform this agreement.",
+      "The Customer's postings and pipeline records are confidential to the Customer. Uptal's pricing, technology, models and non public documentation are confidential to Uptal."
+    ]],
+    ["Limitation of liability", [
+      "To the fullest extent permitted by the laws of the Kingdom, Uptal shall not be liable for any indirect, incidental, special, consequential or punitive loss, nor for any loss of profit, revenue, opportunity, goodwill, data, or anticipated savings, however arising.",
+      "To the fullest extent permitted by the laws of the Kingdom, Uptal's total aggregate liability arising out of or in connection with this agreement, whatever the cause of action, shall not exceed the total fees actually paid by the Customer to Uptal in the three months immediately preceding the event giving rise to the claim.",
+      "Uptal is not liable for any hiring decision the Customer makes, for the conduct, statements, qualifications or performance of any candidate, for the accuracy of information a candidate provides, or for any employment relationship the Customer enters into.",
+      {note: "Nothing in this agreement excludes or limits liability that cannot be excluded or limited under the laws of the Kingdom of Saudi Arabia, including liability arising from fraud or gross negligence."}
+    ]],
+    ["Indemnity", [
+      "The Customer shall indemnify and hold Uptal harmless against all claims, damages, penalties, costs and legal fees arising from the Customer's postings, its hiring decisions, its use or handling of candidate data, its breach of these terms, or its breach of any applicable law."
+    ]],
+    ["Suspension and termination", [
+      "Uptal may suspend or terminate a dashboard immediately, without notice and without refund, where it determines that the Customer has breached these terms, has breached the Acceptable Use policy, has provided inaccurate registration details, or presents a risk to candidates or to the integrity of the board.",
+      "The Customer may end its subscription at any time; the subscription runs to the end of the paid period and no refund is due.",
+      "On closure, the Customer may export its dashboard data before deletion. Postings close, access ends, and data is deleted according to the retention schedule.",
+      "Clauses that by their nature survive termination, including non circumvention, intellectual property, confidentiality, limitation of liability, indemnity and governing law, continue in force."
+    ]],
+    ["Changes to these terms", [
+      "Uptal may amend these terms at any time. The current version is always published in the dashboard, and continued use after a change constitutes acceptance of the amended terms."
+    ]],
+    ["General", [
+      "Uptal may assign this agreement to any affiliate or successor. The Customer may not assign it without Uptal's prior written consent.",
+      "Neither party is liable for failure to perform caused by events beyond its reasonable control.",
+      "Notices to the Customer are validly given by email to the administrator addresses on the dashboard.",
+      "If any provision is held unenforceable, the remainder continues in full force, and the unenforceable provision shall be applied to the maximum extent permitted.",
+      "A failure to enforce any right is not a waiver of that right."
+    ]],
+    ["Governing law and jurisdiction", [
+      "This agreement is governed by the laws of the Kingdom of Saudi Arabia.",
+      "The parties shall first seek to settle any dispute amicably. Failing settlement within thirty days, the dispute shall be finally resolved by arbitration administered by the Saudi Center for Commercial Arbitration in Riyadh, in Arabic, before a sole arbitrator, and the award shall be final and binding. Uptal may, at its sole option, instead bring the matter before the competent courts in Riyadh.",
+      "The Arabic text of these documents governs their interpretation. The English text is provided for convenience."
+    ]]
+  ]
+};
+
+DOCS.terms.ar = {
+  title: "شروط الخدمة",
+  sub: "بين شركة أبتال لتقنية المعلومات والجهة المشتركة.",
+  intro: "تشكل هذه الشروط اتفاقية ملزمة بين شركة أبتال لتقنية المعلومات، وهي شركة مسجلة في المملكة العربية السعودية (“أبتال”)، والجهة التي تسجل لوحة تحكم على لوحة أبتال الخاصة (“العميل”). وباستكمال التسجيل أو باستخدام اللوحة، يقبل العميل هذه الشروط كاملة عبر مفوضه بالتوقيع.",
+  s: [
+    ["الأهلية والتوثيق", [
+      "تخدم اللوحة الشركات والجهات الحكومية التي توظف لشواغرها هي. ولا يحق التسجيل لوكالات التوظيف ولا لشركات التوريد ولا لمزودي الإسناد ولا لأي طرف يوظف نيابة عن غيره.",
+      "يُتحقق من كل طلب قبل تفعيل لوحة التحكم. وتقرر أبتال وحدها ووفق تقديرها المطلق أهلية الجهة، ولها رفض أي طلب دون إبداء الأسباب ودون أي مسؤولية.",
+      "يقر المفوض بالتوقيع بأنه يملك صلاحية إلزام العميل، وبأن كل بيان قدمه عند التسجيل صحيح. ولأبتال إعادة التحقق من لوحة التحكم في أي وقت وتعليقها ريثما تكتمل إعادة التحقق."
+    ]],
+    ["الخدمة", [
+      "تطابق أبتال الكفاءات من شبكتها مع إعلانات العميل، وتعرض متقدمين مفروزين مسبقاً داخل لوحة التحكم. واللوحة خاصة: لا تُدرج الإعلانات علناً ولا تُفهرس ولا يطلع عليها أي صاحب عمل آخر.",
+      "تقدم أبتال الخدمة <strong>كما هي</strong> و<strong>بحسب توافرها</strong> إلى أقصى حد تجيزه أنظمة المملكة.",
+      {warn: "لا تَعِد أبتال ولا تضمن أي توظيف ولا أي عرض ولا أي مقابلة ولا عدداً معيناً من المتقدمين ولا أي نتيجة توظيف. الخدمة بذل جهد لعرض كفاءات مناسبة، ولا يشكل أي نص في هذه الشروط أو في أي مراسلة من أبتال ضماناً لنتيجة."},
+      "لأبتال تعديل الخدمة أو إضافة مزايا أو سحبها في أي وقت. وإذا قلص التغيير ميزة مدفوعة تقليصاً جوهرياً، فحق العميل الوحيد هو الامتناع عن التجديد."
+    ]],
+    ["الحسابات والمقاعد والوصول", [
+      "تشمل كل لوحة تحكم مقعدين للمستخدمين. وتُحتسب المقاعد الإضافية بالسعر المعلن لكل مقعد شهرياً غير شامل ضريبة القيمة المضافة.",
+      "تقتصر دعوات الفريق على عناوين على نطاق العميل الموثق نفسه. والعميل مسؤول عن كل فعل يقع تحت لوحة تحكمه، بما في ذلك أفعال أعضاء فريقه، وعليه إبلاغ أبتال فوراً بأي وصول غير مصرح به يشتبه فيه.",
+      "بيانات الدخول شخصية ولا يجوز مشاركتها. وتتبع صلاحيات الوصول الدور الممنوح في لوحة التحكم، ولا يغير الباقة أو المقاعد أو الخانات إلا المدير."
+    ]],
+    ["الإعلانات والخانات", [
+      "تشمل كل لوحة تحكم مفعلة خانة وظيفية واحدة. وتتسع الخانة لإعلان منشور واحد في الوقت نفسه وتُعاد الاستفادة منها دون حد. وتُحتسب الخانات الإضافية بالسعر المعلن لكل خانة شهرياً غير شامل ضريبة القيمة المضافة.",
+      "يجب أن يكون كل إعلان شاغراً حقيقياً معتمد الميزانية يوظف عليه العميل فعلاً. وأن يكون دقيقاً، ويخص جهة العميل نفسها، ولا يُستخدم لجمع الملفات ولا لمقارنة الرواتب ولا لبناء قاعدة مرشحين لحاجة مستقبلية.",
+      "لأبتال إزالة أي إعلان يخالف هذه الشروط دون إشعار ودون استرداد."
+    ]],
+    ["ضمانات الكفاءات", [
+      "تبقى هويات الكفاءات مغلقة أثناء مراجعة العميل. ودعوة المقابلة هي الفعل الوحيد الذي يكشف الاسم ووسائل التواصل.",
+      "يُبتّ في المتقدمين واحداً تلو الآخر، ويُسجَّل كل قرار في سجل تدقيق موقّع. ويتلقى كل مرشح إجابة ضمن مهلة القرار التي حددها العميل.",
+      "تُفصح أبتال عن البيانات الشخصية للكفاءات لغرض الشاغر المحدد وحده. ولا يجوز للعميل إعادة استخدامها لشاغر آخر، ولا نقلها إلى أي تابع أو طرف ثالث، ولا إضافتها إلى قاعدة بيانات أو نظام تتبع متقدمين بما يتجاوز ما يلزم لذلك الشاغر، ولا الاحتفاظ بها بعد جدول الاحتفاظ."
+    ]],
+    ["نزاهة التوظيف", [
+      "تقيس أبتال السلوك على اللوحة باستمرار وتحفظ سجل نزاهة لكل لوحة تحكم. ومما يخفض السجل: ترشيح كفاءات لا يجري التواصل معها، وترك الإعلانات دون قرارات، وانقضاء مهل القرار، ونشر أدوار لا يجري شغلها فعلاً.",
+      "وعند انخفاض السجل، لأبتال إنذار العميل، أو طلب توضيح، أو تقييد النشر، أو تعليق لوحة التحكم، أو إنهاؤها. وتسري القيود تلقائياً دون حاجة إلى إشعار.",
+      "تفصل أبتال في كل ما يتعلق بالنزاهة وفق تقديرها المطلق. ولا يوقف التوضيح المقدم من العميل أي خصم أو قيد أثناء مراجعته."
+    ]],
+    ["منع التجاوز", [
+      "الكفاءات المعروضة عبر اللوحة مقدَّمة من أبتال. ولمدة اثني عشر شهراً من تاريخ عرض الكفاءة على العميل، لا يجوز للعميل التعاقد معها موظفاً أو متعاقداً أو مستشاراً أو عبر أي تابع أو وسيط، إلا من خلال اللوحة.",
+      "وإذا تعاقد العميل خلال تلك المدة مع كفاءة معروضة خارج اللوحة، التزم بأن يدفع لأبتال أتعاب تقديم تعادل اثني عشر ونصفاً في المئة من إجمالي أجر السنة الأولى للكفاءة، تُسدد خلال ثلاثين يوماً من تاريخ التعاقد، إضافة إلى أي حق آخر مقرر لأبتال."
+    ]],
+    ["الرسوم والفوترة والضرائب", [
+      "تُدفع الرسوم بالريال السعودي مقدماً عن المدة التي تغطيها، بوسائل الدفع المتاحة في لوحة التحكم. وتُضاف ضريبة القيمة المضافة بالنسبة النظامية السارية وتظهر منفصلة في كل فاتورة ضريبية.",
+      "<strong>جميع الرسوم غير قابلة للاسترداد.</strong> ولا يُمنح أي استرداد أو رصيد أو تسوية نسبية عن خانات غير مستخدمة أو مقاعد غير مستخدمة أو خانات مزالة أو تخفيض للباقة أو تعليق أو إنهاء للمخالفة أو أي مدة اختار العميل ألا يستخدم الخدمة فيها.",
+      "<strong>قد تتغير الأسعار في أي وقت دون إشعار مسبق.</strong> ويسري التغيير عند التجديد التالي للعميل، ويُعد استمرار الاستخدام بعد ذلك التجديد قبولاً به.",
+      "وإذا سُددت الفاتورة عبر سداد أو حوالة بنكية، فُعّلت السعة عند تأكد استلام المبلغ. ويعطي التأخر في السداد أبتال الحق في تعليق لوحة التحكم دون إشعار حتى السداد.",
+      "لأبتال مقاصة أي مبلغ مستحق عليها للعميل بأي مبلغ مستحق لها عليه."
+    ]],
+    ["الملكية الفكرية", [
+      "اللوحة وبرمجياتها وواجهاتها وتقنية المطابقة ونماذج النزاهة والوثائق وكل ما يتصل بها من ملكية فكرية هي ملك خالص لأبتال وتبقى كذلك. ولا ينقل أي نص في هذه الشروط أي ملكية إلى العميل.",
+      "يحصل العميل على حق محدود غير حصري غير قابل للتنازل قابل للإلغاء في استخدام اللوحة لتوظيفه هو طوال مدة اشتراكه، دون أي حق آخر.",
+      "لا يجوز للعميل نسخ أي جزء من اللوحة أو تعديله أو هندسته العكسية أو تفكيكه أو كشطه أو مقارنته المرجعية أو إعادة بيعه أو ترخيصه من الباطن أو اشتقاق أعمال منه، ولا السماح لأي طرف ثالث بذلك.",
+      "لأبتال استخدام البيانات مجهولة المصدر والمجمعة الناتجة عن استخدام اللوحة لتشغيل خدماتها وتأمينها وتحليلها وتحسينها ولإنتاج رؤى سوقية، بشرط ألا يعرّف أي استخدام منها بالعميل أو بأي كفاءة.",
+      "ولأبتال استخدام أي ملاحظة أو اقتراح أو فكرة يقدمها العميل دون قيد ولا إسناد ولا مقابل."
+    ]],
+    ["السرية", [
+      "يحمي كل طرف معلومات الطرف الآخر السرية بعناية لا تقل عما يبذله لمعلوماته، ولا يفصح عنها إلا لمن يحتاجها لتنفيذ هذه الاتفاقية.",
+      "إعلانات العميل وسجلات مساره سرية له. وأسعار أبتال وتقنيتها ونماذجها ووثائقها غير المعلنة سرية لها."
+    ]],
+    ["حدود المسؤولية", [
+      "إلى أقصى حد تجيزه أنظمة المملكة، لا تُسأل أبتال عن أي خسارة غير مباشرة أو عرضية أو خاصة أو تبعية أو تأديبية، ولا عن أي فوات ربح أو إيراد أو فرصة أو سمعة أو بيانات أو وفورات متوقعة، أياً كان سببها.",
+      "وإلى أقصى حد تجيزه أنظمة المملكة، لا تتجاوز مسؤولية أبتال الإجمالية الناشئة عن هذه الاتفاقية أو المتصلة بها، أياً كان سبب الدعوى، مجموع الرسوم التي سددها العميل فعلاً لأبتال في الأشهر الثلاثة السابقة مباشرة للواقعة موضوع المطالبة.",
+      "ولا تُسأل أبتال عن أي قرار توظيف يتخذه العميل، ولا عن سلوك أي كفاءة أو أقوالها أو مؤهلاتها أو أدائها، ولا عن دقة ما تقدمه من معلومات، ولا عن أي علاقة عمل يدخل فيها العميل.",
+      {note: "لا يستثني أي نص في هذه الاتفاقية ولا يحد من مسؤولية لا يجوز استثناؤها أو الحد منها بموجب أنظمة المملكة العربية السعودية، بما فيها المسؤولية الناشئة عن الغش أو الخطأ الجسيم."}
+    ]],
+    ["التعويض", [
+      "يلتزم العميل بتعويض أبتال وإبراء ذمتها من كل مطالبة أو ضرر أو غرامة أو تكلفة أو أتعاب محاماة تنشأ عن إعلاناته أو قرارات توظيفه أو استخدامه بيانات الكفاءات أو تعامله معها أو مخالفته هذه الشروط أو مخالفته أي نظام واجب التطبيق."
+    ]],
+    ["التعليق والإنهاء", [
+      "لأبتال تعليق لوحة التحكم أو إنهاؤها فوراً، دون إشعار ودون استرداد، متى رأت أن العميل خالف هذه الشروط أو سياسة الاستخدام المقبول أو قدم بيانات تسجيل غير صحيحة أو شكّل خطراً على الكفاءات أو على نزاهة اللوحة.",
+      "وللعميل إنهاء اشتراكه في أي وقت، ويستمر الاشتراك حتى نهاية المدة المدفوعة دون أي استرداد.",
+      "وعند الإغلاق، يمكن للعميل تصدير بيانات لوحة تحكمه قبل حذفها. ثم تُغلق الإعلانات وينتهي الوصول وتُحذف البيانات وفق جدول الاحتفاظ.",
+      "وتبقى نافذة البنود التي تقتضي طبيعتها البقاء بعد الإنهاء، ومنها منع التجاوز والملكية الفكرية والسرية وحدود المسؤولية والتعويض والنظام الواجب التطبيق."
+    ]],
+    ["تعديل هذه الشروط", [
+      "لأبتال تعديل هذه الشروط في أي وقت. وتُنشر النسخة السارية دائماً في لوحة التحكم، ويُعد استمرار الاستخدام بعد التعديل قبولاً بالشروط المعدلة."
+    ]],
+    ["أحكام عامة", [
+      "لأبتال التنازل عن هذه الاتفاقية لأي تابع أو خلف. ولا يجوز للعميل التنازل عنها دون موافقة أبتال الخطية المسبقة.",
+      "لا يُسأل أي طرف عن إخلال سببه ظرف خارج عن سيطرته المعقولة.",
+      "تُعد الإشعارات إلى العميل صحيحة متى أُرسلت بالبريد الإلكتروني إلى عناوين المديرين في لوحة التحكم.",
+      "وإذا قُضي ببطلان بند، بقيت بقية البنود نافذة، وطُبق البند إلى أقصى حد جائز.",
+      "ولا يُعد التسامح في استعمال حق تنازلاً عنه."
+    ]],
+    ["النظام الواجب التطبيق والاختصاص", [
+      "تخضع هذه الاتفاقية لأنظمة المملكة العربية السعودية.",
+      "يسعى الطرفان أولاً إلى تسوية أي نزاع ودياً. فإذا لم تتم التسوية خلال ثلاثين يوماً، حُسم النزاع نهائياً بالتحكيم لدى المركز السعودي للتحكيم التجاري في الرياض، باللغة العربية، أمام محكم فرد، ويكون الحكم نهائياً وملزماً. ولأبتال وحدها أن تختار بدلاً من ذلك رفع الأمر إلى المحاكم المختصة في الرياض.",
+      "النص العربي لهذه المستندات هو المعوَّل عليه في التفسير، والنص الإنجليزي مقدَّم للتيسير."
+    ]]
+  ]
+};
+
+DOCS.privacy.en = {
+  title: "Privacy Policy",
+  sub: "How Uptal handles personal data on the private board, under the Personal Data Protection Law of the Kingdom of Saudi Arabia.",
+  intro: "This policy explains what personal data Uptal collects on the Uptal Private Board, why it is processed, and the rights available under the Personal Data Protection Law and its Implementing Regulations. It applies to employer users of the board and to candidates presented through it.",
+  s: [
+    ["Who is responsible", [
+      "Uptal Information Technology Company, Riyadh, Kingdom of Saudi Arabia, is the data controller for candidate data held in its network, for account and verification data, and for data generated by operating the board.",
+      "The subscribing entity is the data controller for its own dashboard records, including its postings, its team records and the hiring decisions it takes. Uptal processes those records on the entity's behalf under the Data Processing Terms.",
+      "Contact for privacy matters: privacy@uptal.com"
+    ]],
+    ["Data we collect", [
+      "<strong>Account and verification data</strong>: entity name, commercial registration or official government domain, website, organization profile, the authorized signer's name, work email, role, phone and professional profile, and the verification signals resolved during activation.",
+      "<strong>Dashboard data</strong>: postings, requirements, decision windows, team members and their roles, decisions taken on applicants, notes, and the audit log of activity.",
+      "<strong>Candidate data</strong>: profile, experience, education, skills, salary expectation, city, and contact details, presented under seal until an interview invitation.",
+      "<strong>Billing data</strong>: plan, slots, seats, billing term, invoices and payment references. Card and bank credentials are handled by the payment provider on its own secured page and are never collected or stored by Uptal.",
+      "<strong>Technical data</strong>: device, browser, approximate location derived from network address, log and security events."
+    ]],
+    ["Why we process it", [
+      "To verify that an entity is real and eligible, and to activate, operate and secure its dashboard.",
+      "To match candidates to postings, to present pre-screened applicants, and to record decisions.",
+      "To measure conduct on the board and enforce the hiring integrity rules.",
+      "To bill, invoice and meet tax and accounting obligations.",
+      "To detect, prevent and investigate fraud, abuse, scraping and security incidents.",
+      "To improve the service, including through anonymised and aggregated analysis that identifies no individual and no entity."
+    ]],
+    ["Legal bases", [
+      "Processing rests on the performance of the agreement with the subscribing entity, on the consent given by candidates when they join the Uptal network, on Uptal's legitimate interests in operating and protecting the board, and on compliance with legal obligations in the Kingdom."
+    ]],
+    ["Disclosure of candidate identity", [
+      "A candidate's name and contact details are disclosed to an employer only when that employer issues an interview invitation for the specific vacancy.",
+      "Before that point the employer sees the professional substance of the profile and no identifying detail.",
+      {note: "An employer that receives candidate details may use them only for the vacancy they relate to, and may not transfer them, reuse them for another vacancy, or retain them beyond the retention schedule."}
+    ]],
+    ["Sharing", [
+      "Uptal does not sell personal data.",
+      "Data is shared with service providers that host, secure, deliver messages, or process payments for Uptal, each bound by written terms and permitted to process only on Uptal's instructions.",
+      "Data may be disclosed to a competent authority in the Kingdom where required by law or by valid legal process, and in connection with a corporate transaction, subject to equivalent protections."
+    ]],
+    ["Storage location and transfers", [
+      "Dashboard and candidate data is processed and stored within the Kingdom of Saudi Arabia. Any transfer outside the Kingdom takes place only where the Personal Data Protection Law permits it and with the safeguards it requires."
+    ]],
+    ["Retention", [
+      "Candidate details clear from a posting sixty days after publication.",
+      "Account, verification, billing and audit records are retained for the period required by the applicable commercial, tax and regulatory rules, and are then deleted or anonymised.",
+      "On dashboard closure, the entity may export its data first; deletion then follows the retention schedule."
+    ]],
+    ["Security", [
+      "Uptal applies encryption in transit and at rest, role based access control, least privilege for internal access, signed audit logging of every decision, and continuous monitoring. No system can be guaranteed absolutely secure, and the Customer is responsible for safeguarding access to its own dashboard."
+    ]],
+    ["Your rights", [
+      "Subject to the Personal Data Protection Law, individuals may request access to their personal data, request correction, request destruction where retention is no longer required, and withdraw consent where processing rests on consent.",
+      "Requests are made to privacy@uptal.com and are answered within the statutory period. Uptal may verify identity before acting and may decline a request where the law permits, including where retention is required for a legal or regulatory purpose.",
+      "Complaints may be raised with the competent supervisory authority in the Kingdom."
+    ]],
+    ["Automated processing", [
+      "Matching, screening and account verification involve automated processing of the data described above. Uptal reviews and may override any automated outcome. Individuals may request a review of a decision that produces a legal effect on them."
+    ]],
+    ["Changes", [
+      "This policy may be updated at any time. The current version is published in the dashboard, and continued use after an update constitutes acceptance."
+    ]]
+  ]
+};
+
+DOCS.privacy.ar = {
+  title: "سياسة الخصوصية",
+  sub: "كيف تتعامل أبتال مع البيانات الشخصية على اللوحة الخاصة، وفق نظام حماية البيانات الشخصية في المملكة العربية السعودية.",
+  intro: "توضح هذه السياسة ما تجمعه أبتال من بيانات شخصية على لوحة أبتال الخاصة، وأسباب معالجتها، والحقوق المقررة بموجب نظام حماية البيانات الشخصية ولائحته التنفيذية. وتسري على مستخدمي اللوحة من جهات التوظيف وعلى الكفاءات المعروضة عبرها.",
+  s: [
+    ["الجهة المسؤولة", [
+      "شركة أبتال لتقنية المعلومات، الرياض، المملكة العربية السعودية، هي جهة التحكم في بيانات الكفاءات المحفوظة في شبكتها، وفي بيانات الحساب والتوثيق، وفي البيانات الناتجة عن تشغيل اللوحة.",
+      "والجهة المشتركة هي جهة التحكم في سجلات لوحة تحكمها، ومنها إعلاناتها وسجلات فريقها وقرارات التوظيف التي تتخذها. وتعالج أبتال تلك السجلات نيابة عنها وفق شروط معالجة البيانات.",
+      "للتواصل في شؤون الخصوصية: privacy@uptal.com"
+    ]],
+    ["البيانات التي نجمعها", [
+      "<strong>بيانات الحساب والتوثيق</strong>: اسم الجهة، والسجل التجاري أو النطاق الحكومي الرسمي، والموقع الإلكتروني، وملف المنشأة، واسم المفوض بالتوقيع وبريده الرسمي ومنصبه وهاتفه وملفه المهني، وإشارات التحقق التي تُحسم عند التفعيل.",
+      "<strong>بيانات لوحة التحكم</strong>: الإعلانات والمتطلبات ومهل القرار وأعضاء الفريق وأدوارهم والقرارات المتخذة على المتقدمين والملاحظات وسجل النشاط.",
+      "<strong>بيانات الكفاءات</strong>: الملف والخبرة والتعليم والمهارات والراتب المتوقع والمدينة ووسائل التواصل، وتُعرض مختومة حتى دعوة المقابلة.",
+      "<strong>بيانات الفوترة</strong>: الباقة والخانات والمقاعد ومدة الاشتراك والفواتير ومراجع السداد. أما بيانات البطاقات والحسابات البنكية فيتولاها مزود الدفع على صفحته المؤمّنة، ولا تجمعها أبتال ولا تخزنها إطلاقاً.",
+      "<strong>البيانات التقنية</strong>: الجهاز والمتصفح والموقع التقريبي المستنتج من عنوان الشبكة وسجلات الأحداث الأمنية."
+    ]],
+    ["أسباب المعالجة", [
+      "التحقق من أن الجهة حقيقية ومؤهلة، وتفعيل لوحة تحكمها وتشغيلها وتأمينها.",
+      "مطابقة الكفاءات بالإعلانات، وعرض متقدمين مفروزين مسبقاً، وتسجيل القرارات.",
+      "قياس السلوك على اللوحة وإنفاذ قواعد نزاهة التوظيف.",
+      "الفوترة وإصدار الفواتير والوفاء بالالتزامات الضريبية والمحاسبية.",
+      "كشف الاحتيال وإساءة الاستخدام والكشط والحوادث الأمنية ومنعها والتحقيق فيها.",
+      "تحسين الخدمة، بما في ذلك عبر تحليل مجهول المصدر ومجمّع لا يعرّف بأي فرد ولا بأي جهة."
+    ]],
+    ["الأسس النظامية", [
+      "تستند المعالجة إلى تنفيذ الاتفاقية مع الجهة المشتركة، وإلى موافقة الكفاءات عند انضمامها إلى شبكة أبتال، وإلى المصالح المشروعة لأبتال في تشغيل اللوحة وحمايتها، وإلى الامتثال للالتزامات النظامية في المملكة."
+    ]],
+    ["كشف هوية الكفاءة", [
+      "لا يُكشف اسم الكفاءة ووسائل التواصل معها لصاحب العمل إلا عند إصداره دعوة مقابلة للشاغر المحدد.",
+      "وقبل ذلك يرى صاحب العمل جوهر الملف المهني دون أي تفصيل يعرّف بصاحبه.",
+      {note: "لا يجوز لصاحب العمل الذي يتسلم بيانات كفاءة استخدامها إلا للشاغر الذي تتعلق به، ولا نقلها، ولا إعادة استخدامها لشاغر آخر، ولا الاحتفاظ بها بعد جدول الاحتفاظ."}
+    ]],
+    ["المشاركة", [
+      "لا تبيع أبتال البيانات الشخصية.",
+      "وتُشارك البيانات مع مزودي خدمات يتولون الاستضافة أو الأمن أو إيصال الرسائل أو معالجة المدفوعات لأبتال، وكل منهم مقيد بشروط مكتوبة ولا يعالج إلا وفق تعليمات أبتال.",
+      "وقد يُفصح عنها لجهة مختصة في المملكة متى تطلب النظام ذلك أو بموجب إجراء نظامي صحيح، وكذلك في سياق صفقة مؤسسية بضمانات مماثلة."
+    ]],
+    ["موقع التخزين والنقل", [
+      "تُعالج بيانات لوحة التحكم وبيانات الكفاءات وتُخزن داخل المملكة العربية السعودية. ولا يقع أي نقل خارج المملكة إلا حيث يجيزه نظام حماية البيانات الشخصية وبالضمانات التي يشترطها."
+    ]],
+    ["مدد الاحتفاظ", [
+      "تُمحى تفاصيل الكفاءات من الإعلان بعد ستين يوماً من نشره.",
+      "وتُحفظ سجلات الحساب والتوثيق والفوترة والتدقيق للمدة التي تقتضيها الأنظمة التجارية والضريبية والرقابية، ثم تُحذف أو تُجهَّل.",
+      "وعند إغلاق لوحة التحكم، يمكن للجهة تصدير بياناتها أولاً، ثم يجري الحذف وفق جدول الاحتفاظ."
+    ]],
+    ["الأمن", [
+      "تطبق أبتال التشفير أثناء النقل وفي التخزين، وضوابط وصول قائمة على الأدوار، ومبدأ أقل الصلاحيات للوصول الداخلي، وسجل تدقيق موقّعاً لكل قرار، ومراقبة مستمرة. ولا يمكن ضمان أمن أي نظام ضماناً مطلقاً، ويبقى العميل مسؤولاً عن حماية الوصول إلى لوحة تحكمه."
+    ]],
+    ["حقوقك", [
+      "وفقاً لنظام حماية البيانات الشخصية، للأفراد طلب الاطلاع على بياناتهم الشخصية، وطلب تصحيحها، وطلب إتلافها متى انتفت الحاجة إلى الاحتفاظ بها، وسحب الموافقة متى قامت المعالجة عليها.",
+      "وتُقدَّم الطلبات إلى privacy@uptal.com ويُرد عليها خلال المدة النظامية. ولأبتال التحقق من الهوية قبل التنفيذ، ولها رفض الطلب حيث يجيز النظام ذلك، ومنه ما يلزم الاحتفاظ به لغرض نظامي أو رقابي.",
+      "وللأفراد رفع الشكاوى إلى الجهة الرقابية المختصة في المملكة."
+    ]],
+    ["المعالجة الآلية", [
+      "تتضمن المطابقة والفرز وتوثيق الحسابات معالجة آلية للبيانات الموضحة أعلاه. وتراجع أبتال أي نتيجة آلية ولها تجاوزها. وللأفراد طلب مراجعة أي قرار يرتب أثراً نظامياً عليهم."
+    ]],
+    ["التعديلات", [
+      "قد تُحدَّث هذه السياسة في أي وقت. وتُنشر النسخة السارية في لوحة التحكم، ويُعد استمرار الاستخدام بعد التحديث قبولاً بها."
+    ]]
+  ]
+};
+
+DOCS.dpa.en = {
+  title: "Data Processing Terms",
+  sub: "Applies where Uptal processes dashboard data on behalf of the subscribing entity.",
+  intro: "These terms form part of the agreement and govern Uptal's processing of personal data on behalf of the subscribing entity under the Personal Data Protection Law of the Kingdom of Saudi Arabia.",
+  s: [
+    ["Roles", ["The Customer is the controller of its dashboard data. Uptal is the processor of that data, and acts only on the Customer's documented instructions, which these terms and the use of the board constitute."]],
+    ["Subject matter and duration", ["Processing covers postings, team records, applicant decisions, notes and audit records, for the duration of the subscription and the retention period that follows it."]],
+    ["Categories", ["Data subjects are the Customer's team members and the candidates presented to it. Categories are identification and contact data, professional data, and records of decisions."]],
+    ["Uptal's obligations", [
+      "Process only on the Customer's instructions and for the purposes of the agreement.",
+      "Impose confidentiality obligations on all personnel with access.",
+      "Apply appropriate technical and organizational measures, including encryption, access control and audit logging.",
+      "Assist the Customer, so far as reasonably possible and at the Customer's cost, in responding to data subject requests and to supervisory authorities.",
+      "Make available the information reasonably necessary to demonstrate compliance."
+    ]],
+    ["Sub-processors", ["The Customer authorizes Uptal to engage sub-processors for hosting, security, messaging and payments. Uptal binds each to equivalent obligations, remains responsible for their performance, and discloses the current list on request."]],
+    ["Security incidents", ["Uptal notifies the Customer without undue delay after confirming an incident affecting its dashboard data, and provides the information reasonably available to support the Customer's own obligations."]],
+    ["Data location", ["Dashboard data is processed and stored within the Kingdom of Saudi Arabia."]],
+    ["Return and deletion", ["On closure the Customer may export its dashboard data. Uptal then deletes or anonymises it in line with the retention schedule, except where retention is required by law."]],
+    ["Audit", ["Where an audit is required by law, it takes place once in any twelve month period, on thirty days written notice, during business hours, without disrupting operations, at the Customer's cost, and under confidentiality."]],
+    ["Liability", ["Liability under these terms is subject to the limitation of liability in the Terms of Service."]]
+  ]
+};
+
+DOCS.dpa.ar = {
+  title: "شروط معالجة البيانات",
+  sub: "تسري حيث تعالج أبتال بيانات لوحة التحكم نيابة عن الجهة المشتركة.",
+  intro: "تشكل هذه الشروط جزءاً من الاتفاقية وتحكم معالجة أبتال للبيانات الشخصية نيابة عن الجهة المشتركة وفق نظام حماية البيانات الشخصية في المملكة العربية السعودية.",
+  s: [
+    ["الأدوار", ["العميل هو جهة التحكم في بيانات لوحة تحكمه، وأبتال هي جهة المعالجة لتلك البيانات، ولا تعمل إلا وفق تعليمات العميل الموثقة، وتُعد هذه الشروط واستخدام اللوحة تعليمات موثقة."]],
+    ["الموضوع والمدة", ["تشمل المعالجة الإعلانات وسجلات الفريق وقرارات المتقدمين والملاحظات وسجلات التدقيق، طوال مدة الاشتراك ومدة الاحتفاظ التي تليه."]],
+    ["الفئات", ["أصحاب البيانات هم أعضاء فريق العميل والكفاءات المعروضة عليه. والفئات هي بيانات التعريف والتواصل والبيانات المهنية وسجلات القرارات."]],
+    ["التزامات أبتال", [
+      "المعالجة وفق تعليمات العميل ولأغراض الاتفاقية وحدها.",
+      "إلزام كل من له صلاحية وصول بالتزامات السرية.",
+      "تطبيق تدابير تقنية وتنظيمية مناسبة، منها التشفير وضبط الوصول وسجلات التدقيق.",
+      "معاونة العميل، بالقدر الممكن عملاً وعلى نفقته، في الرد على طلبات أصحاب البيانات والجهات الرقابية.",
+      "إتاحة المعلومات اللازمة عملاً لإثبات الامتثال."
+    ]],
+    ["المعالجون من الباطن", ["يأذن العميل لأبتال بالاستعانة بمعالجين من الباطن للاستضافة والأمن والمراسلة والمدفوعات. وتلزمهم أبتال بالتزامات مماثلة، وتظل مسؤولة عن أدائهم، وتفصح عن القائمة السارية عند الطلب."]],
+    ["الحوادث الأمنية", ["تُشعر أبتال العميل دون تأخير غير مبرر بعد تأكدها من حادثة تمس بيانات لوحة تحكمه، وتزوده بالمعلومات المتاحة عملاً لدعم التزاماته."]],
+    ["موقع البيانات", ["تُعالج بيانات لوحة التحكم وتُخزن داخل المملكة العربية السعودية."]],
+    ["الإعادة والحذف", ["عند الإغلاق يمكن للعميل تصدير بيانات لوحة تحكمه، ثم تحذفها أبتال أو تجهّلها وفق جدول الاحتفاظ، إلا ما يوجب النظام الاحتفاظ به."]],
+    ["التدقيق", ["حيث يوجب النظام تدقيقاً، يجري مرة واحدة في كل اثني عشر شهراً، بإشعار خطي مدته ثلاثون يوماً، في أوقات العمل، دون تعطيل التشغيل، وعلى نفقة العميل، وفي إطار السرية."]],
+    ["المسؤولية", ["تخضع المسؤولية بموجب هذه الشروط لحدود المسؤولية المقررة في شروط الخدمة."]]
+  ]
+};
+
+DOCS.aup.en = {
+  title: "Acceptable Use",
+  sub: "The conduct rules that protect candidates and every employer on the board.",
+  intro: "The board works because every dashboard on it behaves. These rules are binding, and a breach is a breach of the Terms of Service.",
+  s: [
+    ["Strictly prohibited", [
+      {warn: "Data scraping, pipeline building, CV collecting and fake postings result in immediate loss of access, termination of the dashboard, and legal action."},
+      "Extracting, copying, exporting or storing candidate data beyond the vacancy it was provided for.",
+      "Posting a role that is not a real, budgeted vacancy currently being filled.",
+      "Posting on behalf of another entity, or reselling access to the board.",
+      "Using the board to benchmark salaries, to research a market, or to build a pipeline for a future need.",
+      "Contacting a presented candidate outside the board, or engaging one in breach of the non circumvention clause.",
+      "Automated access, crawling, or any attempt to circumvent access controls or rate limits."
+    ]],
+    ["Required conduct", [
+      "Decide on every applicant presented to you.",
+      "Interview the people you shortlist, and answer within the decision window you set.",
+      "Close a role once it is filled, and keep postings accurate while they are live.",
+      "Keep team access limited to colleagues on your own domain who need it."
+    ]],
+    ["Enforcement", [
+      "Uptal measures conduct continuously. Depending on severity, it may warn, request an explanation, restrict posting, suspend the dashboard, or terminate it, in each case at its sole discretion, automatically, and without prior notice.",
+      "No refund is due on any suspension or termination for breach."
+    ]]
+  ]
+};
+
+DOCS.aup.ar = {
+  title: "الاستخدام المقبول",
+  sub: "قواعد السلوك التي تحمي الكفاءات وكل صاحب عمل على اللوحة.",
+  intro: "تعمل اللوحة لأن كل لوحة تحكم عليها تلتزم. وهذه القواعد ملزمة، ومخالفتها مخالفة لشروط الخدمة.",
+  s: [
+    ["محظور قطعاً", [
+      {warn: "كشط البيانات وبناء قواعد المرشحين وجمع السير الذاتية ونشر إعلانات وهمية يؤدي إلى الحرمان الفوري من الوصول وإنهاء لوحة التحكم واتخاذ إجراءات قانونية."},
+      "استخراج بيانات الكفاءات أو نسخها أو تصديرها أو تخزينها بما يتجاوز الشاغر الذي قُدمت لأجله.",
+      "نشر دور ليس شاغراً حقيقياً معتمد الميزانية يجري شغله فعلاً.",
+      "النشر نيابة عن جهة أخرى أو إعادة بيع الوصول إلى اللوحة.",
+      "استخدام اللوحة لمقارنة الرواتب أو دراسة السوق أو بناء قاعدة مرشحين لحاجة مستقبلية.",
+      "التواصل مع كفاءة معروضة خارج اللوحة أو التعاقد معها بالمخالفة لبند منع التجاوز.",
+      "الوصول الآلي أو الزحف أو أي محاولة لتجاوز ضوابط الوصول أو حدود الاستخدام."
+    ]],
+    ["السلوك المطلوب", [
+      "البتّ في كل متقدم يُعرض عليك.",
+      "مقابلة من ترشحهم في القائمة المختصرة، والرد خلال مهلة القرار التي حددتها.",
+      "إغلاق الدور فور شغله، وإبقاء الإعلانات دقيقة ما دامت منشورة.",
+      "قصر وصول الفريق على الزملاء على نطاقك ممن يحتاجونه."
+    ]],
+    ["الإنفاذ", [
+      "تقيس أبتال السلوك باستمرار. وبحسب الجسامة، لها الإنذار أو طلب توضيح أو تقييد النشر أو تعليق لوحة التحكم أو إنهاؤها، وفي كل حال وفق تقديرها المطلق وتلقائياً ودون إشعار مسبق.",
+      "ولا يُستحق أي استرداد عند التعليق أو الإنهاء للمخالفة."
+    ]]
+  ]
+};
+
+/* ---------------- render ---------------- */
+var ORDER = ["terms","privacy","dpa","aup"];
+var current = "terms";
+
+function esc(x){ return String(x == null ? "" : x).replace(/[&<>"]/g, function(c){
+  return ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;" })[c]; }); }
+
+function blockHTML(b){
+  if (typeof b === "string") return "<p>" + b + "</p>";
+  if (b.ul) return "<ul>" + b.ul.map(function(li){ return "<li>" + li + "</li>"; }).join("") + "</ul>";
+  if (b.note) return '<div class="note"><p>' + b.note + "</p></div>";
+  if (b.warn) return '<div class="note warn"><p>' + b.warn + "</p></div>";
+  return "";
+}
+
+function renderDoc(key){
+  var d = DOCS[key][LANG];
+  var host = document.getElementById("doc-" + key);
+  host.innerHTML =
+    '<div class="card"><h2>' + esc(d.title) + "</h2>" +
+    '<p class="sub">' + esc(d.sub) + "</p>" +
+    "<p>" + d.intro + "</p>" +
+    d.s.map(function(sec, i){
+      return "<section><h3><i>" + (i + 1) + ".</i>" + esc(sec[0]) + "</h3>" +
+        sec[1].map(blockHTML).join("") + "</section>";
+    }).join("") +
+    "</div>";
+}
+
+function renderNav(){
+  document.getElementById("docNav").innerHTML = ORDER.map(function(k){
+    return '<button type="button" data-doc="' + k + '" class="' + (current === k ? "on" : "") + '">' +
+      esc(UI[LANG]["nav_" + k]) + "</button>";
+  }).join("");
+}
+
+function show(key){
+  current = key;
+  ORDER.forEach(function(k){
+    document.getElementById("doc-" + k).classList.toggle("on", k === key);
+  });
+  renderNav();
+  window.scrollTo(0, 0);
+}
+
+function applyLang(){
+  document.documentElement.lang = LANG;
+  document.documentElement.dir = LANG === "ar" ? "rtl" : "ltr";
+  document.title = LANG === "ar" ? "لوحة أبتال الخاصة · الشؤون النظامية" : "Uptal Private Board · Legal";
+  document.getElementById("langBtn").textContent = LANG === "ar" ? "English" : "عربي";
+  Array.prototype.forEach.call(document.querySelectorAll("[data-i18n]"), function(el){
+    el.textContent = UI[LANG][el.getAttribute("data-i18n")] || "";
+  });
+  ORDER.forEach(renderDoc);
+  renderNav();
+  show(current);
+}
+
+document.getElementById("langBtn").addEventListener("click", function(){
+  LANG = LANG === "ar" ? "en" : "ar";
+  try { localStorage.setItem("uptal_pjb_lang", LANG); } catch(e){}
+  applyLang();
+});
+document.getElementById("docNav").addEventListener("click", function(e){
+  var b = e.target.closest("[data-doc]");
+  if (b){
+    show(b.getAttribute("data-doc"));
+    /* keep the address bar in step so a chosen document stays linkable */
+    try { history.replaceState(null, "", "#" + b.getAttribute("data-doc")); } catch(err){}
+  }
+});
+
+/* arriving from the landing page: honour the requested document and language.
+   The hash is validated against ORDER first — show() only toggles ids it knows,
+   so an unrecognized key would hide every document and leave a blank page. */
+(function(){
+  var h = (location.hash || "").replace(/^#/, "");
+  if (ORDER.indexOf(h) !== -1) current = h;
+  var q = /[?&]lang=(ar|en)\b/.exec(location.search);
+  var stored = null; try { stored = localStorage.getItem("uptal_pjb_lang"); } catch(e){}
+  if (q) LANG = q[1];
+  else if (stored === "ar" || stored === "en") LANG = stored;
+})();
+window.addEventListener("hashchange", function(){
+  var h = (location.hash || "").replace(/^#/, "");
+  if (ORDER.indexOf(h) !== -1 && h !== current) show(h);
+});
+
+applyLang();
+
+</script>
+</body>
+</html>
