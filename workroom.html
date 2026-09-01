@@ -318,6 +318,8 @@ html.ce-on .ce-bar{display:flex}
 .ce-status{border-radius:99px;padding:3px 12px;font-weight:700;background:#4a3413;color:#F3C46B}
 .ce-status.approved{background:#0e3d22;color:#7CE98B}
 .ce-status.readonly{background:#2b3c5e;color:#c6d2e8}
+html.ce-preview .ce-bar{display:flex}
+html.ce-preview{scroll-padding-bottom:70px}
 html.ce-on [data-i18n][contenteditable],html.ce-on [data-i18n-html][contenteditable]{cursor:text}
 html.ce-on [data-i18n][contenteditable]:hover,html.ce-on [data-i18n-html][contenteditable]:hover{outline:1.5px dashed rgba(124,233,139,.7);outline-offset:3px}
 html.ce-on [contenteditable]:focus{outline:2px solid #7CE98B;outline-offset:3px}
@@ -555,6 +557,7 @@ html[lang=ar] .hero .sub{line-height:1.9}
 </head><body>
 <div class="ce-bar" id="ceBar" dir="ltr"><b>&#9998; Copy workroom</b><span class="ce-status" id="ceStatus">Loading saved copy&hellip;</span><span class="ce-n" id="ceCount">no unsaved edits</span>
 <button id="ceEn" type="button">EN</button><button id="ceAr" type="button">&#1593;&#1585;&#1576;&#1610;</button>
+<button id="cePrev" type="button">Preview page</button>
 <button id="ceSave" class="pri" type="button">Save to this link</button>
 <button id="ceApprove" class="ok" type="button">Approve</button>
 <button id="ceJson" type="button">Export JSON</button>
@@ -1644,12 +1647,42 @@ document.addEventListener("DOMContentLoaded", function(){
     renderBar();
     clearTimeout(saveT); saveT = setTimeout(persistLocal, 500);
   });
-  /* nothing on the page may act while words are edited - only the bar */
+  /* while EDITING, nothing on the page may act - only the bar. In PREVIEW the
+     page is fully live: links navigate, buttons work, the deck swipes. */
+  var previewing = false;
   document.addEventListener("click", function(e){
+    if (previewing) return;
     if (e.target.closest("#ceBar")) return;
     var nav = e.target.closest("a[href], button");
     if (nav){ e.preventDefault(); e.stopPropagation(); }
   }, true);
+  function enterPreview(){
+    previewing = true;
+    window.__ceOn = false;
+    document.documentElement.classList.remove("ce-on");
+    document.documentElement.classList.add("ce-preview");
+    $all("[contenteditable]").forEach(function(el){ el.removeAttribute("contenteditable"); });
+    $all("select.in").forEach(function(sel){
+      sel.style.display = "";
+      var face = document.getElementById("ceFace_" + sel.id);
+      if (face) face.style.display = "none";
+    });
+    $("#cePrev").textContent = "Back to editing";
+    barMsg("Preview - every button and link is live. Your edits are safe.");
+  }
+  function exitPreview(){
+    previewing = false;
+    window.__ceOn = true;
+    document.documentElement.classList.remove("ce-preview");
+    document.documentElement.classList.add("ce-on");
+    $all("select.in").forEach(function(sel){
+      var face = document.getElementById("ceFace_" + sel.id);
+      if (face) face.style.display = "";
+    });
+    $("#cePrev").textContent = "Preview page";
+    editifyAll();
+  }
+  $("#cePrev").addEventListener("click", function(){ previewing ? exitPreview() : enterPreview(); });
 
   /* ---- inline asks: name, then access code ---- */
   var pendingAction = null;
