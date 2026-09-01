@@ -302,6 +302,10 @@ html[dir=rtl] .hl-wipe::after{--seal-origin:0% 50%}
 /* copy-edit mode (?edit) - invisible to normal visitors */
 html.ce-on #mpResults .mcard{cursor:text}
 html.ce-on #mpResults .mcard:hover{outline:1.5px dashed rgba(124,233,139,.55);outline-offset:2px}
+html.ce-on *{-webkit-user-select:text!important;user-select:text!important}
+html.ce-on [contenteditable]{cursor:text}
+html.ce-on [contenteditable]:hover{outline:1.5px dashed rgba(124,233,139,.55);outline-offset:2px}
+.ce-selface{display:block;min-height:42px;cursor:text}
 .ce-bar{position:fixed;inset-inline:0;bottom:0;z-index:300;display:none;align-items:center;gap:10px;flex-wrap:wrap;
   background:#0B1526;color:#fff;padding:10px 18px;font-size:13px;box-shadow:0 -8px 30px rgba(2,8,23,.4)}
 html.ce-on .ce-bar{display:flex}
@@ -545,6 +549,7 @@ html[lang=ar] .hero .sub{line-height:1.9}
 </style>
 </head><body>
 <div class="ce-bar" id="ceBar" dir="ltr"><b>&#9998; Copy edit mode</b><span>click any text and type &middot; autosaves in this browser</span><span class="ce-n" id="ceCount">0 edits</span>
+<button id="ceEn" type="button">EN</button><button id="ceAr" type="button">&#1593;&#1585;&#1576;&#1610;</button>
 <button id="ceJson" type="button">Export changes</button>
 <button id="ceHtml" class="pri" type="button">Save as HTML</button>
 <button id="cePdf" type="button">Save as PDF</button>
@@ -1417,11 +1422,12 @@ document.addEventListener("DOMContentLoaded", function(){
 });
 
 /* ============================================================
-   COPY EDIT MODE (?edit) - every word on the page is editable.
-   Dictionary-bound text maps to keys; everything else (the demo
-   card's candidates, status lines) is tracked as freeform edits
-   re-applied by position. Autosaves per language. Exports: JSON
-   diff, a static baked HTML snapshot, or print-to-PDF.
+   COPY EDIT MODE (?edit) - v3: EVERY word is an editing host.
+   Outermost text-bearing elements become individually editable;
+   dictionary-bound ones map to keys, the rest are tracked by a
+   stable path and re-applied after every re-render. The deck is
+   settled and inert; the brief's dropdowns get editable faces;
+   language switching lives in the bar. Autosaves per language.
    ============================================================ */
 (function(){
   if (!/[?&]edit\b/.test(location.search)) return;
@@ -1429,14 +1435,13 @@ document.addEventListener("DOMContentLoaded", function(){
   document.documentElement.classList.add("ce-on");
   var LS = "upb_landing_copy_draft";
   var BASE = { en: JSON.parse(JSON.stringify(T.en)), ar: JSON.parse(JSON.stringify(T.ar)) };
-  var draft = { en: {}, ar: {} }, free = { en: {}, ar: {} };
+  var draft = { en: {}, ar: {} }, free = { en: {}, ar: {} }, freeBase = {};
   try {
     var st = JSON.parse(localStorage.getItem(LS) || "{}");
-    if (st.dict) { draft = Object.assign(draft, st.dict); free = Object.assign(free, st.free || {}); }
-    else if (st.en || st.ar) draft = Object.assign(draft, st);   /* v1 drafts carry over */
+    if (st.dict){ draft = Object.assign(draft, st.dict); free = Object.assign(free, st.free || {}); freeBase = st.freeBase || {}; }
+    else if (st.en || st.ar) draft = Object.assign(draft, st);
   } catch(e){}
 
-  function els(){ return $all("[data-i18n],[data-i18n-html]"); }
   function keyOf(el){ return el.getAttribute("data-i18n") || el.getAttribute("data-i18n-html"); }
   function isHtml(el){ return el.hasAttribute("data-i18n-html"); }
   function count(){
@@ -1445,127 +1450,136 @@ document.addEventListener("DOMContentLoaded", function(){
     $("#ceCount").textContent = n + (n === 1 ? " edit" : " edits");
   }
   function persist(){
-    try { localStorage.setItem(LS, JSON.stringify({dict: draft, free: free})); } catch(e){}
+    try { localStorage.setItem(LS, JSON.stringify({dict:draft, free:free, freeBase:freeBase})); } catch(e){}
   }
 
-  /* ---- freeform coverage: the demo card + JS-set status text ---- */
-  function freeRoots(){
-    return $all("#mpResults .mcard").concat([$("#mpFoot"), $("#mpTimerTx")].filter(Boolean));
-  }
+  /* ---- stable addressing for non-dictionary text ---- */
+  function idxIn(root, el){ return Array.prototype.indexOf.call(root.querySelectorAll("*"), el); }
   function freeId(el){
-    var card = el.closest ? el.closest(".mcard") : null;
-    if (card){
-      var all = Array.prototype.slice.call(card.querySelectorAll("*"));
-      var i = all.indexOf(el);
-      return i >= 0 ? "card:" + card.getAttribute("data-ref") + ":" + i : null;
-    }
-    return el.id ? "id:" + el.id : null;
+    if (el.id) return "id:" + el.id;
+    var card = el.closest(".mcard");
+    if (card && card.getAttribute("data-ref")) return "card:" + card.getAttribute("data-ref") + ":" + idxIn(card, el);
+    var anc = el.parentElement && el.parentElement.closest("[id]");
+    if (anc) return "n:" + anc.id + ":" + idxIn(anc, el);
+    return "b:" + idxIn(document.body, el);
   }
   function freeFind(id){
     var p = id.split(":");
-    if (p[0] === "id") return document.getElementById(p[1]);
-    var card = document.querySelector('#mpResults .mcard[data-ref="' + p[1] + '"]');
-    if (!card) return null;
-    return card.querySelectorAll("*")[Number(p[2])] || null;
+    if (p[0] === "id") return document.getElementById(p.slice(1).join(":"));
+    if (p[0] === "card"){
+      var card = document.querySelector('#mpResults .mcard[data-ref="' + p[1] + '"]');
+      return card ? (card.querySelectorAll("*")[+p[2]] || null) : null;
+    }
+    if (p[0] === "n"){
+      var root = document.getElementById(p[1]);
+      return root ? (root.querySelectorAll("*")[+p[2]] || null) : null;
+    }
+    return document.body.querySelectorAll("*")[+p[1]] || null;
   }
-  var freeBase = {};   /* per-language original text, captured before edits apply */
   function applyFree(){
     Object.keys(free[LANG]).forEach(function(id){
       var el = freeFind(id);
       if (!el) return;
-      if (freeBase[LANG + "::" + id] === undefined) freeBase[LANG + "::" + id] = el.textContent;
       el.textContent = free[LANG][id];
       el.classList.add("ce-dirty");
     });
   }
-  function editifyDeck(){
-    /* the deck must be settled and inert before its words open up */
-    try { settleMatch(); mp.timers.forEach(clearTimeout); mp.timers = []; } catch(e){}
-    freeRoots().forEach(function(r){ if (r){ r.setAttribute("contenteditable","true"); r.spellcheck = true; } });
-    applyFree();
+
+  /* ---- the dropdowns show one visible label each: give it an editable face ---- */
+  function selFaces(){
+    $all("select.in").forEach(function(sel){
+      if (!sel.id) return;
+      var face = document.getElementById("ceFace_" + sel.id);
+      if (!face){
+        face = document.createElement("span");
+        face.id = "ceFace_" + sel.id;
+        face.className = "in ce-selface";
+        sel.parentNode.insertBefore(face, sel.nextSibling);
+      }
+      sel.style.display = "none";
+      var opt = sel.selectedOptions && sel.selectedOptions[0];
+      face.textContent = opt ? opt.textContent : "";
+      face.setAttribute("contenteditable", "plaintext-only");
+      face.spellcheck = true;
+    });
   }
-  function decorate(){
-    els().forEach(function(el){
-      var k = keyOf(el);
-      if (!(k in T[LANG])) return;
+
+  /* ---- make every outermost text-bearing element an editing host ---- */
+  var SKIP = { SCRIPT:1, STYLE:1, SELECT:1, OPTION:1, INPUT:1, TEXTAREA:1 };
+  function editifyAll(){
+    try { settleMatch(); mp.timers.forEach(clearTimeout); mp.timers = []; } catch(e){}
+    selFaces();
+    $all("body *").forEach(function(el){
+      if (el.closest("#ceBar")) return;
+      if (SKIP[el.tagName]) return;
+      if (el.namespaceURI && String(el.namespaceURI).indexOf("svg") >= 0) return;
+      if (el.parentElement && el.parentElement.closest("[contenteditable]")) return;
+      var direct = Array.prototype.some.call(el.childNodes, function(n){ return n.nodeType === 3 && /\S/.test(n.nodeValue); });
+      var bound = el.hasAttribute("data-i18n") || el.hasAttribute("data-i18n-html");
+      if (!direct && !bound) return;
       el.setAttribute("contenteditable", isHtml(el) ? "true" : "plaintext-only");
       el.spellcheck = true;
-      el.classList.toggle("ce-dirty", draft[LANG][k] !== undefined);
+      if (bound) el.classList.toggle("ce-dirty", draft[LANG][keyOf(el)] !== undefined);
     });
+    applyFree();
+    count();
   }
   function applyDrafts(){
     Object.keys(draft[LANG]).forEach(function(k){ T[LANG][k] = draft[LANG][k]; });
-    els().forEach(function(el){
+    $all("[data-i18n],[data-i18n-html]").forEach(function(el){
       var k = keyOf(el);
       if (draft[LANG][k] === undefined) return;
       if (isHtml(el)) el.innerHTML = draft[LANG][k]; else el.textContent = draft[LANG][k];
     });
-    decorate(); count();
-    setTimeout(editifyDeck, 30);   /* applyLang re-runs the match; settle and re-open it */
+    setTimeout(editifyAll, 30);   /* applyLang re-renders the deck; settle it and reopen every host */
   }
   var _applyLang = applyLang;
   applyLang = function(){ _applyLang(); applyDrafts(); };
   applyDrafts();
-  document.addEventListener("DOMContentLoaded", function(){ setTimeout(editifyDeck, 80); });
+  document.addEventListener("DOMContentLoaded", function(){ setTimeout(editifyAll, 80); });
 
+  /* ---- edit tracking ---- */
   var saveT = null;
+  document.addEventListener("focusin", function(e){
+    var host = e.target;
+    if (!host.getAttribute || host.getAttribute("contenteditable") == null) return;
+    if (host.closest("#ceBar") || host.closest("[data-i18n],[data-i18n-html]")) return;
+    var id = freeId(host), bk = LANG + "::" + id;
+    if (freeBase[bk] === undefined && free[LANG][id] === undefined) freeBase[bk] = host.textContent;
+  });
   document.addEventListener("input", function(e){
-    var el = e.target.closest("[data-i18n],[data-i18n-html]");
-    if (el){
-      var k = keyOf(el), v = isHtml(el) ? el.innerHTML : el.textContent;
+    var host = e.target && e.target.closest ? e.target.closest("[contenteditable]") : null;
+    if (!host || host.closest("#ceBar")) return;
+    var dictEl = host.closest("[data-i18n],[data-i18n-html]");
+    if (dictEl){
+      var k = keyOf(dictEl), v = isHtml(dictEl) ? dictEl.innerHTML : dictEl.textContent;
       if (v === BASE[LANG][k]) delete draft[LANG][k]; else draft[LANG][k] = v;
       T[LANG][k] = v;
-      el.classList.toggle("ce-dirty", draft[LANG][k] !== undefined);
+      dictEl.classList.toggle("ce-dirty", draft[LANG][k] !== undefined);
     } else {
-      var t2 = e.target.closest && e.target.closest("#mpResults .mcard,[id=mpFoot],[id=mpTimerTx]");
-      if (!t2) return;
-      /* attribute the edit to the deepest element that directly holds text */
-      var node = document.getSelection && document.getSelection().anchorNode;
-      var host = node ? (node.nodeType === 3 ? node.parentElement : node) : t2;
-      var id = freeId(host);
-      if (!id) return;
-      var bk = LANG + "::" + id;
-      if (freeBase[bk] === undefined) freeBase[bk] = free[LANG][id] !== undefined ? freeBase[bk] : host.textContent;
-      /* capture AFTER the input landed */
+      var id = freeId(host), bk = LANG + "::" + id;
+      if (freeBase[bk] === undefined) freeBase[bk] = host.textContent;
       var now = host.textContent;
-      if (freeBase[bk] !== undefined && now === freeBase[bk]) { delete free[LANG][id]; host.classList.remove("ce-dirty"); }
+      if (now === freeBase[bk]){ delete free[LANG][id]; host.classList.remove("ce-dirty"); }
       else { free[LANG][id] = now; host.classList.add("ce-dirty"); }
     }
-    count();
-    clearTimeout(saveT); saveT = setTimeout(persist, 500);
+    count(); clearTimeout(saveT); saveT = setTimeout(persist, 500);
   });
-  /* freeform originals must be caught before the first keystroke */
-  document.addEventListener("focusin", function(e){
-    var host = e.target.closest && e.target.closest("#mpResults .mcard,[id=mpFoot],[id=mpTimerTx]");
-    if (!host) return;
-    setTimeout(function(){
-      var sel = document.getSelection && document.getSelection().anchorNode;
-      var el = sel ? (sel.nodeType === 3 ? sel.parentElement : sel) : null;
-      if (!el) return;
-      var id = freeId(el), bk = LANG + "::" + (id || "");
-      if (id && freeBase[bk] === undefined && free[LANG][id] === undefined) freeBase[bk] = el.textContent;
-    }, 0);
-  });
-  document.addEventListener("selectionchange", function(){
-    var sel = document.getSelection && document.getSelection().anchorNode;
-    var el = sel ? (sel.nodeType === 3 ? sel.parentElement : sel) : null;
-    if (!el || !el.closest) return;
-    if (!el.closest("#mpResults .mcard")) return;
-    var id = freeId(el), bk = LANG + "::" + (id || "");
-    if (id && freeBase[bk] === undefined && free[LANG][id] === undefined) freeBase[bk] = el.textContent;
-  });
-  /* navigation and deck actions would throw edits away */
+  /* nothing on the page may act while words are being edited - only the bar */
   document.addEventListener("click", function(e){
-    if (e.target.closest("#ceBar") || e.target.closest("#langBtn")) return;
-    var nav = e.target.closest("a[href], #bfGo, #btnYes, #btnNo, #mpReplay, #mpReplay2");
+    if (e.target.closest("#ceBar")) return;
+    var nav = e.target.closest("a[href], button");
     if (nav){ e.preventDefault(); e.stopPropagation(); }
   }, true);
 
+  /* ---- the bar ---- */
   function dl(name, type, text){
     var blob = new Blob([text], {type: type});
     var a = document.createElement("a");
     a.href = URL.createObjectURL(blob); a.download = name; a.click();
   }
+  $("#ceEn").addEventListener("click", function(){ setLang("en"); });
+  $("#ceAr").addEventListener("click", function(){ setLang("ar"); });
   $("#ceJson").addEventListener("click", function(){
     var dict = [], freeform = [];
     ["en","ar"].forEach(function(lg){
@@ -1580,7 +1594,6 @@ document.addEventListener("DOMContentLoaded", function(){
        "application/json", JSON.stringify({dict:dict, freeform:freeform}, null, 2));
   });
   $("#ceHtml").addEventListener("click", function(){
-    /* a static snapshot of exactly what is on screen - every edit included */
     var clone = document.documentElement.cloneNode(true);
     Array.prototype.slice.call(clone.querySelectorAll("script")).forEach(function(x){ x.remove(); });
     var bar = clone.querySelector("#ceBar"); if (bar) bar.remove();
@@ -1599,7 +1612,7 @@ document.addEventListener("DOMContentLoaded", function(){
   $("#ceExit").addEventListener("click", function(){
     location.href = location.pathname + location.hash;
   });
-  decorate(); count();
+  count();
 })();
 </script>
 </body>
