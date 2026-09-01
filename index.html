@@ -299,6 +299,20 @@ html[dir=rtl] .hl-wipe::after{--seal-origin:0% 50%}
      once the hero stops stretching the panel */
   .mp .mp-body{min-height:clamp(420px,118vw,520px)}
 }
+/* copy-edit mode (?edit) - invisible to normal visitors */
+.ce-bar{position:fixed;inset-inline:0;bottom:0;z-index:300;display:none;align-items:center;gap:10px;flex-wrap:wrap;
+  background:#0B1526;color:#fff;padding:10px 18px;font-size:13px;box-shadow:0 -8px 30px rgba(2,8,23,.4)}
+html.ce-on .ce-bar{display:flex}
+.ce-bar b{color:#7CE98B}
+.ce-bar .ce-n{background:#1d2b47;border-radius:99px;padding:2px 10px}
+.ce-bar button{border:0;border-radius:99px;padding:7px 14px;font-size:12.5px;font-weight:700;cursor:pointer;background:#2b3c5e;color:#fff}
+.ce-bar button.pri{background:#22c05e;color:#06250f}
+html.ce-on [data-i18n][contenteditable],html.ce-on [data-i18n-html][contenteditable]{cursor:text}
+html.ce-on [data-i18n][contenteditable]:hover,html.ce-on [data-i18n-html][contenteditable]:hover{outline:1.5px dashed rgba(124,233,139,.7);outline-offset:3px}
+html.ce-on [contenteditable]:focus{outline:2px solid #7CE98B;outline-offset:3px}
+html.ce-on .ce-dirty{outline:2px solid #E8A13A!important;outline-offset:3px;border-radius:3px}
+html.ce-on{scroll-padding-bottom:70px}
+@media print{.ce-bar{display:none!important}}
 /* short desktop viewports scroll instead of clipping the demo's action bar */
 @media (max-height:660px){.hero-in{height:auto;max-height:none;min-height:0}}
 .gate-chips .chip-dark svg{width:12px;height:12px;color:var(--flash);flex:none}
@@ -528,6 +542,12 @@ html[lang=ar] .hero .sub{line-height:1.9}
 }
 </style>
 </head><body>
+<div class="ce-bar" id="ceBar" dir="ltr"><b>&#9998; Copy edit mode</b><span>click any text and type &middot; autosaves in this browser</span><span class="ce-n" id="ceCount">0 edits</span>
+<button id="ceJson" type="button">Export changes</button>
+<button id="ceHtml" class="pri" type="button">Save as HTML</button>
+<button id="cePdf" type="button">Save as PDF</button>
+<button id="ceReset" type="button">Reset</button>
+<button id="ceExit" type="button">Exit</button></div>
 <a class="skip" href="#main" data-i18n="skip"></a>
 
 <svg style="display:none" aria-hidden="true">
@@ -1390,6 +1410,106 @@ document.addEventListener("DOMContentLoaded", function(){
     window.location.href = boardHref();
   });
 });
+
+/* ============================================================
+   COPY EDIT MODE (?edit) - the copywriter edits the real page.
+   Drafts autosave to localStorage per language; exports: JSON diff,
+   a baked standalone HTML, or print-to-PDF. Never runs for visitors.
+   ============================================================ */
+(function(){
+  if (!/[?&]edit\b/.test(location.search)) return;
+  document.documentElement.classList.add("ce-on");
+  var LS = "upb_landing_copy_draft";
+  var BASE = { en: JSON.parse(JSON.stringify(T.en)), ar: JSON.parse(JSON.stringify(T.ar)) };
+  var draft = { en: {}, ar: {} };
+  try { draft = Object.assign(draft, JSON.parse(localStorage.getItem(LS) || "{}")); } catch(e){}
+
+  function els(){ return $all("[data-i18n],[data-i18n-html]"); }
+  function keyOf(el){ return el.getAttribute("data-i18n") || el.getAttribute("data-i18n-html"); }
+  function isHtml(el){ return el.hasAttribute("data-i18n-html"); }
+  function valOf(el){ return isHtml(el) ? el.innerHTML : el.textContent; }
+  function count(){
+    var n = Object.keys(draft.en).length + Object.keys(draft.ar).length;
+    $("#ceCount").textContent = n + (n === 1 ? " edit" : " edits");
+    return n;
+  }
+  function decorate(){
+    els().forEach(function(el){
+      var k = keyOf(el);
+      if (!(k in T[LANG])) return;
+      el.setAttribute("contenteditable", isHtml(el) ? "true" : "plaintext-only");
+      el.spellcheck = true;
+      el.classList.toggle("ce-dirty", draft[LANG][k] !== undefined);
+    });
+  }
+  function applyDrafts(){
+    Object.keys(draft[LANG]).forEach(function(k){ T[LANG][k] = draft[LANG][k]; });
+    els().forEach(function(el){
+      var k = keyOf(el);
+      if (draft[LANG][k] === undefined) return;
+      if (isHtml(el)) el.innerHTML = draft[LANG][k]; else el.textContent = draft[LANG][k];
+    });
+    decorate(); count();
+  }
+  /* every applyLang() repaints from T, so drafts must ride along */
+  var _applyLang = applyLang;
+  applyLang = function(){ _applyLang(); applyDrafts(); };
+  applyDrafts();
+
+  var saveT = null;
+  document.addEventListener("input", function(e){
+    var el = e.target.closest("[data-i18n],[data-i18n-html]");
+    if (!el) return;
+    var k = keyOf(el), v = valOf(el);
+    if (v === BASE[LANG][k]) delete draft[LANG][k]; else draft[LANG][k] = v;
+    T[LANG][k] = v;
+    el.classList.toggle("ce-dirty", draft[LANG][k] !== undefined);
+    count();
+    clearTimeout(saveT);
+    saveT = setTimeout(function(){ try { localStorage.setItem(LS, JSON.stringify(draft)); } catch(e){} }, 500);
+  });
+  /* navigation would throw edits away - block everything except the bar and the language pill */
+  document.addEventListener("click", function(e){
+    if (e.target.closest("#ceBar") || e.target.closest("#langBtn")) return;
+    var nav = e.target.closest("a[href], #bfGo");
+    if (nav){ e.preventDefault(); e.stopPropagation(); }
+  }, true);
+
+  function dl(name, type, text){
+    var blob = new Blob([text], {type: type});
+    var a = document.createElement("a");
+    a.href = URL.createObjectURL(blob); a.download = name; a.click();
+  }
+  $("#ceJson").addEventListener("click", function(){
+    var out = [];
+    ["en","ar"].forEach(function(lg){
+      Object.keys(draft[lg]).forEach(function(k){
+        out.push({file:"landing", key:k, lang:lg, before:BASE[lg][k], after:draft[lg][k]});
+      });
+    });
+    dl("uptal_landing_edits_" + new Date().toISOString().slice(0,10) + ".json", "application/json", JSON.stringify(out, null, 2));
+  });
+  $("#ceHtml").addEventListener("click", function(){
+    fetch(location.pathname).then(function(r){ return r.text(); }).then(function(src){
+      var inject = "<script>/* copy edits baked " + new Date().toISOString().slice(0,10) + " */" +
+        "Object.assign(T.en," + JSON.stringify(draft.en) + ");" +
+        "Object.assign(T.ar," + JSON.stringify(draft.ar) + ");<\/script>";
+      dl("Uptal_Landing_edited.html", "text/html", src.replace("</body>", inject + "</body>"));
+    }).catch(function(){ alert("Save as HTML needs the hosted page (it re-fetches its own source)."); });
+  });
+  $("#cePdf").addEventListener("click", function(){ window.print(); });
+  $("#ceReset").addEventListener("click", function(){
+    if (!confirm("Discard every edit and restore the original copy?")) return;
+    draft = { en: {}, ar: {} };
+    try { localStorage.removeItem(LS); } catch(e){}
+    T.en = JSON.parse(JSON.stringify(BASE.en)); T.ar = JSON.parse(JSON.stringify(BASE.ar));
+    applyLang();
+  });
+  $("#ceExit").addEventListener("click", function(){
+    location.href = location.pathname + location.hash;
+  });
+  decorate(); count();
+})();
 </script>
 </body>
 </html>
