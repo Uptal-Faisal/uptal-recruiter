@@ -300,6 +300,8 @@ html[dir=rtl] .hl-wipe::after{--seal-origin:0% 50%}
   .mp .mp-body{min-height:clamp(420px,118vw,520px)}
 }
 /* copy-edit mode (?edit) - invisible to normal visitors */
+html.ce-on #mpResults .mcard{cursor:text}
+html.ce-on #mpResults .mcard:hover{outline:1.5px dashed rgba(124,233,139,.55);outline-offset:2px}
 .ce-bar{position:fixed;inset-inline:0;bottom:0;z-index:300;display:none;align-items:center;gap:10px;flex-wrap:wrap;
   background:#0B1526;color:#fff;padding:10px 18px;font-size:13px;box-shadow:0 -8px 30px rgba(2,8,23,.4)}
 html.ce-on .ce-bar{display:flex}
@@ -1209,6 +1211,7 @@ function settleMatch(){
   mp.timers.push(setTimeout(nudgeDeck, 6500));
 }
 function nudgeDeck(){
+  if (window.__ceOn) return;
   if (REDUCED || !mp.done || mp.yes + mp.no > 0) return;
   var el = topCard();
   if (!el || el.dataset.decided) return;
@@ -1251,6 +1254,7 @@ function springBack(el){
   setStamp(el, "");
 }
 function decide(kind){
+  if (window.__ceOn) return;
   if (!mp.done) return;                       /* the match must land before you can judge it */
   var el = topCard();
   if (!el || el.dataset.decided) return;      /* no double-decide during the flyout */
@@ -1289,6 +1293,7 @@ function decide(kind){
     if (n) n.style.opacity = logical < -10 ? a : 0;
   }
   stage.addEventListener("pointerdown", function(e){
+    if (window.__ceOn) return;              /* copy edit mode: text selection, not swiping */
     if (!mp.done) return;
     var el = topCard();
     if (!el || el.dataset.decided) return;
@@ -1412,26 +1417,72 @@ document.addEventListener("DOMContentLoaded", function(){
 });
 
 /* ============================================================
-   COPY EDIT MODE (?edit) - the copywriter edits the real page.
-   Drafts autosave to localStorage per language; exports: JSON diff,
-   a baked standalone HTML, or print-to-PDF. Never runs for visitors.
+   COPY EDIT MODE (?edit) - every word on the page is editable.
+   Dictionary-bound text maps to keys; everything else (the demo
+   card's candidates, status lines) is tracked as freeform edits
+   re-applied by position. Autosaves per language. Exports: JSON
+   diff, a static baked HTML snapshot, or print-to-PDF.
    ============================================================ */
 (function(){
   if (!/[?&]edit\b/.test(location.search)) return;
+  window.__ceOn = true;
   document.documentElement.classList.add("ce-on");
   var LS = "upb_landing_copy_draft";
   var BASE = { en: JSON.parse(JSON.stringify(T.en)), ar: JSON.parse(JSON.stringify(T.ar)) };
-  var draft = { en: {}, ar: {} };
-  try { draft = Object.assign(draft, JSON.parse(localStorage.getItem(LS) || "{}")); } catch(e){}
+  var draft = { en: {}, ar: {} }, free = { en: {}, ar: {} };
+  try {
+    var st = JSON.parse(localStorage.getItem(LS) || "{}");
+    if (st.dict) { draft = Object.assign(draft, st.dict); free = Object.assign(free, st.free || {}); }
+    else if (st.en || st.ar) draft = Object.assign(draft, st);   /* v1 drafts carry over */
+  } catch(e){}
 
   function els(){ return $all("[data-i18n],[data-i18n-html]"); }
   function keyOf(el){ return el.getAttribute("data-i18n") || el.getAttribute("data-i18n-html"); }
   function isHtml(el){ return el.hasAttribute("data-i18n-html"); }
-  function valOf(el){ return isHtml(el) ? el.innerHTML : el.textContent; }
   function count(){
-    var n = Object.keys(draft.en).length + Object.keys(draft.ar).length;
+    var n = Object.keys(draft.en).length + Object.keys(draft.ar).length +
+            Object.keys(free.en).length + Object.keys(free.ar).length;
     $("#ceCount").textContent = n + (n === 1 ? " edit" : " edits");
-    return n;
+  }
+  function persist(){
+    try { localStorage.setItem(LS, JSON.stringify({dict: draft, free: free})); } catch(e){}
+  }
+
+  /* ---- freeform coverage: the demo card + JS-set status text ---- */
+  function freeRoots(){
+    return $all("#mpResults .mcard").concat([$("#mpFoot"), $("#mpTimerTx")].filter(Boolean));
+  }
+  function freeId(el){
+    var card = el.closest ? el.closest(".mcard") : null;
+    if (card){
+      var all = Array.prototype.slice.call(card.querySelectorAll("*"));
+      var i = all.indexOf(el);
+      return i >= 0 ? "card:" + card.getAttribute("data-ref") + ":" + i : null;
+    }
+    return el.id ? "id:" + el.id : null;
+  }
+  function freeFind(id){
+    var p = id.split(":");
+    if (p[0] === "id") return document.getElementById(p[1]);
+    var card = document.querySelector('#mpResults .mcard[data-ref="' + p[1] + '"]');
+    if (!card) return null;
+    return card.querySelectorAll("*")[Number(p[2])] || null;
+  }
+  var freeBase = {};   /* per-language original text, captured before edits apply */
+  function applyFree(){
+    Object.keys(free[LANG]).forEach(function(id){
+      var el = freeFind(id);
+      if (!el) return;
+      if (freeBase[LANG + "::" + id] === undefined) freeBase[LANG + "::" + id] = el.textContent;
+      el.textContent = free[LANG][id];
+      el.classList.add("ce-dirty");
+    });
+  }
+  function editifyDeck(){
+    /* the deck must be settled and inert before its words open up */
+    try { settleMatch(); mp.timers.forEach(clearTimeout); mp.timers = []; } catch(e){}
+    freeRoots().forEach(function(r){ if (r){ r.setAttribute("contenteditable","true"); r.spellcheck = true; } });
+    applyFree();
   }
   function decorate(){
     els().forEach(function(el){
@@ -1450,28 +1501,63 @@ document.addEventListener("DOMContentLoaded", function(){
       if (isHtml(el)) el.innerHTML = draft[LANG][k]; else el.textContent = draft[LANG][k];
     });
     decorate(); count();
+    setTimeout(editifyDeck, 30);   /* applyLang re-runs the match; settle and re-open it */
   }
-  /* every applyLang() repaints from T, so drafts must ride along */
   var _applyLang = applyLang;
   applyLang = function(){ _applyLang(); applyDrafts(); };
   applyDrafts();
+  document.addEventListener("DOMContentLoaded", function(){ setTimeout(editifyDeck, 80); });
 
   var saveT = null;
   document.addEventListener("input", function(e){
     var el = e.target.closest("[data-i18n],[data-i18n-html]");
-    if (!el) return;
-    var k = keyOf(el), v = valOf(el);
-    if (v === BASE[LANG][k]) delete draft[LANG][k]; else draft[LANG][k] = v;
-    T[LANG][k] = v;
-    el.classList.toggle("ce-dirty", draft[LANG][k] !== undefined);
+    if (el){
+      var k = keyOf(el), v = isHtml(el) ? el.innerHTML : el.textContent;
+      if (v === BASE[LANG][k]) delete draft[LANG][k]; else draft[LANG][k] = v;
+      T[LANG][k] = v;
+      el.classList.toggle("ce-dirty", draft[LANG][k] !== undefined);
+    } else {
+      var t2 = e.target.closest && e.target.closest("#mpResults .mcard,[id=mpFoot],[id=mpTimerTx]");
+      if (!t2) return;
+      /* attribute the edit to the deepest element that directly holds text */
+      var node = document.getSelection && document.getSelection().anchorNode;
+      var host = node ? (node.nodeType === 3 ? node.parentElement : node) : t2;
+      var id = freeId(host);
+      if (!id) return;
+      var bk = LANG + "::" + id;
+      if (freeBase[bk] === undefined) freeBase[bk] = free[LANG][id] !== undefined ? freeBase[bk] : host.textContent;
+      /* capture AFTER the input landed */
+      var now = host.textContent;
+      if (freeBase[bk] !== undefined && now === freeBase[bk]) { delete free[LANG][id]; host.classList.remove("ce-dirty"); }
+      else { free[LANG][id] = now; host.classList.add("ce-dirty"); }
+    }
     count();
-    clearTimeout(saveT);
-    saveT = setTimeout(function(){ try { localStorage.setItem(LS, JSON.stringify(draft)); } catch(e){} }, 500);
+    clearTimeout(saveT); saveT = setTimeout(persist, 500);
   });
-  /* navigation would throw edits away - block everything except the bar and the language pill */
+  /* freeform originals must be caught before the first keystroke */
+  document.addEventListener("focusin", function(e){
+    var host = e.target.closest && e.target.closest("#mpResults .mcard,[id=mpFoot],[id=mpTimerTx]");
+    if (!host) return;
+    setTimeout(function(){
+      var sel = document.getSelection && document.getSelection().anchorNode;
+      var el = sel ? (sel.nodeType === 3 ? sel.parentElement : sel) : null;
+      if (!el) return;
+      var id = freeId(el), bk = LANG + "::" + (id || "");
+      if (id && freeBase[bk] === undefined && free[LANG][id] === undefined) freeBase[bk] = el.textContent;
+    }, 0);
+  });
+  document.addEventListener("selectionchange", function(){
+    var sel = document.getSelection && document.getSelection().anchorNode;
+    var el = sel ? (sel.nodeType === 3 ? sel.parentElement : sel) : null;
+    if (!el || !el.closest) return;
+    if (!el.closest("#mpResults .mcard")) return;
+    var id = freeId(el), bk = LANG + "::" + (id || "");
+    if (id && freeBase[bk] === undefined && free[LANG][id] === undefined) freeBase[bk] = el.textContent;
+  });
+  /* navigation and deck actions would throw edits away */
   document.addEventListener("click", function(e){
     if (e.target.closest("#ceBar") || e.target.closest("#langBtn")) return;
-    var nav = e.target.closest("a[href], #bfGo");
+    var nav = e.target.closest("a[href], #bfGo, #btnYes, #btnNo, #mpReplay, #mpReplay2");
     if (nav){ e.preventDefault(); e.stopPropagation(); }
   }, true);
 
@@ -1481,29 +1567,34 @@ document.addEventListener("DOMContentLoaded", function(){
     a.href = URL.createObjectURL(blob); a.download = name; a.click();
   }
   $("#ceJson").addEventListener("click", function(){
-    var out = [];
+    var dict = [], freeform = [];
     ["en","ar"].forEach(function(lg){
       Object.keys(draft[lg]).forEach(function(k){
-        out.push({file:"landing", key:k, lang:lg, before:BASE[lg][k], after:draft[lg][k]});
+        dict.push({file:"landing", key:k, lang:lg, before:BASE[lg][k], after:draft[lg][k]});
+      });
+      Object.keys(free[lg]).forEach(function(id){
+        freeform.push({where:id, lang:lg, before:freeBase[lg + "::" + id], after:free[lg][id]});
       });
     });
-    dl("uptal_landing_edits_" + new Date().toISOString().slice(0,10) + ".json", "application/json", JSON.stringify(out, null, 2));
+    dl("uptal_landing_edits_" + new Date().toISOString().slice(0,10) + ".json",
+       "application/json", JSON.stringify({dict:dict, freeform:freeform}, null, 2));
   });
   $("#ceHtml").addEventListener("click", function(){
-    fetch(location.pathname).then(function(r){ return r.text(); }).then(function(src){
-      var inject = "<script>/* copy edits baked " + new Date().toISOString().slice(0,10) + " */" +
-        "Object.assign(T.en," + JSON.stringify(draft.en) + ");" +
-        "Object.assign(T.ar," + JSON.stringify(draft.ar) + ");<\/script>";
-      dl("Uptal_Landing_edited.html", "text/html", src.replace("</body>", inject + "</body>"));
-    }).catch(function(){ alert("Save as HTML needs the hosted page (it re-fetches its own source)."); });
+    /* a static snapshot of exactly what is on screen - every edit included */
+    var clone = document.documentElement.cloneNode(true);
+    Array.prototype.slice.call(clone.querySelectorAll("script")).forEach(function(x){ x.remove(); });
+    var bar = clone.querySelector("#ceBar"); if (bar) bar.remove();
+    Array.prototype.slice.call(clone.querySelectorAll("[contenteditable]")).forEach(function(x){ x.removeAttribute("contenteditable"); });
+    Array.prototype.slice.call(clone.querySelectorAll(".ce-dirty")).forEach(function(x){ x.classList.remove("ce-dirty"); });
+    clone.classList.remove("ce-on");
+    dl("Uptal_Landing_edited.html", "text/html",
+       "<!doctype html>\n<!-- static copy proof, baked " + new Date().toISOString().slice(0,10) + " -->\n" + clone.outerHTML);
   });
   $("#cePdf").addEventListener("click", function(){ window.print(); });
   $("#ceReset").addEventListener("click", function(){
     if (!confirm("Discard every edit and restore the original copy?")) return;
-    draft = { en: {}, ar: {} };
     try { localStorage.removeItem(LS); } catch(e){}
-    T.en = JSON.parse(JSON.stringify(BASE.en)); T.ar = JSON.parse(JSON.stringify(BASE.ar));
-    applyLang();
+    location.reload();
   });
   $("#ceExit").addEventListener("click", function(){
     location.href = location.pathname + location.hash;
