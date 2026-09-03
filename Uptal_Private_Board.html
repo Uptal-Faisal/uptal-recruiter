@@ -2155,6 +2155,10 @@
   .wiz-foot{display:flex;gap:10px;justify-content:space-between;margin-block-start:20px}
   .wiz-foot .btn{min-width:120px}
   .wiz-foot .wf-spacer{flex:1}
+  .wiz-signin{margin-block-start:14px;padding-block-start:14px;border-top:1px solid var(--hair);
+    text-align:center;font-size:var(--fs-3);color:var(--muted)}
+  .wiz-signin button{color:var(--persian);font-weight:700;padding:2px 4px;border-radius:6px}
+  .wiz-signin button:hover{text-decoration:underline}
   .field-err{font-size:var(--fs-2);color:var(--red-ink);margin-block-start:4px}
   .field .hint{font-size:var(--fs-1);color:var(--muted);margin-block-start:2px;line-height:1.45}
   .in.err{border-color:var(--red)}
@@ -3542,7 +3546,7 @@ en:{
   su_attest:"I confirm I am authorized to hire and to represent {entity} on the Uptal Private Board, and that the information provided is accurate and subject to verification.",
   su_agree_terms:"I agree to the Board Terms and consent to processing under the Personal Data Protection Law (PDPL).",
   su_agree_prohibit:"I understand that data-scraping, pipeline-building, CV-collecting, and fake postings are prohibited, that recruitment agencies may not register, and that violations result in loss of access and legal action.",
-   su_back:"Back", 
+   su_back:"Back", su_have_acct:"Already have a dashboard?", su_signin_cta:"Log in", 
   pend_h:"Under review",   
   av_pill:"AGENT DECISION",
   av_d_approve:"Activated automatically",
@@ -5255,7 +5259,7 @@ ar:{
   su_attest:"أُقرّ بأنني مخوّل بالتوظيف وبتمثيل {entity} على لوحة أبتال الخاصة، وأن المعلومات المقدَّمة صحيحة وخاضعة للتحقق.",
   su_agree_terms:"أوافق على شروط اللوحة وعلى معالجة البيانات وفق نظام حماية البيانات الشخصية.",
   su_agree_prohibit:"أُدرك أن كشط البيانات وبناء قواعد المرشحين وجمع السير الذاتية ونشر إعلانات وهمية أفعال محظورة، وأن وكالات التوظيف لا يحق لها التسجيل، وأن المخالفة تؤدي إلى الحرمان من الوصول واتخاذ إجراءات قانونية.",
-   su_back:"رجوع", 
+   su_back:"رجوع", su_have_acct:"لديك لوحة تحكم بالفعل؟", su_signin_cta:"تسجيل الدخول", 
   pend_h:"قيد المراجعة",   
   av_pill:"قرار الوكلاء",
   av_d_approve:"فُعِّل تلقائياً",
@@ -16301,7 +16305,8 @@ function renderSignup(){
       '<div class="wiz-why">'+SU_IINFO+'<span>'+t("su_lite_note")+'</span></div>'+
       '<button class="btn btn-pri btn-lg" type="button" data-act="create">'+t("su_create")+'</button>';
   }
-  var foot='<div class="wiz-foot" style="justify-content:flex-start"><button class="btn btn-ghost" type="button" data-wiz="back">'+t("su_back")+'</button></div>';
+  var foot='<div class="wiz-foot" style="justify-content:flex-start"><button class="btn btn-ghost" type="button" data-wiz="back">'+t("su_back")+'</button></div>'+
+    '<p class="wiz-signin">'+t("su_have_acct")+' <button type="button" data-wiz="signin">'+t("su_signin_cta")+'</button></p>';
   $("#wizBody").innerHTML=h+block+foot;
 }
 
@@ -16432,6 +16437,8 @@ function onSignupClick(e){
     return; }
   var wiz=e.target.closest("[data-wiz]");
   if(wiz && wiz.getAttribute("data-wiz")==="back"){ clearSignup(); showAuth("gate"); }
+  /* someone who already has a dashboard is not signing up: hand them the gate */
+  if(wiz && wiz.getAttribute("data-wiz")==="signin"){ clearSignup(); showAuth("gate"); var ge=$("#gEmail"); if(ge) ge.focus(); }
 }
 function focusFirstErr(root){ var el=document.querySelector((root||"#wizBody")+" .in.err"); if(el && el.focus){ try{ el.focus(); }catch(x){} } }
 /* needs-info reasons map to the fields they implicate; the err values are dict keys */
