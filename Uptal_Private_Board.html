@@ -19004,6 +19004,23 @@ document.addEventListener("DOMContentLoaded", function(){
     if (ltry && ltry.status === "draft" && ltry.mode === "try"){ state.signup = ltry; showAuth("signup"); return; }
     startTry(); return;
   }
+  /* the login page's handoff: it collected the work email and the code, we run
+     the real sign-in here so auth lives in one place. Ahead of any half-finished
+     signup draft - someone asking to log in is not signing up. */
+  if (location.hash === "#signin"){
+    var lg = null;
+    try { lg = JSON.parse(localStorage.getItem("upb_login") || "null"); } catch(e){}
+    try { localStorage.removeItem("upb_login"); } catch(e){}
+    showAuth("gate");
+    if (lg && lg.email && (Date.now() - (lg.at || 0)) < 600000){
+      var lgBy = rehydrateWorkspaces(), lgWid = lgBy[String(lg.email).toLowerCase()];
+      if (lgWid && TENANTS[lgWid]){ enter(lgWid); return; }
+      /* no dashboard on that address: keep them on the gate with it filled in */
+      var gEm = $("#gEmail"); if (gEm) gEm.value = lg.email;
+      toast(t("gate_no_ws"), "error");
+    }
+    return;
+  }
   /* a signup in progress (auth layer, localStorage) takes precedence over a live shell
      (sessionStorage); the one-screen signup only ever holds a draft */
   var sig = null;

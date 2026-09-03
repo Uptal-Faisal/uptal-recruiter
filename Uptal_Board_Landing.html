@@ -201,6 +201,9 @@ html[dir=rtl] .ksa-badge{padding:5px 8px 5px 12px}
   padding:6px 14px;font-size:13px;font-weight:600;transition:background .15s;
 }
 .lang-pill:hover{background:rgba(255,255,255,.1)}
+.login-link{color:#fff;font-size:13.5px;font-weight:600;padding:6px 12px;border-radius:var(--r-pill);
+  white-space:nowrap;transition:background .15s,opacity .15s;opacity:.92}
+.login-link:hover{background:rgba(255,255,255,.1);opacity:1}
 .topbar .btn-flash{min-height:38px;padding:8px 18px;font-size:14px}
 @media (max-width:760px){
   
@@ -215,6 +218,7 @@ html[dir=rtl] .ksa-badge{padding:5px 8px 5px 12px}
   .topbar-in{gap:10px}
   .topbar .btn-flash{padding:8px 15px}
   .lang-pill{padding:6px 11px}
+  .login-link{padding:6px 8px;font-size:13px}
 }
 
 /* ============================================================
@@ -587,6 +591,7 @@ html[lang=ar] .hero .sub{line-height:1.9}
     </span>
     <nav class="topnav" aria-label="Main">
       <button class="lang-pill" id="langBtn" type="button"></button>
+      <a class="login-link" data-login href="Uptal_Board_Login.html" data-i18n="nav_login"></a>
       <a class="btn btn-flash" data-board href="Uptal_Private_Board.html#try" data-i18n="nav_cta"></a>
     </nav>
   </div>
@@ -779,6 +784,7 @@ en: {
   mp_timer_done: "Matched in seconds",
   mp_timer_run: "Matching…",
   nav_cta: "Try it free",
+  nav_login: "Log in",
   skip: "Skip to content",
   t_no: "passed",
   t_yes: "shortlisted",
@@ -851,6 +857,7 @@ ar: {
   mp_timer_done: "تمت المطابقة خلال ثوانٍ",
   mp_timer_run: "جارٍ المطابقة…",
   nav_cta: "جرّبها مجاناً",
+  nav_login: "تسجيل الدخول",
   skip: "تخطَّ إلى المحتوى",
   t_no: "متجاوَز",
   t_yes: "في القائمة",
@@ -1084,7 +1091,8 @@ var BF_CITIES = [
 /* ============================================================
    I18N
    ============================================================ */
-function boardHref(){ return "Uptal_Private_Board.html" + (LANG === "ar" ? "?lang=ar" : "") + "#try"; }
+function boardHref(hash){ return "Uptal_Private_Board.html" + (LANG === "ar" ? "?lang=ar" : "") + (hash || "#try"); }
+function loginHref(){ return "Uptal_Board_Login.html" + (LANG === "ar" ? "?lang=ar" : ""); }
 function legalHref(doc){ return "Uptal_Board_Legal.html" + (LANG === "ar" ? "?lang=ar" : "") + "#" + doc; }
 function applyLang(){
   document.documentElement.lang = LANG;
@@ -1097,6 +1105,7 @@ function applyLang(){
   $all("[data-i18n-html]").forEach(function(el){ el.innerHTML = t(el.getAttribute("data-i18n-html")); });
   $all("[data-i18n-aria]").forEach(function(el){ el.setAttribute("aria-label", t(el.getAttribute("data-i18n-aria"))); });
   $all("[data-board]").forEach(function(a){ a.setAttribute("href", boardHref()); });
+  $all("[data-login]").forEach(function(a){ a.setAttribute("href", loginHref()); });
   $all("[data-legal]").forEach(function(a){ a.setAttribute("href", legalHref(a.getAttribute("data-legal"))); });
   var lb = $("#langBtn");
   lb.textContent = t("lang_btn");
