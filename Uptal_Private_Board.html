@@ -3403,7 +3403,7 @@ en:{
    su_type_co:"Company", su_type_gov:"Government entity",
   su_email_lbl:"Work email",
   su_email_bad:"Enter a valid work email.",
-  su_email_free:"Personal and free email providers are not accepted. Sign up with your organization email so we can verify the entity.",
+  su_email_free:"Please sign in with your organization email, personal emails are not accepted.",
   su_gov_domain_req:"Government entities must register with an official gov.sa email. If you are a company, switch the type above.",
   otp_send:"Send verification code",  otp_sent:"We emailed a 6-digit code.",
   otp_lbl:"Verification code",  otp_demo:"Prototype: use code 482913, or any 6 digits.",
@@ -5112,7 +5112,7 @@ ar:{
    su_type_co:"شركة", su_type_gov:"جهة حكومية",
   su_email_lbl:"بريد العمل",
   su_email_bad:"أدخل بريد عمل صحيحاً.",
-  su_email_free:"لا تُقبل عناوين البريد الشخصي ومزوّدات البريد المجاني. سجّل ببريد مؤسستك لنتمكن من التحقق من الجهة.",
+  su_email_free:"يرجى الدخول ببريد مؤسستك، لا تُقبل عناوين البريد الشخصي.",
   su_gov_domain_req:"على الجهات الحكومية التسجيل ببريد رسمي على نطاق gov.sa. وإن كنت شركة فبدّل النوع أعلاه.",
   otp_send:"إرسال رمز التحقق",  otp_sent:"أرسلنا رمزاً مكوّناً من ٦ أرقام.",
   otp_lbl:"رمز التحقق",  otp_demo:"نموذج تجريبي: استخدم الرمز 482913 أو أي ٦ أرقام.",
@@ -16055,6 +16055,19 @@ function leadForTenant(tid){
   Object.keys(L).forEach(function(k){ if(L[k].tenantId===tid) hit=L[k]; });
   return hit;
 }
+/* A draft saved by an EARLIER build can be missing fields this one renders
+   (otp, agree, errs...). Merge it over the current defaults so a returning
+   visitor resumes instead of crashing the boot. */
+function hydrateSignup(raw){
+  if (!raw || typeof raw !== "object") return null;
+  var d = signupDefaults();
+  var su = Object.assign(d, raw);
+  su.otp = Object.assign(signupDefaults().otp, raw.otp || {});
+  su.agree = Object.assign(signupDefaults().agree, raw.agree || {});
+  su.errs = (raw.errs && typeof raw.errs === "object") ? raw.errs : {};
+  su.invites = Array.isArray(raw.invites) ? raw.invites : [];
+  return su;
+}
 function persistSignup(){ try{ localStorage.setItem("upb_signup", JSON.stringify(state.signup)); }catch(e){} }
 function saveSignupDraft(){ persistSignup(); }
 function clearSignup(){ state.signup=null; try{ localStorage.removeItem("upb_signup"); }catch(e){} }
@@ -18863,8 +18876,19 @@ function onOpsAction(b){
   }
 }
 
-/* ================= boot ================= */
+/* ================= boot =================
+   The board no longer has a default-visible screen, so an exception here used
+   to leave a blank page. Everything runs inside a guard: on failure we drop the
+   state that could not be read and hand the visitor the login page. */
 document.addEventListener("DOMContentLoaded", function(){
+  try { bootBoard(); }
+  catch(err){
+    try { localStorage.removeItem("upb_signup"); } catch(e){}
+    try { sessionStorage.removeItem("upb_tenant"); } catch(e){}
+    if (!/Uptal_Board_Login/.test(location.pathname)) goLogin();
+  }
+});
+function bootBoard(){
   applyStatic();
   wire();
   state.form = defaultForm();
@@ -18880,14 +18904,14 @@ document.addEventListener("DOMContentLoaded", function(){
   if (location.hash === "#signup"){
     var lsig = null;
     try { lsig = JSON.parse(localStorage.getItem("upb_signup") || "null"); } catch(e){}
-    if (lsig && lsig.status === "draft"){ state.signup = lsig; showAuth("signup"); return; }
+    if (lsig && lsig.status === "draft"){ state.signup = hydrateSignup(lsig); showAuth("signup"); return; }
     startSignup(); return;
   }
   /* the landing's Try-it-free CTA: lead capture, then the demo dashboard */
   if (location.hash === "#try"){
     var ltry = null;
     try { ltry = JSON.parse(localStorage.getItem("upb_signup") || "null"); } catch(e){}
-    if (ltry && ltry.status === "draft" && ltry.mode === "try"){ state.signup = ltry; showAuth("signup"); return; }
+    if (ltry && ltry.status === "draft" && ltry.mode === "try"){ state.signup = hydrateSignup(ltry); showAuth("signup"); return; }
     startTry(); return;
   }
   /* the demo dashboards the old gate used to list: reachable by link for the team */
@@ -18915,7 +18939,7 @@ document.addEventListener("DOMContentLoaded", function(){
   if (sig){
     try {
       var su = JSON.parse(sig);
-      if (su && su.status === "draft"){ state.signup = su; showAuth("signup"); return; }
+      if (su && su.status === "draft"){ state.signup = hydrateSignup(su); showAuth("signup"); return; }
       try { localStorage.removeItem("upb_signup"); } catch(x){}
     } catch(e){ try { localStorage.removeItem("upb_signup"); } catch(x){} }
   }
@@ -18932,7 +18956,7 @@ document.addEventListener("DOMContentLoaded", function(){
   /* nothing to open: no live session, no draft, no deep link. The board used to
      show its own gate here; sign-in now lives on one page, so go there. */
   goLogin();
-});
+}
 </script>
 </body>
 </html>

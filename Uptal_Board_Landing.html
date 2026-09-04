@@ -387,8 +387,8 @@ html[dir=rtl] .sk::after{animation-name:shimmerRtl}
 #mpResults .mcard[data-top]{cursor:grab;z-index:3;box-shadow:0 16px 34px -22px rgba(6,20,48,.34)}
 #mpResults .mcard[data-top].grabbing{cursor:grabbing;transition:none}
 #mpResults .mcard.snap{transition:transform .34s cubic-bezier(.2,.8,.25,1)}
-@keyframes deck-nudge{0%,100%{transform:none}28%{transform:translateX(30px) rotate(2.4deg)}56%{transform:translateX(-13px) rotate(-1.1deg)}80%{transform:translateX(4px) rotate(.4deg)}}
-#mpResults .mcard[data-top].nudge{animation:deck-nudge 1.15s cubic-bezier(.45,0,.25,1) 2}
+/* the deck demonstrates itself: a slow glide each way, held long enough to read */
+#mpResults .mcard[data-top].demo{transition:transform .62s cubic-bezier(.33,.02,.18,1)}
 #mpResults .mcard.flyout{transition:transform .46s cubic-bezier(.5,0,.8,.4),opacity .38s ease .08s;opacity:0;pointer-events:none}
 #mpResults .mcard[data-gone]{display:none}
 #mpResults .mcard:not([data-top]) > *{visibility:hidden}
@@ -397,7 +397,8 @@ html[dir=rtl] .sk::after{animation-name:shimmerRtl}
 /* swipe verdict stamps */
 .stamp{position:absolute;top:58px;padding:6px 13px;border:3px solid;border-radius:9px;
   font-family:var(--font-disp);font-weight:800;font-size:16px;letter-spacing:.03em;
-  opacity:0;pointer-events:none;background:rgba(255,255,255,.9);z-index:4}
+  opacity:0;pointer-events:none;background:rgba(255,255,255,.9);z-index:4;
+  transition:opacity .26s ease}
 html[lang=ar] .stamp{font-family:var(--font-ar);letter-spacing:0;font-size:14px}
 .stamp-yes{inset-inline-start:14px;color:var(--flash-tag);border-color:var(--flash-tag);transform:rotate(-11deg)}
 .stamp-no{inset-inline-end:14px;color:#B23C39;border-color:#B23C39;transform:rotate(11deg)}
@@ -1183,6 +1184,7 @@ function candCardHTML(c){
 function clearMatchTimers(){ mp.timers.forEach(clearTimeout); mp.timers = []; }
 function runMatch(reset){
   var panel = $("#mp"), res = $("#mpResults");
+  demo.on = false;
   clearMatchTimers();
   if (reset){ mp.done = false; mp.yes = 0; mp.no = 0; }
   panel.classList.remove("showing", "done");
@@ -1220,17 +1222,42 @@ function settleMatch(){
   $("#mpLive").textContent = tf("mp_live_done", { n: CANDS.length });
   restack();
   updateDeck();
-  /* the deck reads as a static card until it moves - nudge it, twice if ignored */
-  mp.timers.push(setTimeout(nudgeDeck, 900));
-  mp.timers.push(setTimeout(nudgeDeck, 6500));
+  /* the deck reads as a static card until it moves - it demonstrates the swipe itself */
+  mp.timers.push(setTimeout(demoLoop, 800));
 }
-function nudgeDeck(){
-  if (window.__ceOn) return;
+/* The deck teaches the gesture by performing it: glide right, hold with the
+   Shortlist stamp, settle back, the same to the left with Pass, pause, repeat.
+   It runs until the visitor takes over - a touch or a decision ends it for good. */
+var demo = { on: false };
+function demoStop(){
+  demo.on = false;
+  $all("#mpResults .mcard").forEach(function(el){
+    el.classList.remove("demo");
+    if (!el.dataset.decided){ el.style.transform = ""; setStamp(el, ""); }
+  });
+}
+function demoLoop(){
+  if (window.__ceOn) return;                       /* never while the copy is being edited */
   if (REDUCED || !mp.done || mp.yes + mp.no > 0) return;
   var el = topCard();
   if (!el || el.dataset.decided) return;
-  el.classList.add("nudge");
-  mp.timers.push(setTimeout(function(){ el.classList.remove("nudge"); }, 2500));
+  demo.on = true;
+  /* the verdict follows the LOGICAL direction, so RTL mirrors the whole show */
+  var rtl = document.documentElement.dir === "rtl";
+  var out = (rtl ? -1 : 1) * 78;
+  function at(ms, fn){ mp.timers.push(setTimeout(function(){ if (demo.on) fn(); }, ms)); }
+  function glide(x, deg){
+    el.classList.add("demo");
+    el.style.transform = "translate(" + x + "px,0) rotate(" + deg + "deg)";
+  }
+  var t = 0;
+  at(t,          function(){ glide(out, (rtl ? -1 : 1) * 5); });      /* toward shortlist */
+  at(t += 480,   function(){ setStamp(el, "yes"); });
+  at(t += 1050,  function(){ setStamp(el, ""); glide(0, 0); });       /* hold, then settle */
+  at(t += 880,   function(){ glide(-out, (rtl ? 1 : -1) * 5); });     /* toward pass */
+  at(t += 480,   function(){ setStamp(el, "no"); });
+  at(t += 1050,  function(){ setStamp(el, ""); glide(0, 0); });
+  at(t += 1450,  function(){ demoLoop(); });                          /* breathe, then again */
 }
 /* ---- the swipe deck ---- */
 function liveCards(){ return $all("#mpResults .mcard:not([data-gone])"); }
@@ -1273,7 +1300,7 @@ function decide(kind){
   var el = topCard();
   if (!el || el.dataset.decided) return;      /* no double-decide during the flyout */
   el.dataset.decided = "1";
-  el.classList.remove("nudge");
+  demoStop();
   setStamp(el, kind);
   var rtl = document.documentElement.dir === "rtl";
   var endX = (kind === "yes" ? 1 : -1) * (rtl ? -1 : 1) * 560;
@@ -1313,7 +1340,7 @@ function decide(kind){
     if (!el || el.dataset.decided) return;
     /* armed, not yet dragging: the card scrolls vertically, so the gesture's
        direction decides who owns it */
-    el.classList.remove("nudge");
+    demoStop();
     drag = { el: el, x0: e.clientX, y0: e.clientY, dx: 0, dy: 0, locked: false, dead: false };
   });
   stage.addEventListener("pointermove", function(e){
