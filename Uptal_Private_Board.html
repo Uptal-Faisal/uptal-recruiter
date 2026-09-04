@@ -8962,7 +8962,8 @@ function enter(tenantId){
   if (tenantId === "qimam"){ state.invited["q2|hr1"] = true; state.invited["q4|pd1"] = true; }
   if (tenantId === "ndpc"){ state.disp["n2|pm1"] = 4; }
   if (state.tenant.type === "gov"){ state.form.seal = true; state.form.saudi = true; }
-  $("#gate").style.display = "none";
+  /* the gate screen is gone; showAuth() already hides the auth layer */
+  hideAuthLayer();
   $("#shell").classList.add("on");
   renderOrg();
   buildPostForm();
@@ -16004,8 +16005,14 @@ function hideAuthSections(){ ["scr-signup","scr-review","scr-verify"].forEach(fu
 function goLogin(q){
   location.href = "Uptal_Board_Login.html" + (LANG === "ar" ? "?lang=ar" : "") + (q || "");
 }
+var AUTH_SCREENS = { signup:"scr-signup", review:"scr-review", verify:"scr-verify" };
+function hideAuthLayer(){
+  Object.keys(AUTH_SCREENS).forEach(function(k){
+    var e = $("#" + AUTH_SCREENS[k]); if (e) e.style.display = "none";
+  });
+}
 function showAuth(name){
-  var map={signup:"scr-signup",review:"scr-review",verify:"scr-verify"};
+  var map=AUTH_SCREENS;
   Object.keys(map).forEach(function(k){ var e=$("#"+map[k]); if(e) e.style.display=(k===name?"":"none"); });
   $("#shell").classList.remove("on");
   state.authScreen = name;
