@@ -1805,6 +1805,68 @@
   .home-col{display:grid;gap:12px;align-content:start}
   .hm-sec-h{font-family:var(--font-disp);font-weight:700;font-size:var(--fs-5);color:var(--ink);margin:0;display:flex;align-items:center;gap:8px}
   html[lang=ar] .hm-sec-h{font-family:var(--font-ar)}
+  /* ===== Home as a fixed frame =====
+     The tiles are ACCOUNT states: each one changes what the dashboard will let you do next.
+     Below them two panels share a top and a bottom edge and scroll inside themselves, so the
+     page itself never scrolls and the tiles never leave the viewport. */
+  .htiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px}
+  .htile{background:#fff;border:1px solid var(--hair);border-radius:var(--r-card);padding:13px 15px;position:relative;overflow:hidden;
+    text-align:start;font-family:inherit;font-size:inherit;color:inherit;cursor:pointer;min-height:96px;display:flex;flex-direction:column;align-items:flex-start}
+  .htile::after{content:"";position:absolute;inset-block-start:0;inset-inline:0;height:3px;background:var(--hair-2)}
+  .htile.s0::after{background:#C9403C}
+  .htile.s1::after{background:#E8A13A}
+  .htile.s2::after{background:var(--persian)}
+  .htile.s3::after{background:#CBD5EA}
+  .htile:hover{border-color:var(--hair-2);box-shadow:var(--sh-1)}
+  .htile .ht-k{font-size:var(--fs-1);font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+  html[lang=ar] .htile .ht-k{letter-spacing:0}
+  .htile .ht-v{font-family:var(--font-disp);font-size:17px;line-height:1.25;letter-spacing:-.01em;margin-block-start:7px;color:var(--ink)}
+  html[lang=ar] .htile .ht-v{font-family:var(--font-ar);letter-spacing:0}
+  .htile.s0 .ht-v{color:#B23C39}
+  .htile.s1 .ht-v{color:#9A6516}
+  .htile.s2 .ht-v{color:var(--persian)}
+  .htile.s3 .ht-v{color:var(--slate)}
+  .htile .ht-due{display:block;font-family:var(--font-body);font-size:var(--fs-2);font-weight:700;color:#B23C39;margin-block-start:3px}
+  html[lang=ar] .htile .ht-due{font-family:var(--font-ar)}
+  .htile .ht-a{margin-block-start:auto;padding-block-start:9px;font-size:var(--fs-2);font-weight:650;color:var(--persian)}
+  .htile .ht-a.quiet{color:var(--muted);font-weight:500}
+  .htile.more{background:var(--tint-blue-2);border-style:dashed;justify-content:center;align-items:center;text-align:center;cursor:default}
+  .htile.more .ht-v{font-size:15px;color:var(--slate);margin:0}
+  .htile.more .ht-k{margin-block-start:5px;letter-spacing:0;text-transform:none;line-height:1.5}
+  .hpanel{background:#fff;border:1px solid var(--hair);border-radius:var(--r-card);box-shadow:var(--sh-1);display:flex;flex-direction:column;min-height:0;overflow:hidden}
+  .hp-h{flex:none;display:flex;align-items:center;gap:9px;padding:13px 18px;border-block-end:1px solid var(--hair)}
+  .hp-h h2{font-family:var(--font-disp);font-size:var(--fs-5);margin:0}
+  html[lang=ar] .hp-h h2{font-family:var(--font-ar)}
+  .hp-h .hp-link{margin-inline-start:auto;display:inline-flex;align-items:center;gap:4px;background:none;border:0;padding:0;
+    font-family:inherit;font-size:var(--fs-3);font-weight:600;color:var(--persian);cursor:pointer}
+  .hp-h .hp-link svg{width:14px;height:14px}
+  .hp-b{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain}
+  .hp-b::-webkit-scrollbar{width:8px}
+  .hp-b::-webkit-scrollbar-thumb{background:#D3DAE8;border-radius:var(--r-pill);border:2px solid #fff}
+  .hp-b::-webkit-scrollbar-track{background:transparent}
+  .hp-b .ops-card{border:0;border-radius:0;box-shadow:none}
+  .hp-f{flex:none;display:flex;align-items:center;gap:10px;padding:8px 12px;border-block-start:1px solid var(--hair);background:var(--tint-blue-2)}
+  .hp-f .hp-note{font-size:var(--fs-2);color:var(--muted);padding-inline-start:5px}
+  .hp-f .home-foot{margin:0;padding:0;border:0;flex:1}
+  /* the frame: Home only, and only once it has panels to hold */
+  html.home-fixed,html.home-fixed body{height:100%;overflow:hidden}
+  html.home-fixed .shell.on{height:100dvh;min-height:0}
+  html.home-fixed .content{min-height:0;display:flex;flex-direction:column;padding-block-end:clamp(14px,1.8vw,22px)}
+  html.home-fixed #scr-home.on{flex:1;min-height:0;display:flex;flex-direction:column;animation:none}
+  html.home-fixed .home-wrap{flex:1;min-height:0;display:flex;flex-direction:column;gap:16px}
+  html.home-fixed .home-grid.hframe{flex:1;min-height:0;align-items:stretch}
+  @media (max-width:900px){
+    /* a phone scrolls the page, never two nested panes inside a locked viewport */
+    /* give the page back its scroll WITHOUT giving back horizontal overflow:
+       the shell clips x globally and a phone must keep that */
+    html.home-fixed,html.home-fixed body{height:auto;overflow-x:clip;overflow-y:visible}
+    html.home-fixed .shell.on{height:auto;min-height:100dvh}
+    html.home-fixed .content,html.home-fixed #scr-home.on{display:block}
+    html.home-fixed .home-wrap{display:grid;gap:16px}
+    html.home-fixed .home-grid.hframe{display:grid}
+    .hp-b{overflow:visible}
+    .htiles{grid-template-columns:repeat(2,minmax(0,1fr))}
+  }
   .hm-sec-h .sec-count{margin-inline-start:auto;font-size:var(--fs-3);font-weight:700;color:var(--muted)}
   .pill-count.rev{background:var(--tint-blue);color:var(--persian)}
   .pill-count.inv{background:var(--tint-blue);color:var(--persian)}
@@ -3553,6 +3615,16 @@ nav_settings:"Settings",
   home_all_matching:"Uptal is matching your roles now",
   home_all_matching_s:"First qualified applicants land in your pipeline shortly.",
   home_ops_h:"Your hiring operations",
+  ht_h_verif:"Verification",ht_h_pub:"Publishing",ht_h_subs:"Submissions",ht_h_rev:"To review",ht_h_ans:"Answers owed",
+  ht_h_appr:"Approvals",ht_h_seat:"Seats",ht_h_stand:"Standing",ht_h_net:"Network",
+  ht_v_ni:"Needs one detail",ht_v_none:"Not started",
+  ht_p_paused:"Paused",ht_p_full:"Full — {u} of {n}",
+  ht_s_paused_1:"Paused on 1 role",ht_s_paused_n:"Paused on {n} roles",
+  ht_r_wait:"{n} waiting",ht_a_1:"1 candidate",ht_a_n:"{n} candidates",ht_a_due:"{n} due now",
+  ht_ap_1:"1 waiting",ht_ap_n:"{n} waiting",ht_se_1:"1 request",ht_se_n:"{n} requests",
+  ht_st_1:"1 role to fix",ht_st_n:"{n} roles to fix",ht_nw_1:"Open on 1 role",ht_nw_n:"Open on {n} roles",
+  ht_cta_clear:"Clear the backlog",ht_cta_seat:"Approve or decline",ht_cta_stand:"Open Settings",ht_cta_net:"Search the network",
+  ht_more:"+{n}",ht_clear_h:"Nothing is owed by you",ht_clear_s:"Every deadline this board tracks is clear.",
   home_stand_open:"{n} items need your attention",
   home_view_all:"View all roles · {n}",
   badge_review_aria:"{n} candidates awaiting review",
@@ -5266,6 +5338,16 @@ nav_settings:"الإعدادات",
   home_all_matching:"يعمل المحرك الآن على مطابقة أدوارك",
   home_all_matching_s:"أول المتقدمين المؤهلين يصلون إلى مسارك قريباً.",
   home_ops_h:"سير التوظيف لديك",
+  ht_h_verif:"التوثيق",ht_h_pub:"النشر",ht_h_subs:"التقديمات",ht_h_rev:"للمراجعة",ht_h_ans:"ردود مستحقة",
+  ht_h_appr:"الاعتمادات",ht_h_seat:"المقاعد",ht_h_stand:"المكانة",ht_h_net:"الشبكة",
+  ht_v_ni:"ينقصه تفصيل واحد",ht_v_none:"لم يبدأ",
+  ht_p_paused:"موقوف",ht_p_full:"مكتمل — {u} من {n}",
+  ht_s_paused_1:"موقوفة على دور واحد",ht_s_paused_n:"موقوفة على {n} أدوار",
+  ht_r_wait:"{n} بالانتظار",ht_a_1:"مرشح واحد",ht_a_n:"{n} مرشحين",ht_a_due:"{n} مستحقون الآن",
+  ht_ap_1:"واحد بالانتظار",ht_ap_n:"{n} بالانتظار",ht_se_1:"طلب واحد",ht_se_n:"{n} طلبات",
+  ht_st_1:"دور واحد يحتاج معالجة",ht_st_n:"{n} أدوار تحتاج معالجة",ht_nw_1:"مفتوحة على دور واحد",ht_nw_n:"مفتوحة على {n} أدوار",
+  ht_cta_clear:"صفِّ المتراكم",ht_cta_seat:"اعتمد أو ارفض",ht_cta_stand:"افتح الإعدادات",ht_cta_net:"ابحث في الشبكة",
+  ht_more:"+{n}",ht_clear_h:"لا شيء مستحق عليك",ht_clear_s:"كل مهلة تتابعها اللوحة سليمة.",
   home_stand_open:"{n} بنود تحتاج انتباهك",
   home_view_all:"عرض كل الأدوار · {n}",
   badge_review_aria:"{n} مرشحين بانتظار المراجعة",
@@ -8858,6 +8940,7 @@ function go(screen, jobId){
       if (on) b.setAttribute("aria-current","page"); else b.removeAttribute("aria-current");
     }
   });
+  setHomeFixed(false);   /* every screen but the panelled Home scrolls the page itself */
   render(screen);
   try { sessionStorage.setItem("upb_screen", screen); if (state.jobId) sessionStorage.setItem("upb_job", state.jobId); if (state.projId) sessionStorage.setItem("upb_proj", state.projId); } catch(e){}
   window.scrollTo(0,0);
@@ -9503,6 +9586,84 @@ function viewerFirstRunHTML(){
 function everPublished(){
   return tenantJobs().some(function(j){ return j.status !== "draft"; });
 }
+/* ===== Home state tiles =====
+   A tile is an ACCOUNT state: something true of the whole dashboard that changes what it
+   will let you do next. Per-role facts (invites left, a hold, a funnel) stay on the role.
+   A tile renders only when its state is not the quiet one, they sort by consequence, and
+   Home keeps at most HOME_TILE_CAP with the rest collapsed into one "+n" tile.
+   No tile carries a countdown: jobDays() is seeded and never ticks, so a day figure here
+   would be theatre. States are stated; days are not. */
+var HOME_TILE_CAP = 5;
+/* submissions stop while a backlog sits: checkBatchRelease holds the next batch until
+   applied + screened is clear, so the pause is a fact about the job, not a setting */
+function subsPausedJobs(){
+  return visibleJobs().filter(function(j){
+    if (j.status !== "active" || !j.batchPending || j.batchReleasing) return false;
+    var st = jobStages(j);
+    return st.applied.length + st.screened.length > 0;
+  });
+}
+function poolOpenJobs(){ return visibleJobs().filter(function(j){ return j.poolOpen && j.status === "active"; }); }
+function approvalJobs(){ return canApprove() ? visibleJobs().filter(function(j){ return j.status === "approval"; }) : []; }
+function homeTiles(reviewN, invQ, due, acts){
+  var T = [], vs = verifState();
+  function add(sev, k, v, cta, attr, quiet){ T.push({ sev:sev, k:k, v:v, cta:cta, attr:attr || "", quiet:!!quiet }); }
+  /* 1 · verification outranks everything: it is the one state that freezes the rest */
+  if (vs === "needinfo") add(0, "ht_h_verif", t("ht_v_ni"), t("hv_ni_cta"), 'id="heroVerify"');
+  else if (vs === "none" && acts.length) add(0, "ht_h_verif", t("ht_v_none"), t("hv_ni_cta"), 'id="heroVerify"');
+  else if (vs === "pending") add(3, "ht_h_verif", t("hv_pending_h"), t("hv_pending_s"), "", true);
+  /* 2 · can this dashboard publish at all */
+  var owed = outcomesBlocking();
+  if (owed.length) add(0, "ht_h_pub", t("ht_p_paused"), t("oc_report"), 'data-recout="'+esc(owed[0].id)+'"');
+  else if (!isViewer() && slotsFree() <= 0) add(1, "ht_h_pub", tf("ht_p_full",{u:slotsUsed(), n:slotsTotal()}), t("slot_add"), "data-slots");
+  /* 3 · new applicants stop arriving while an unreviewed backlog sits */
+  var sp = subsPausedJobs();
+  if (sp.length) add(0, "ht_h_subs", sp.length === 1 ? t("ht_s_paused_1") : tf("ht_s_paused_n",{n:nn(fmt(sp.length))}), t("ht_cta_clear"), 'data-deck="all|review"');
+  /* 4 · the day’s work */
+  if (reviewN > 0) add(1, "ht_h_rev", tf("ht_r_wait",{n:nn(fmt(reviewN))}), t("home_start"), 'data-deck="all|review"');
+  /* 5 · people already shortlisted, waiting on a decision */
+  if (invQ.length){
+    var av = (invQ.length === 1 ? t("ht_a_1") : tf("ht_a_n",{n:nn(fmt(invQ.length))}))+
+      (due > 0 ? '<span class="ht-due">'+tf("ht_a_due",{n:nn(fmt(due))})+'</span>' : "");
+    add(1, "ht_h_ans", av, t("home_start_inv"), 'data-deck="all|invite"');
+  }
+  var ap = approvalJobs();
+  if (ap.length) add(2, "ht_h_appr", ap.length === 1 ? t("ht_ap_1") : tf("ht_ap_n",{n:nn(fmt(ap.length))}), t("ap_review_btn"), 'data-openrole="'+esc(ap[0].id)+'"');
+  var sr = isAdmin() ? seatReqs() : [];
+  if (sr.length) add(2, "ht_h_seat", sr.length === 1 ? t("ht_se_1") : tf("ht_se_n",{n:nn(fmt(sr.length))}), t("ht_cta_seat"), 'data-goset="team"');
+  var warns = state.intWarnings || [];
+  if (warns.length) add(1, "ht_h_stand", warns.length === 1 ? t("ht_st_1") : tf("ht_st_n",{n:nn(fmt(warns.length))}), t("ht_cta_stand"), 'data-goset="standing"');
+  var po = poolOpenJobs();
+  if (po.length) add(3, "ht_h_net", po.length === 1 ? t("ht_nw_1") : tf("ht_nw_n",{n:nn(fmt(po.length))}), t("ht_cta_net"), 'data-openpool="'+esc(po[0].id)+'"');
+  /* stable within a severity: the order above is the order of consequence */
+  T.forEach(function(x, i){ x.i = i; });
+  T.sort(function(a, b){ return a.sev - b.sev || a.i - b.i; });
+  return T;
+}
+function homeTilesHTML(reviewN, invQ, due, acts){
+  var T = homeTiles(reviewN, invQ, due, acts);
+  if (!T.length)
+    return '<div class="htiles"><div class="htile s3 more" style="grid-column:1 / -1;min-height:0">'+
+      '<span class="ht-v">'+t("ht_clear_h")+'</span><span class="ht-k">'+t("ht_clear_s")+'</span></div></div>';
+  var shown = T.slice(0, HOME_TILE_CAP), rest = T.slice(HOME_TILE_CAP);
+  var html = shown.map(function(x, i){
+    /* the one-verb law survives the redesign: exactly one lead action, the top one */
+    var lead = i === 0 && !x.quiet;
+    var tag = x.quiet ? "div" : "button";
+    return '<'+tag+' class="htile s'+x.sev+(lead ? " lead" : "")+'"'+(tag === "button" ? ' type="button"' : "")+' '+x.attr+'>'+
+      '<span class="ht-k">'+t(x.k)+'</span><span class="ht-v">'+x.v+'</span>'+
+      '<span class="ht-a'+(x.quiet ? " quiet" : "")+(lead ? " ha-lead" : "")+'">'+x.cta+(x.quiet ? "" : " \u2192")+'</span></'+tag+'>';
+  }).join("");
+  if (rest.length)
+    html += '<div class="htile more"><span class="ht-v">'+tf("ht_more",{n:nn(fmt(rest.length))})+'</span>'+
+      '<span class="ht-k">'+rest.map(function(x){ return t(x.k); }).join(" \u00b7 ")+'</span></div>';
+  return '<div class="htiles">'+html+'</div>';
+}
+/* Home is the only screen that owns the viewport; the frame goes on with the panels */
+function setHomeFixed(on){
+  var r = document.documentElement;
+  if (r && r.classList) r.classList.toggle("home-fixed", !!on);
+}
 function renderHome(){
   if (state.handoffReady){
     state.handoffReady = false;
@@ -9512,7 +9673,7 @@ function renderHome(){
   var invQ = inviteQueue("all"), inviteN = invQ.length;
   var due = invQ.filter(function(x){ return x.left <= 2; }).length;
   var acts = activeJobs();
-  var html;
+  var html, framed = false;
   /* one-time strips ride above whichever home renders: seat requests parked at onboarding,
      — the free plan states itself here */
   var strips = "";
@@ -9552,15 +9713,24 @@ function renderHome(){
           : '<button class="btn btn-out" data-post type="button">'+t("acct_post")+'</button>');
       board = '<div class="card op-empty"><span>'+t(pubEver ? "op_empty" : "op_empty_first")+'</span>'+emBtn+'</div>';
     }
-    html = opHeroHTML(reviewN, invQ, due, acts)+
-      '<div class="home-grid" style="margin-block-start:20px"><div class="home-col">'+
-        '<div class="hm-sec-h">'+t("home_ops_h")+'<span class="sec-count num" dir="ltr">'+fmt(acts.length)+'</span></div>'+board+
-      '</div><div class="home-col">'+
-        '<div class="hm-sec-h">'+t("feed_h")+'</div>'+feedHTML()+
-      '</div></div>'+
-      homeFootHTML();
+    /* the two panels share a top and a bottom edge; each scrolls inside itself */
+    html = homeTilesHTML(reviewN, invQ, due, acts)+
+      '<div class="home-grid hframe">'+
+        '<section class="hpanel"><header class="hp-h"><h2>'+t("home_ops_h")+'</h2>'+
+          '<span class="sec-count num" dir="ltr">'+fmt(acts.length)+'</span>'+
+          '<button class="hp-link" data-nav="roles" type="button">'+t("nav_jobs")+CHEV+'</button>'+
+        '</header><div class="hp-b">'+board+'</div>'+
+        '<footer class="hp-f">'+homeFootHTML()+'</footer></section>'+
+        '<section class="hpanel"><header class="hp-h"><h2>'+t("feed_h")+'</h2>'+
+          '<button class="hp-link" data-nav="reports" type="button">'+t("nav_insights")+CHEV+'</button>'+
+        '</header><div class="hp-b">'+feedHTML()+'</div>'+
+        '<footer class="hp-f"><span class="hp-note">'+t("nf_email_note")+'</span></footer></section>'+
+      '</div>';
+    framed = true;
   }
   $("#homeBody").innerHTML = strips + html;
+  /* only the panelled Home locks the viewport; every first-run variant scrolls normally */
+  setHomeFixed(framed);
   renderJobsBadge();
   /* one-time strips: the seat strip lands on the surface its copy names; the lapse bar acks */
   var ssb = $("#seatStripBtn");
