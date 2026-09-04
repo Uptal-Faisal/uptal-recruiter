@@ -540,6 +540,9 @@
   .crow:hover{background:var(--tint-blue-2)}
   .crow.selected{background:var(--tint-blue)}
   .c-ava{width:40px;height:40px;flex:none;border-radius:50%;display:grid;place-items:center;font-size:var(--fs-3);font-weight:800;color:#fff;background:var(--persian)}
+  /* the revealed headshot wears the public card’s frame: ring inside, photo filling the circle */
+  .c-ava.face,.dr-ava.face{background:var(--tint-blue-2);padding:2px;border-radius:50%;box-shadow:0 0 0 2px var(--flash) inset}
+  .c-ava.face img,.dr-ava.face img{width:100%;height:100%;display:block;object-fit:cover;border-radius:50%}
   .crow .cr-main{min-width:0}
   .crow .cr-nm{display:inline-flex;align-items:center;gap:8px;font-size:var(--fs-4);font-weight:700;color:var(--persian);cursor:pointer}
   .crow .cr-nm:hover{text-decoration:underline;text-underline-offset:3px}
@@ -668,7 +671,20 @@
      logo simply replaces the initials inside the same geometry */
   .org-mark{display:inline-flex;align-items:center;justify-content:center;line-height:1;flex:none;
     font-weight:800;color:#fff;background:var(--persian);overflow:hidden;letter-spacing:.02em}
-  .org-mark.gov{background:var(--ink)}
+  /* placeholder mark: a company that has not uploaded a logo still gets a mark
+     of its own - stable hue, soft depth, monogram optically centred */
+  .org-mark.ph{position:relative;isolation:isolate;letter-spacing:.04em;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.28),0 1px 2px rgba(6,20,48,.18)}
+  .org-mark.ph::after{content:"";position:absolute;inset:0;z-index:-1;
+    background:linear-gradient(150deg,rgba(255,255,255,.26),transparent 58%)}
+  .org-mark.ph > i{font-style:normal;transform:translateY(.02em)}
+  .org-mark.ph.hue-p{background:linear-gradient(145deg,#4A51E4,#2A30AE)}
+  .org-mark.ph.hue-b{background:linear-gradient(145deg,#2E7FD6,#1B5AA6)}
+  .org-mark.ph.hue-t{background:linear-gradient(145deg,#1C8C7A,#12655A)}
+  .org-mark.ph.hue-v{background:linear-gradient(145deg,#6B4BD6,#4A2FA6)}
+  .org-mark.ph.hue-c{background:linear-gradient(145deg,#2F6F8F,#1D4C66)}
+  .org-mark.ph.hue-o{background:linear-gradient(145deg,#B4703A,#8A5122)}
+  .org-mark.gov,.org-mark.ph.gov{background:linear-gradient(145deg,#12224A,#061430)}
   img.org-mark{background:#fff;border:1px solid var(--hair);object-fit:contain;padding:2px}
   .vs-deleg{display:flex;align-items:center;gap:12px;background:var(--tint-blue);border:1px solid var(--hair);
     border-radius:var(--r-card);padding:13px 15px;margin-block-end:16px}
@@ -1898,14 +1914,20 @@
   .swipe-btn.like:hover{filter:brightness(1.07);box-shadow:0 10px 24px -8px rgba(53,60,216,.55)}
   .swipe-btn.like svg{stroke:#fff}
   .swipe-hint{text-align:center;font-size:var(--fs-2);color:var(--muted);padding:2px 16px calc(env(safe-area-inset-bottom) + 12px);position:relative;z-index:2}
-  /* the left-swipe grace bar: a held verdict, not a toast — it sits inside the deck */
-  .swipe-snack{position:absolute;inset-inline:0;bottom:calc(env(safe-area-inset-bottom) + 86px);margin-inline:auto;width:min(560px,calc(100% - 24px));display:flex;flex-wrap:wrap;align-items:center;gap:7px;background:var(--ink,#0B1B3F);color:#fff;border-radius:var(--r-card);padding:12px 14px 14px;box-shadow:0 18px 44px -16px rgba(6,20,48,.55);z-index:6;opacity:0;transform:translateY(8px);transition:opacity .16s ease,transform .16s ease;overflow:hidden}
+  /* the left-swipe grace bar: a held verdict, not a toast. It sits ABOVE the deck as its own
+     row — never over the card, because the next candidate must stay readable while it counts down */
+  .swipe-snack{position:relative;flex:none;margin:0 auto 8px;width:min(560px,calc(100% - 32px));display:flex;flex-wrap:wrap;align-items:center;gap:7px;background:var(--ink,#0B1B3F);color:#fff;border-radius:var(--r-card);padding:11px 12px 13px;box-shadow:0 18px 44px -16px rgba(6,20,48,.55);z-index:6;opacity:0;transform:translateY(-6px);transition:opacity .16s ease,transform .16s ease;overflow:hidden}
   .swipe-snack.on{opacity:1;transform:none}
   .swipe-snack .snk-h{font-size:var(--fs-2);font-weight:700;flex:none}
   .swipe-snack .snk-chip{border:1px solid rgba(255,255,255,.32);background:rgba(255,255,255,.08);color:#fff;border-radius:var(--r-pill);min-height:30px;padding:0 12px;font-family:inherit;font-size:var(--fs-2);font-weight:600;cursor:pointer;transition:background .12s ease}
   html[lang=ar] .swipe-snack .snk-chip,html[lang=ar] .swipe-snack .snk-undo{font-family:var(--font-ar)}
   .swipe-snack .snk-chip:hover{background:rgba(255,255,255,.2)}
   .swipe-snack .snk-undo{margin-inline-start:auto;border:0;background:var(--flash,#B7F34C);color:var(--ink,#0B1B3F);border-radius:var(--r-pill);min-height:30px;padding:0 16px;font-family:inherit;font-size:var(--fs-3);font-weight:800;cursor:pointer}
+  /* dismiss: the user can clear the bar the moment it is in the way. It commits the pass to the
+     fallback bucket exactly as the timer would — closing declines to give a reason, it never undoes */
+  .swipe-snack .snk-x{flex:none;width:30px;height:30px;border:0;border-radius:9px;background:rgba(255,255,255,.10);display:grid;place-items:center;cursor:pointer;transition:background .12s ease}
+  .swipe-snack .snk-x:hover{background:rgba(255,255,255,.22)}
+  .swipe-snack .snk-x svg{width:13px;height:13px;fill:none;stroke:#fff;stroke-width:2.4}
   .swipe-snack .snk-bar{position:absolute;inset-inline:0;bottom:0;height:3px;background:rgba(255,255,255,.14)}
   .swipe-snack .snk-bar i{display:block;height:100%;background:var(--flash,#B7F34C);animation:snkbar 5.2s linear forwards;transform-origin:0 50%}
   html[dir=rtl] .swipe-snack .snk-bar i{transform-origin:100% 50%}
@@ -2918,6 +2940,11 @@
                 <button type="button" id="yrPlus" aria-label="plus">+</button>
               </div>
             </div>
+            <div style="margin-block:4px 12px">
+              <div class="g-lab" style="margin-block:2px 7px"><span data-i18n="pg3_gen"></span></div>
+              <div class="pillset" id="fGender"></div>
+              <p class="role-desc" style="margin-top:7px" data-i18n="pg3_gen_s"></p>
+            </div>
             <div class="switchrow">
               <div class="sw-tx"><b data-i18n="pg3_saudi"></b><span data-i18n="pg3_saudi_s"></span></div>
               <button class="switch" id="swSaudi" role="switch" aria-checked="false" type="button"><span class="sr-only" data-i18n="pg3_saudi"></span></button>
@@ -2933,7 +2960,11 @@
           </div>
           <div class="fgroup" data-step="s2">
             <div class="g-lab"><span class="g-num">5</span><span data-i18n="pg4"></span><span class="g-hint" data-i18n="pg4_hint"></span></div>
-            <div class="band-row">
+            <div class="switchrow">
+              <div class="sw-tx"><b data-i18n="pg4_none"></b><span data-i18n="pg4_none_s"></span></div>
+              <button class="switch" id="swBandNone" role="switch" aria-checked="false" type="button"><span class="sr-only" data-i18n="pg4_none"></span></button>
+            </div>
+            <div class="band-row" id="bandRow">
               <div class="stepper">
                 <button type="button" id="bMinDown" aria-label="minus">&minus;</button>
                 <span class="st-val"><span class="num" id="bandMinVal" dir="ltr">28,000</span><svg class="riyal" viewBox="0 0 1124.14 1256.39" aria-label="SAR" role="img"><path d="M699.62,1113.02h0c-20.06,44.48-33.32,92.75-38.4,143.37l424.51-90.24c20.06-44.47,33.31-92.75,38.4-143.37l-424.51,90.24Z"/><path d="M1085.73,895.8c20.06-44.47,33.32-92.75,38.4-143.37l-330.68,70.33v-135.2l292.27-62.11c20.06-44.47,33.32-92.75,38.4-143.37l-330.68,70.27V66.13c-50.67,28.45-95.67,66.32-132.25,110.99v403.35l-132.25,28.11V0c-50.67,28.44-95.67,66.32-132.25,110.99v525.69l-295.91,62.88c-20.06,44.47-33.33,92.75-38.42,143.37l334.33-71.05v170.26l-358.3,76.14c-20.06,44.47-33.32,92.75-38.4,143.37l375.04-79.7c30.53-6.35,56.77-24.4,73.83-49.24l68.78-101.97v-.02c7.14-10.55,11.3-23.27,11.3-36.97v-149.98l132.25-28.11v270.4l424.53-90.28Z"/></svg></span>
@@ -3328,6 +3359,10 @@
     <span class="swipe-count num" id="swipeCount" dir="ltr"></span>
   </div>
   <div class="deck-strip" id="deckStrip"></div>
+  <!-- left-swipe grace: the pass is held ~5s behind this bar; a chip commits it with the real
+       reason, Undo returns the card and writes nothing, silence commits the fallback bucket.
+       It lives above the deck so it can never sit on top of the candidate being read. -->
+  <div class="swipe-snack" id="swipeSnack" hidden></div>
   <div class="swipe-body">
     <aside class="swipe-rail" id="swipeRail"></aside>
     <div class="swipe-arena">
@@ -3344,9 +3379,6 @@
     <button class="swipe-btn like" id="swipeLike" type="button"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5 9.5 18 20 6.5"/></svg><span id="swipeLikeLab"></span></button>
   </div>
   <div class="swipe-hint" id="swipeHint"></div>
-  <!-- left-swipe grace: the pass is held ~5s behind this bar; a chip commits it with the real
-       reason, Undo returns the card and writes nothing, silence commits the fallback bucket -->
-  <div class="swipe-snack" id="swipeSnack" hidden></div>
 </div>
 
 <!-- jobs filter sheet (mobile) -->
@@ -3482,35 +3514,35 @@ en:{
   
   nav_jobs:"Jobs",nav_post:"Post a job",nav_post_s:"Post",
   nav_home:"Home",nav_insights:"Hiring Record",
-  nav_projects:"Initiatives",nav_projects_s:"Initiatives",
-  proj_h:"Initiatives",
-  proj_lead:"Time-bound hiring initiatives grouping roles across your organization.",
-  proj_new:"New initiative",proj_kind:"Hiring initiative",proj_conf:"Confidential",
+  nav_projects:"Projects",nav_projects_s:"Projects",
+  proj_h:"Projects",
+  proj_lead:"Time-bound hiring projects grouping roles across your organization.",
+  proj_new:"New project",proj_kind:"Hiring project",proj_conf:"Confidential",
   proj_owner:"Owner",proj_target:"Target",proj_start:"Start",proj_progress:"Progress",
-  proj_roles:"Roles",proj_roles_h:"Roles in this initiative",
+  proj_roles:"Roles",proj_roles_h:"Roles in this project",
   proj_filled:"{f} of {n} filled",proj_draft:"{n} still in draft",
 proj_span_n:"{n} departments",
   proj_in_play:"Applicants in play",
   proj_needs_review:"{n} need review",proj_ready_inv:"{n} ready to invite",
   proj_uptodate:"On track",proj_complete:"Complete",
   proj_team:"Team",proj_activity:"Where each role stands",
-  proj_review_all:"Review across the initiative",proj_invite_all:"Review invites",
-  proj_belongs:"Part of {p}",proj_unassigned:"Roles not in an initiative",
-  proj_empty:"No initiatives yet. Post a role first, then group your roles into an initiative to track them together.",
-  proj_empty_have:"No initiatives yet. Create one and group your roles to track them together.",
-  proj_back:"All initiatives",
+  proj_review_all:"Review across the project",proj_invite_all:"Review shortlist",
+  proj_belongs:"Part of {p}",proj_unassigned:"Roles not in an project",
+  proj_empty:"No projects yet. Post a role first, then group your roles into an project to track them together.",
+  proj_empty_have:"No projects yet. Create one and group your roles to track them together.",
+  proj_back:"All projects",
   proj_f_all:"All",proj_f_active:"Active",proj_f_complete:"Complete",
-  proj_stat_active:"Active initiatives",proj_stat_open:"Open roles",proj_stat_review:"Awaiting review",
+  proj_stat_active:"Active projects",proj_stat_open:"Open roles",proj_stat_review:"Awaiting review",
   proj_new_s:"Group live roles under one owner and target date.",
-  proj_new_name:"Initiative name",proj_new_name_ph:"e.g. Riyadh Fund Launch",
+  proj_new_name:"Project name",proj_new_name_ph:"e.g. Riyadh Fund Launch",
   proj_new_target:"Target date (optional)",proj_new_target_ph:"e.g. 30 Nov",
-  proj_new_create:"Create initiative",proj_new_need_name:"Name the initiative first.",
-  proj_created_toast:"Initiative created. Add roles from Jobs or a role's dashboard.",
-  proj_add_btn:"Add to initiative",proj_added_toast:"Added to {p}.",
-  proj_pick_none:"No initiatives yet. Create one first.",
+  proj_new_create:"Create project",proj_new_need_name:"Name the project first.",
+  proj_created_toast:"Project created. Add roles from Jobs or a role's dashboard.",
+  proj_add_btn:"Add to project",proj_added_toast:"Added to {p}.",
+  proj_pick_none:"No projects yet. Create one first.",
   proj_st_outcome:"Outcome recorded",proj_st_ready:"Ready to invite",proj_st_awaiting:"Awaiting your review",proj_st_open:"Live, awaiting applicants",proj_st_draft:"Draft, not yet live",
 nav_settings:"Settings",
-  home_start:"Start reviewing",home_start_inv:"Review invites",home_open:"Open",
+  home_start:"Start reviewing",home_start_inv:"Review shortlist",home_open:"Open",
   home_need_dec_1:"candidate needs your decision",home_need_dec_n:"candidates need your decision",
   home_ready_1:"candidate is ready to invite",home_ready_n:"candidates are ready to invite",
   home_await_1:"candidate is in interviews with you.",home_await_n:"candidates are in interviews with you.",
@@ -4250,7 +4282,7 @@ nav_settings:"Settings",
   swipe_done_s:"Shortlisted candidates are ready for you to invite to interview.",
   swipe_shortlisted:"Shortlisted",swipe_passed:"Not selected",swipe_back:"Back to the board",
   swipe_list_short:"Shortlisted",swipe_list_pass:"Not selected",
-  sw_snack_h:"Set aside — tell the engine why:",sw_undo:"Undo",
+  sw_snack_h:"Set aside — tell the engine why:",sw_undo:"Undo",sw_snack_x:"Dismiss",
   sw_r1:"Seniority",sw_r2:"Compensation",sw_r3:"Location",sw_r4:"Notice period",sw_r5:"Just not a fit",
   sw_done_none_h:"None was a fit",
   sw_done_none_s:"Your verdicts set the next batch in motion — new pre-screened applicants are on the way.",
@@ -4277,8 +4309,8 @@ review_next:"Review next candidate",
   stat_active:"Active jobs",stat_apps:"Applicants in play",stat_review:"Awaiting your review",
   jobs_search:"Search jobs",
   jobs_filters:"Filters",jobs_results:"{n} jobs",
-  ff_status:"Status",ff_func:"Function",ff_dept:"Department",ff_sen:"Seniority",ff_place:"Workplace",ff_proj:"Initiative",ff_conf:"Confidentiality",
-  ff_none:"No initiative",conf_std:"Standard",ff_clear:"Clear all",ff_show:"Show {n} jobs",jf_remove:"Remove filter",r_paused:"Paused",
+  ff_status:"Status",ff_func:"Function",ff_dept:"Department",ff_sen:"Seniority",ff_place:"Workplace",ff_proj:"Project",ff_conf:"Confidentiality",
+  ff_none:"No project",conf_std:"Standard",ff_clear:"Clear all",ff_show:"Show {n} jobs",jf_remove:"Remove filter",r_paused:"Paused",
   r_active:"Active",r_draft:"Draft",r_approval:"Awaiting approval",
   r_conf:"Confidential",r_sealed:"Sealed",
   th_job:"Job",th_band:"Salary band",th_apps:"Applicants",th_posted:"Posted",
@@ -4304,6 +4336,9 @@ pg1_years:"Minimum years of experience",
   pg3:"Candidate criteria",
   pg3_saudi:"Saudi nationals only",pg3_saudi_s:"Limit the posting to Saudi citizens.",
   pg3_eng:"Fluent English required",pg3_eng_s:"Verified by the engine during screening.",
+  pg3_gen:"Preferred gender",pg3_gen_s:"Optional. Leave it at no preference unless the role genuinely requires one.",
+  gen_any:"No preference",gen_m:"Male",gen_f:"Female",pub_gender:"Preferred gender",
+  pg4_none:"Do not state a salary",pg4_none_s:"The posting shows no band. Candidates still tell you what they expect.",band_none:"Not stated",
   pg3_clear:"Security-clearance eligible",pg3_clear_s:"Limits the posting to candidates eligible for government clearance.",
   pg4:"Monthly salary band",pg4_hint:"Benchmarked against market data for this function.",pg4_to:"to",
   band_ok:"Healthy band. At market for this role.",
@@ -4497,7 +4532,7 @@ pg1_years:"Minimum years of experience",
   not_selected_note:"Marked not a fit, released or exited, each with its reason on record. Identity stays as it was: sealed unless an invite had already opened it.",
   not_selected_empty:"No candidate has left this role's pipeline yet.",
   role_detail_show:"Role details",
-  rd_jd:"Role summary",rd_reqs:"Requirements",rd_comp:"Compensation",rd_sen:"Seniority",rd_workplace:"Workplace",rd_dept:"Department",rd_window:"Closes after",rd_retention:"Data retention",rd_program:"Hiring initiative",rd_privacy:"Privacy posture",rd_ats:"ATS sync",rd_view_posting:"View the posting as candidates see it",
+  rd_jd:"Role summary",rd_reqs:"Requirements",rd_comp:"Compensation",rd_sen:"Seniority",rd_workplace:"Workplace",rd_dept:"Department",rd_window:"Closes after",rd_retention:"Data retention",rd_program:"Hiring project",rd_privacy:"Privacy posture",rd_ats:"ATS sync",rd_view_posting:"View the posting as candidates see it",
   cand_new:"New",cand_applied:"applied {t}",
   col_empty_all:"No candidates in this pipeline yet.",
   col_empty_scr:"Pre-screened applicants matched to this role appear here.",
@@ -4510,7 +4545,7 @@ pg1_years:"Minimum years of experience",
   panel_of:"{i} of {n}",
   ptab_profile:"Profile",ptab_notes:"Notes",
   dr_head:"Candidate",
-  dr_years:"Experience",dr_notice:"Notice period",dr_current:"Current salary",dr_expect:"Expected salary",dr_city:"City",
+  dr_years:"Experience",dr_notice:"Notice period",dr_current:"Current salary",dr_expect:"Expected salary",dr_city:"City",dr_gender:"Gender",
   dr_why:"Why they fit this job",
   dr_high:"Verified highlights",
   dr_screen:"Uptal screening",dr_screen_by:"Generated by the matching engine",
@@ -4665,7 +4700,7 @@ mod_out_s:"Contact candidates directly from the dashboard. Ships separately.",
   ga_team_role:"Changed {n}\u2019s role",
   ga_seat_req:"Requested a seat for {e}",
   ga_draft:"Saved a draft: {r}",
-  ga_proj_new:"Created initiative {r}",
+  ga_proj_new:"Created project {r}",
   ga_proj_add:"Added {r} to {p}",
   ga_appeal:"Submitted a justification to Uptal review",
   ga_appeal_ws:"Requested a review of the posting pause",
@@ -5059,6 +5094,7 @@ rep_first_s:"After publishing",
   lg_up:"Upload logo",
   lg_change:"Replace logo",
   lg_note:"PNG or JPG \u00b7 square works best \u00b7 optional",
+  lg_ph:"Until you upload one, your initials stand in as your mark.",
   doc_cr_h:"CR certificate",
   doc_vat_h:"VAT certificate",
   doc_up:"Attach file",
@@ -5191,35 +5227,35 @@ ar:{
   
   nav_jobs:"الوظائف",nav_post:"انشر وظيفة",nav_post_s:"انشر",
   nav_home:"الرئيسية",nav_insights:"سجل التوظيف",
-  nav_projects:"المبادرات",nav_projects_s:"المبادرات",
-  proj_h:"المبادرات",
-  proj_lead:"مبادرات توظيف محددة المدة تجمع أدواراً عبر جهتك.",
-  proj_new:"مبادرة جديدة",proj_kind:"مبادرة توظيف",proj_conf:"سرية",
+  nav_projects:"المشاريع",nav_projects_s:"المشاريع",
+  proj_h:"المشاريع",
+  proj_lead:"مشاريع توظيف محددة المدة تجمع أدواراً عبر جهتك.",
+  proj_new:"مشروع جديد",proj_kind:"مشروع توظيف",proj_conf:"سرية",
   proj_owner:"المسؤول",proj_target:"الموعد المستهدف",proj_start:"البداية",proj_progress:"التقدّم",
-  proj_roles:"الأدوار",proj_roles_h:"الأدوار ضمن المبادرة",
+  proj_roles:"الأدوار",proj_roles_h:"الأدوار ضمن المشروع",
   proj_filled:"اكتمل {f} من {n}",proj_draft:"{n} ما زالت مسودة",
 proj_span_n:"{n} إدارات",
   proj_in_play:"متقدمون قيد النظر",
   proj_needs_review:"{n} بانتظار المراجعة",proj_ready_inv:"{n} جاهز للدعوة",
   proj_uptodate:"على المسار",proj_complete:"مكتملة",
   proj_team:"الفريق",proj_activity:"موقف كل دور",
-  proj_review_all:"راجع على مستوى المبادرة",proj_invite_all:"راجع الدعوات",
-  proj_belongs:"ضمن {p}",proj_unassigned:"أدوار خارج المبادرات",
-  proj_empty:"لا مبادرات بعد. انشر دوراً أولاً، ثم اجمع أدوارك ضمن مبادرة لمتابعتها معاً.",
-  proj_empty_have:"لا مبادرات بعد. أنشئ واحدة واجمع أدوارك لمتابعتها معاً.",
+  proj_review_all:"راجع على مستوى المشروع",proj_invite_all:"راجع القائمة المختصرة",
+  proj_belongs:"ضمن {p}",proj_unassigned:"أدوار خارج المشاريع",
+  proj_empty:"لا مشاريع بعد. انشر دوراً أولاً، ثم اجمع أدوارك ضمن مشروع لمتابعتها معاً.",
+  proj_empty_have:"لا مشاريع بعد. أنشئ واحداً واجمع أدوارك لمتابعتها معاً.",
   proj_new_s:"اجمع الأدوار الحية تحت مالك واحد وتاريخ مستهدف.",
-  proj_new_name:"اسم المبادرة",proj_new_name_ph:"مثال: إطلاق صندوق الرياض",
+  proj_new_name:"اسم المشروع",proj_new_name_ph:"مثال: إطلاق صندوق الرياض",
   proj_new_target:"التاريخ المستهدف (اختياري)",proj_new_target_ph:"مثال: 30 نوفمبر",
-  proj_new_create:"إنشاء المبادرة",proj_new_need_name:"سمِّ المبادرة أولاً.",
-  proj_created_toast:"أُنشئت المبادرة. أضف الأدوار من الوظائف أو من صفحة الدور.",
-  proj_add_btn:"أضِف إلى مبادرة",proj_added_toast:"أُضيف إلى {p}.",
-  proj_pick_none:"لا مبادرات بعد. أنشئ واحدة أولاً.",
-  proj_back:"كل المبادرات",
+  proj_new_create:"إنشاء المشروع",proj_new_need_name:"سمِّ المشروع أولاً.",
+  proj_created_toast:"أُنشئ المشروع. أضف الأدوار من الوظائف أو من صفحة الدور.",
+  proj_add_btn:"أضِف إلى مشروع",proj_added_toast:"أُضيف إلى {p}.",
+  proj_pick_none:"لا مشاريع بعد. أنشئ واحداً أولاً.",
+  proj_back:"كل المشاريع",
   proj_f_all:"الكل",proj_f_active:"نشطة",proj_f_complete:"مكتملة",
-  proj_stat_active:"مبادرات نشطة",proj_stat_open:"أدوار مفتوحة",proj_stat_review:"بانتظار المراجعة",
+  proj_stat_active:"مشاريع نشطة",proj_stat_open:"أدوار مفتوحة",proj_stat_review:"بانتظار المراجعة",
   proj_st_outcome:"سُجّلت النتيجة",proj_st_ready:"جاهز للدعوة",proj_st_awaiting:"بانتظار مراجعتك",proj_st_open:"منشور، بانتظار المتقدمين",proj_st_draft:"مسودة، غير منشور",
 nav_settings:"الإعدادات",
-  home_start:"ابدأ المراجعة",home_start_inv:"راجع الدعوات",home_open:"افتح",
+  home_start:"ابدأ المراجعة",home_start_inv:"راجع القائمة المختصرة",home_open:"افتح",
   home_need_dec_1:"بانتظار قرارك",home_need_dec_n:"بانتظار قرارك",
   home_ready_1:"جاهز للدعوة",home_ready_n:"جاهزون للدعوة",
   home_await_1:"في مقابلات معكم الآن.",home_await_n:"في مقابلات معكم الآن.",
@@ -5959,7 +5995,7 @@ nav_settings:"الإعدادات",
   swipe_done_s:"المرشحون في القائمة المختصرة جاهزون لدعوتهم للمقابلة.",
   swipe_shortlisted:"في القائمة المختصرة",swipe_passed:"غير المختارين",swipe_back:"العودة إلى اللوحة",
   swipe_list_short:"القائمة المختصرة",swipe_list_pass:"غير المختارين",
-  sw_snack_h:"نُحّي جانباً — أخبر المحرك بالسبب:",sw_undo:"تراجع",
+  sw_snack_h:"نُحّي جانباً — أخبر المحرك بالسبب:",sw_undo:"تراجع",sw_snack_x:"إغلاق",
   sw_r1:"الأقدمية",sw_r2:"التعويض",sw_r3:"الموقع",sw_r4:"فترة الإشعار",sw_r5:"غير مناسب فحسب",
   sw_done_none_h:"لم يكن أحدهم مناسباً",
   sw_done_none_s:"قراراتك أطلقت الدفعة التالية — متقدمون مفروزون مسبقاً في طريقهم إليك.",
@@ -5986,8 +6022,8 @@ review_next:"راجع المرشح التالي",
   stat_active:"وظائف نشطة",stat_apps:"متقدمون قيد المتابعة",stat_review:"بانتظار مراجعتك",
   jobs_search:"ابحث في الوظائف",
   jobs_filters:"التصفية",jobs_results:"{n} وظيفة",
-  ff_status:"الحالة",ff_func:"المجال الوظيفي",ff_dept:"الإدارة",ff_sen:"المستوى",ff_place:"مكان العمل",ff_proj:"المبادرة",ff_conf:"السرّية",
-  ff_none:"دون مبادرة",conf_std:"قياسية",ff_clear:"مسح الكل",ff_show:"عرض {n} وظيفة",jf_remove:"إزالة عامل التصفية",r_paused:"موقوفة",
+  ff_status:"الحالة",ff_func:"المجال الوظيفي",ff_dept:"الإدارة",ff_sen:"المستوى",ff_place:"مكان العمل",ff_proj:"المشروع",ff_conf:"السرّية",
+  ff_none:"دون مشروع",conf_std:"قياسية",ff_clear:"مسح الكل",ff_show:"عرض {n} وظيفة",jf_remove:"إزالة عامل التصفية",r_paused:"موقوفة",
   r_active:"نشطة",r_draft:"مسودة",r_approval:"بانتظار الاعتماد",
   r_conf:"سرّية",r_sealed:"مختومة",
   th_job:"الوظيفة",th_band:"نطاق الراتب",th_apps:"المتقدمون",th_posted:"تاريخ النشر",
@@ -6013,6 +6049,9 @@ pg1_years:"الحد الأدنى لسنوات الخبرة",
   pg3:"معايير المرشح",
   pg3_saudi:"سعوديون فقط",pg3_saudi_s:"قصر الإعلان على المواطنين السعوديين.",
   pg3_eng:"إتقان الإنجليزية مطلوب",pg3_eng_s:"يتحقق منه المحرك أثناء الفرز.",
+  pg3_gen:"الجنس المفضل",pg3_gen_s:"اختياري. اتركه دون تفضيل ما لم يكن الدور يتطلب ذلك فعلاً.",
+  gen_any:"دون تفضيل",gen_m:"ذكر",gen_f:"أنثى",pub_gender:"الجنس المفضل",
+  pg4_none:"دون ذكر الراتب",pg4_none_s:"لن يظهر نطاق في الإعلان. وسيظل المرشحون يذكرون توقعاتهم.",band_none:"غير محدد",
   pg3_clear:"مؤهل للتصريح الأمني",pg3_clear_s:"قصر الإعلان على المرشحين المؤهلين للتصاريح الحكومية.",
   pg4:"نطاق الراتب الشهري",pg4_hint:"يُقارن ببيانات السوق لهذا المجال.",pg4_to:"إلى",
   band_ok:"نطاق سليم. ضمن السوق لهذا الدور.",
@@ -6206,7 +6245,7 @@ pg1_years:"الحد الأدنى لسنوات الخبرة",
   not_selected_note:"غير مناسبين أو صُرف النظر عنهم أو خرجوا، وكلٌّ مسجَّل مع سببه. وتبقى الهوية كما كانت: محجوبة ما لم تكن دعوة قد فتحتها.",
   not_selected_empty:"لم يغادر أي مرشح مسار هذا الدور بعد.",
   role_detail_show:"تفاصيل الدور",
-  rd_jd:"ملخّص الدور",rd_reqs:"المتطلبات",rd_comp:"الأجر",rd_sen:"المستوى الوظيفي",rd_workplace:"مكان العمل",rd_dept:"الإدارة",rd_window:"يُغلق بعد",rd_retention:"الاحتفاظ بالبيانات",rd_program:"مبادرة التوظيف",rd_privacy:"وضع الخصوصية",rd_ats:"مزامنة ATS",rd_view_posting:"اعرض الإعلان كما يراه المتقدمون",
+  rd_jd:"ملخّص الدور",rd_reqs:"المتطلبات",rd_comp:"الأجر",rd_sen:"المستوى الوظيفي",rd_workplace:"مكان العمل",rd_dept:"الإدارة",rd_window:"يُغلق بعد",rd_retention:"الاحتفاظ بالبيانات",rd_program:"مشروع التوظيف",rd_privacy:"وضع الخصوصية",rd_ats:"مزامنة ATS",rd_view_posting:"اعرض الإعلان كما يراه المتقدمون",
   cand_new:"جديد",cand_applied:"قدّم {t}",
   col_empty_all:"لا مرشحين في هذا المسار بعد.",
   col_empty_scr:"يظهر هنا المتقدمون المفروزون المطابقون لهذا الدور.",
@@ -6219,7 +6258,7 @@ pg1_years:"الحد الأدنى لسنوات الخبرة",
   panel_of:"{i} من {n}",
   ptab_profile:"الملف",ptab_notes:"الملاحظات",
   dr_head:"المرشح",
-  dr_years:"الخبرة",dr_notice:"فترة الإشعار",dr_current:"الراتب الحالي",dr_expect:"الراتب المتوقع",dr_city:"المدينة",
+  dr_years:"الخبرة",dr_notice:"فترة الإشعار",dr_current:"الراتب الحالي",dr_expect:"الراتب المتوقع",dr_city:"المدينة",dr_gender:"الجنس",
   dr_why:"لماذا يناسب هذه الوظيفة",
   dr_high:"أبرز ما تحقّقنا منه",
   dr_screen:"فرز أبتال",dr_screen_by:"أعدّه محرك المطابقة",
@@ -6374,7 +6413,7 @@ mod_out_s:"تواصل مع المرشحين مباشرة من اللوحة. تص
   ga_team_role:"غيّر صلاحية {n}",
   ga_seat_req:"طلب مقعداً لأجل {e}",
   ga_draft:"حفظ مسودة: {r}",
-  ga_proj_new:"أنشأ المبادرة {r}",
+  ga_proj_new:"أنشأ المشروع {r}",
   ga_proj_add:"أضاف {r} إلى {p}",
   ga_appeal:"قدّم تبريراً لمراجعة أبتال",
   ga_appeal_ws:"طلب مراجعة إيقاف النشر",
@@ -6768,6 +6807,7 @@ rep_first_s:"بعد النشر",
   lg_up:"ارفع الشعار",
   lg_change:"استبدل الشعار",
   lg_note:"PNG أو JPG · المربع أفضل · اختياري",
+  lg_ph:"إلى أن ترفع شعارك، تنوب أحرف اسمك عنه.",
   doc_cr_h:"شهادة السجل التجاري",
   doc_vat_h:"شهادة ضريبة القيمة المضافة",
   doc_up:"أرفق الملف",
@@ -6876,6 +6916,49 @@ function C(id,nameEn,nameAr,ttEn,ttAr,org,cityEn,cityAr,yrs,expect,noticeEn,noti
   return {id:id,name:{en:nameEn,ar:nameAr},title:{en:ttEn,ar:ttAr},org:org,city:{en:cityEn,ar:cityAr},
     years:yrs,expect:expect,notice:{en:noticeEn,ar:noticeAr},match:match,ago:{en:agoEn,ar:agoAr},
     saudi:saudi,availDays:availDays,skills:skills,ev:ev,note:{en:noteEn,ar:noteAr},verdict:verdict||"rec"};
+}
+/* candidate headshots, lifted from Uptal's own product imagery so the demo
+   matches the avatars the platform actually shows */
+var FACES = {
+  noura: "data:image/jpeg;base64,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",
+  mohammed: "data:image/jpeg;base64,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",
+  layan: "data:image/jpeg;base64,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"
+};
+/* Gender as the candidate stated it on their profile. It is a candidate FACT — it rides
+   the record, never the ranking — and it is what the headshot and the card label read from. */
+var CAND_SEX = {
+  de1:"m",de2:"f",de3:"m",de4:"f",de5:"m",de6:"f",de7:"m",
+  hr1:"m",hr2:"f",hr3:"m",hr4:"f",hr5:"m",hr6:"f",hr7:"m",
+  ta1:"m",ta2:"f",ta3:"m",ta4:"f",ta5:"m",ta6:"f",
+  pd1:"f",pd2:"f",pd3:"m",pd4:"f",pd5:"m",pd6:"f",pd7:"m",
+  cs1:"m",cs2:"f",pm1:"m",dg1:"f",dt1:"m",
+  ml1:"m",ml2:"f",ml3:"m",ml4:"f"
+};
+function candSex(c){
+  if (!c) return "";
+  return CAND_SEX[c.cloneOf ? c.cloneOf : c.id] || "";
+}
+function candSexLabel(c){
+  var g = candSex(c);
+  return g ? t(g === "f" ? "gen_f" : "gen_m") : "-";
+}
+/* One face per candidate, drawn deterministically from the set that matches how they
+   identified, so the same person never changes face between two views. */
+var FACE_SET = { m:["mohammed"], f:["noura","layan"] };
+function candFace(c){
+  var set = FACE_SET[candSex(c)];
+  if (!set || !set.length) return "";
+  var id = String((c && (c.cloneOf || c.id)) || ""), h = 0;
+  for (var i = 0; i < id.length; i++) h = (h * 31 + id.charCodeAt(i)) % 9973;
+  return FACES[set[h % set.length]] || "";
+}
+/* An identity that has been opened shows the real headshot, framed the way the public
+   card frames it. Anything still sealed keeps the lock — this helper is never called for one. */
+function faceAva(c, cls, style){
+  var src = candFace(c), st = style ? ' style="'+style+'"' : "";
+  return src
+    ? '<span class="'+cls+' face"'+st+'><img src="'+src+'" alt=""></span>'
+    : '<span class="'+cls+'"'+st+'>'+esc(initials(c))+'</span>';
 }
 var CANDS = {
  de1:C("de1","Abdullah Al-Harbi","عبدالله الحربي","Senior Data Engineer","مهندس بيانات أول","STC","Riyadh","الرياض",8,39000,"30 days","30 يوماً",94,"2 days ago","قبل يومين",true,30,
@@ -7942,7 +8025,8 @@ function money(n){ return numSpan(n) + RIYAL; }
 /* an honest draft may hold NO band/mode/function yet: unset facts render as a plain
    placeholder, never as a laundered default */
 function salaryLabel(j){
-  return j.band ? money(j.band[0])+' '+t("pg4_to")+' '+money(j.band[1]) : '<span style="color:var(--muted)">—</span>';
+  return j.band ? money(j.band[0])+' '+t("pg4_to")+' '+money(j.band[1])
+                : '<span style="color:var(--muted)">'+t("band_none")+'</span>';
 }
 function appsLabel(n){
   if (LANG === "ar"){
@@ -8051,7 +8135,7 @@ var ROW_STAGES = ["short","applied","screened"];
 function defaultForm(){
   return { title:"", func:"", sen:"sen", years:5, must:[], nice:[],
     wtype:"wt_onsite", country:"ct_sa", city:"ruh", etype:"et_full", dept:0, jd:"", jdText:"",
-    saudi:false, eng:false, clear:false, bmin:28000, bmax:38000, conf:false, seal:false,
+    saudi:false, eng:false, clear:false, gender:"", bandOff:false, bmin:28000, bmax:38000, conf:false, seal:false,
     window:45, owner:0, attest:false, attestRef:"" };
 }
 function ownerName(idx){
@@ -8107,7 +8191,7 @@ function slotsCost(n, months){
 }
 function jobById(id){ return JOBS.filter(function(j){ return j.id === id; })[0] || null; }
 
-/* ============ PROJECTS: time-bound hiring initiatives ============
+/* ============ PROJECTS: time-bound hiring projects ============
    A Project groups ROLES (possibly across departments) under one owner and target.
    DISTINCT from department: department is a PERMANENT unit that scopes the integrity
    ledger; a Project is OPTIONAL, TEMPORARY, owner-led, dated, and may SPAN departments.
@@ -8168,7 +8252,7 @@ function projectStats(p){
            apps:apps, review:review, invite:invite, offers:offers, needRev:needRev,
            pct: r ? Math.round(filled / r * 100) : 0 };
 }
-/* scope the existing review/invite queues to a whole initiative: startSwipe("proj:"+id) */
+/* scope the existing review/invite queues to a whole project: startSwipe("proj:"+id) */
 function inScope(j, scope){
   if (!scope || scope === "all") return true;
   if (scope.indexOf("proj:") === 0){
@@ -8798,12 +8882,45 @@ function roleBack(){
 /* the dashboard mark, everywhere it appears: an uploaded logo when the tenant has one,
    centred initials until then. One builder — the corner-clipped initials bug came from
    each surface hand-rolling its own avatar. */
+/* The monogram is read off the name being displayed, never a field frozen at
+   signup - renaming the company used to leave the old initials behind. Generic
+   company words carry no identity, so they are skipped: "Uptal Co" reads UP. */
+var ORG_STOPWORDS = ["co","company","corp","corporation","inc","llc","ltd","limited","group","holding","holdings",
+                     "est","establishment","enterprises","international","intl","the","and",
+                     "شركة","مؤسسة","مجموعة","القابضة","المحدودة","المحدود","الدولية","و"];
+function orgMonogram(tn){
+  if (!tn) return "";
+  var nm = (tn.name && (tn.name[LANG] || tn.name.en || tn.name.ar)) || "";
+  var parts = String(nm).replace(/[^\p{L}\s]/gu, " ").split(/\s+/).filter(Boolean);
+  /* Arabic carries its article on the word: "البحر" must read ب, not ا - the same
+     rule the candidate initials already use */
+  parts = parts.map(function(w){ return (w.length > 3 && w.indexOf("ال") === 0) ? w.slice(2) : w; });
+  var real = parts.filter(function(w){ return ORG_STOPWORDS.indexOf(w.toLowerCase()) < 0; });
+  if (!real.length) real = parts;
+  if (!real.length) return String(tn.short || "").slice(0, 2).toUpperCase();
+  var m = real.length === 1
+    ? real[0].slice(0, 2)                                   /* one real word: first two letters */
+    : real[0].charAt(0) + real[1].charAt(0);                /* else: first letter of the first two */
+  return m.toLocaleUpperCase(LANG === "ar" ? "ar" : "en");
+}
+/* a stable colour per company, so the placeholder reads as that company's mark
+   rather than "no logo yet" - same name always lands on the same hue */
+var ORG_HUES = ["p","b","t","v","c","o"];
+function orgHue(tn){
+  var nm = (tn && tn.name && (tn.name.en || tn.name.ar)) || "";
+  var h = 0;
+  for (var i = 0; i < nm.length; i++) h = (h * 31 + nm.charCodeAt(i)) % 9973;
+  return ORG_HUES[h % ORG_HUES.length];
+}
 function orgMarkHTML(tn, opts){
   opts = opts || {};
   var cls = opts.cls ? " " + opts.cls : "";
   if (opts.masked) return '<span class="org-mark' + cls + ' masked">?</span>';
   if (tn && tn.logo) return '<img class="org-mark' + cls + '" src="' + tn.logo + '" alt="">';
-  return '<span class="org-mark' + cls + (tn && tn.type === "gov" ? " gov" : "") + '">' + esc((tn && tn.short) || "") + '</span>';
+  var mono = orgMonogram(tn);
+  var tone = (tn && tn.type === "gov") ? " gov" : " hue-" + orgHue(tn);
+  return '<span class="org-mark ph' + cls + tone + '" aria-hidden="true">' +
+           '<i>' + esc(mono) + '</i></span>';
 }
 function bindLogoUpload(after){
   var inp = $("#lgFile"); if (!inp) return;
@@ -8860,7 +8977,7 @@ function logoRowHTML(){
     '<div class="lg-row">'+orgMarkHTML(state.tenant)+
     '<button class="btn btn-out" id="lgBtn" type="button">'+t(state.tenant.logo?"lg_change":"lg_up")+'</button>'+
     '<input id="lgFile" type="file" accept="image/*" hidden></div>'+
-    '<div class="hint">'+t("lg_note")+'</div></div>';
+    '<div class="hint">'+t(state.tenant.logo?"lg_note":"lg_ph")+'</div></div>';
 }
 function render(screen){
   if (screen === "home") renderHome();
@@ -9775,6 +9892,8 @@ function swipeSnackShow(){
   }).join("");
   el.innerHTML = '<span class="snk-h">'+t("sw_snack_h")+'</span>'+chips+
     '<button class="snk-undo" id="snkUndo" type="button">'+t("sw_undo")+'</button>'+
+    '<button class="snk-x" id="snkX" type="button" aria-label="'+esc(t("sw_snack_x"))+'" title="'+esc(t("sw_snack_x"))+'">'+
+      '<svg viewBox="0 0 24 24" stroke-linecap="round"><path d="m6 6 12 12M18 6 6 18"/></svg></button>'+
     '<span class="snk-bar"><i></i></span>';
   el.hidden = false;
   void el.offsetWidth;   /* restart the entry transition and the countdown bar */
@@ -9784,6 +9903,10 @@ function swipeSnackShow(){
   });
   var u = $("#snkUndo");
   if (u) u.addEventListener("click", swipeUndoPass);
+  /* dismissing is not undoing: it commits the held pass to the fallback bucket at once,
+     which is exactly what silence would have done five seconds later */
+  var x = $("#snkX");
+  if (x) x.addEventListener("click", function(){ swipeFlushPend(); });
 }
 function swipeSnackHide(){
   var el = $("#swipeSnack"); if (!el) return;
@@ -10193,7 +10316,7 @@ function renderProject(){
   }).join("")+'</div>';
   $("#projBody").innerHTML = head + summary + prog + ctas + rolesH + rolesList + teamH + teamRows + actH + actRows;
 }
-/* ===== initiative verbs: the nav position promises create + attach, so both exist ===== */
+/* ===== project verbs: the nav position promises create + attach, so both exist ===== */
 function projShortDate(l){
   return new Date().toLocaleDateString(l === "ar" ? "ar-u-ca-gregory-nu-latn" : "en-GB", { day:"numeric", month:"short" });
 }
@@ -10253,7 +10376,7 @@ function openProjPicker(jobId){
 }
 function addJobToProject(jobId, pid){
   var p = projectById(pid); if (!p) return;
-  /* a job belongs to one initiative or none: joining a new one leaves the old one */
+  /* a job belongs to one project or none: joining a new one leaves the old one */
   projectsFor().forEach(function(x){ x.jobs = x.jobs.filter(function(id){ return id !== jobId; }); });
   p.jobs.push(jobId);
   closeModal();
@@ -10355,7 +10478,7 @@ function renderWorkspace(){
   var md = MODES.filter(function(m){ return m.id === job.mode; })[0];
   var stChipCls = (job.status === "active" || job.status === "hired") ? "chip-green" : job.status === "approval" ? "chip-amber" : "chip-plain";
   /* wave 6 — 3-slot header: ONE status chip, ONE time chip, one muted meta line.
-     Everything else (exclusivity, retention, conf/sealed, ATS, initiative) lives in Role details. */
+     Everything else (exclusivity, retention, conf/sealed, ATS, project) lives in Role details. */
   var chips = ['<span class="chip '+stChipCls+'">'+t("r_"+job.status)+'</span>'];
   if (job.status === "hired" && job.outcome && job.outcome.confirm && job.outcome.confirm.status === "confirmed")
     chips.push('<span class="chip chip-green">'+ICONS.check+t("hire_conf_chip")+'</span>');
@@ -10686,7 +10809,7 @@ function candRowHTML(cid, job){
   var nm = shown ? esc(c.name[LANG]) : esc(blindLabel(cid));
   var tt = shown ? (esc(c.title[LANG])+' · '+esc(c.org)+' · '+esc(c.city[LANG]))
                  : ((LANG==="ar"?arYears(c.years):c.years+" yrs")+' · '+esc(c.city[LANG]));
-  var ava = shown ? '<span class="c-ava">'+esc(initials(c))+'</span>' : '<span class="c-ava blind">'+ICONS.lock+'</span>';
+  var ava = shown ? faceAva(c, "c-ava") : '<span class="c-ava blind">'+ICONS.lock+'</span>';
   var nameClickable = !isReviewRow;
   return '<div class="crow'+(isReviewRow?" teaser":"")+'">'+
     lead+ ava+
@@ -10720,7 +10843,7 @@ function notSelRowHTML(e, job){
      nobody is re-sealed by leaving — and nobody is unsealed by it either */
   var shown = job ? idOpen(job.id, e.cid) : false;
   var nm = shown ? esc(c.name[LANG]) : esc(blindLabel(e.cid));
-  var ava = shown ? '<span class="c-ava">'+esc(initials(c))+'</span>' : '<span class="c-ava blind">'+ICONS.lock+'</span>';
+  var ava = shown ? faceAva(c, "c-ava") : '<span class="c-ava blind">'+ICONS.lock+'</span>';
   return '<div class="crow teaser"><span></span>'+ava+
     '<span class="cr-main"><span class="cr-nm">'+nm+'</span>'+
     '<span class="cr-tt">'+((LANG==="ar"?arYears(c.years):c.years+" yrs")+' · '+esc(c.city[LANG]))+'</span></span>'+
@@ -11245,7 +11368,7 @@ function candBodyHTML(cid, ctx, jobId, withContact){
   var headName = revealedName ? esc(c.name[LANG]) : esc(blindLabel(cid));
   var headSub = revealedName ? (esc(c.title[LANG])+' · '+esc(c.org))
     : ((LANG==="ar"?arYears(c.years):c.years+" yrs")+' · '+esc(c.city[LANG]));
-  var idSec = '<div class="dr-id"><span class="dr-ava'+(revealedName?"":" blind")+'">'+(revealedName ? esc(initials(c)) : ICONS.lock)+'</span>'+
+  var idSec = '<div class="dr-id">'+(revealedName ? faceAva(c, "dr-ava") : '<span class="dr-ava blind">'+ICONS.lock+'</span>')+
     '<div class="mw0"><h3>'+headName+'</h3><div class="dr-tt">'+headSub+'</div>'+
     (revealedName ? "" : '<span class="id-seal">'+ICONS.lock+t("id_sealed")+'</span>'+sealedRefChip(jobId, cid))+'</div>'+
     (pipe ? '<span class="fit"><span class="fd"></span><span class="num">'+tf("fit_lab",{n:c.match})+'</span></span>' : "")+
@@ -11261,7 +11384,8 @@ function candBodyHTML(cid, ctx, jobId, withContact){
       '<div class="dr-fact"><div class="f-lab">'+t("dr_notice")+'</div><div class="f-val">'+esc(c.notice[LANG])+'</div></div>'+
       '<div class="dr-fact"><div class="f-lab">'+t("dr_current")+'</div><div class="f-val">'+money(currentSalary(c))+perMo+'</div></div>'+
       '<div class="dr-fact"><div class="f-lab">'+t("dr_expect")+'</div><div class="f-val">'+money(c.expect)+perMo+'</div></div>'+
-      '<div class="dr-fact wide"><div class="f-lab">'+t("dr_city")+'</div><div class="f-val">'+esc(c.city[LANG])+'</div></div>'+
+      '<div class="dr-fact"><div class="f-lab">'+t("dr_gender")+'</div><div class="f-val">'+candSexLabel(c)+'</div></div>'+
+      '<div class="dr-fact"><div class="f-lab">'+t("dr_city")+'</div><div class="f-val">'+esc(c.city[LANG])+'</div></div>'+
     '</div>';
   /* a completed phone screen is the freshest intel: its notes sit right under the engine's read */
   var scrSec = "";
@@ -12061,7 +12185,8 @@ function openOutcomeHirePick(job, finalists, forced){
   var picks = finalists.map(function(cid){
     var c = CANDS[cid], shown = idOpen(job.id, cid);
     return '<button class="pick-job" type="button" data-ochire="'+cid+'">'+
-      '<span class="c-ava'+(shown?"":" blind")+'" style="width:32px;height:32px;font-size:10.5px;border-radius:9px">'+(shown?esc(initials(c)):ICONS.lock)+'</span>'+
+      (shown ? faceAva(c, "c-ava", "width:32px;height:32px;font-size:10.5px")
+             : '<span class="c-ava blind" style="width:32px;height:32px;font-size:10.5px;border-radius:9px">'+ICONS.lock+'</span>')+
       '<span class="mw0"><b>'+esc(pipeName(job.id, cid))+'</b><span>'+esc(c.title[LANG])+'</span></span></button>';
   }).join("");
   openModal(
@@ -12716,8 +12841,8 @@ function openAmendModal(job){
       '<div class="field"><label>'+t("amend_title")+' <span class="am-lang">'+t("am_en")+'</span></label><input class="in" id="amTitleEn" dir="ltr" value="'+esc(job.title.en||"")+'"></div>'+
       '<div class="field"><label>'+t("amend_title")+' <span class="am-lang">'+t("am_ar")+'</span></label><input class="in" id="amTitleAr" dir="rtl" value="'+esc(job.title.ar||"")+'"></div>'+
       '<div class="wiz-row">'+
-        '<div class="field"><label>'+t("amend_bmin")+'</label><input class="in" id="amBmin" type="number" dir="ltr" value="'+job.band[0]+'"'+(locked?" disabled":"")+'></div>'+
-        '<div class="field"><label>'+t("amend_bmax")+'</label><input class="in" id="amBmax" type="number" dir="ltr" value="'+job.band[1]+'"'+(locked?" disabled":"")+'></div>'+
+        '<div class="field"><label>'+t("amend_bmin")+'</label><input class="in" id="amBmin" type="number" dir="ltr" value="'+(job.band?job.band[0]:"")+'"'+(locked?" disabled":"")+'></div>'+
+        '<div class="field"><label>'+t("amend_bmax")+'</label><input class="in" id="amBmax" type="number" dir="ltr" value="'+(job.band?job.band[1]:"")+'"'+(locked?" disabled":"")+'></div>'+
       '</div>'+
       '<div class="field"><label>'+t("amend_mode")+'</label><select class="in" id="amMode"'+(locked?" disabled":"")+'>'+modeOpts+'</select></div>'+
       '<div class="field"><label>'+t("amend_jd")+' <span class="am-lang">'+t("am_en")+'</span></label><textarea class="in" id="amJdEn" dir="ltr" rows="4">'+esc(jdOf(job,"en"))+'</textarea></div>'+
@@ -13861,6 +13986,9 @@ function buildPostForm(){
   if (jd.innerHTML !== f.jd) jd.innerHTML = f.jd;
   $("#fYearsVal").textContent = arYears(f.years);
   $("#fTitle").value = f.title;
+  $("#fGender").innerHTML = [["","gen_any"],["m","gen_m"],["f","gen_f"]].map(function(g){
+    return '<button class="opt'+(f.gender===g[0]?" on":"")+'" type="button" data-gender="'+g[0]+'">'+t(g[1])+'</button>';
+  }).join("");
   $("#fWindow").innerHTML = [30,45,60].map(function(d){
     return '<button class="opt'+(f.window===d?" on":"")+'" type="button" data-window="'+d+'"><span class="num">'+tf("wnd_d",{d:d})+'</span></button>';
   }).join("");
@@ -14137,7 +14265,8 @@ function renderReview(){
     [t("lb_dept"), dept ? esc(dept[LANG]) : "-"],
     [t("rv_location"), locLabel(f)],
     [t("rv_etype"), t(f.etype)],
-    [t("pub_band"), money(f.bmin)+' '+t("pg4_to")+' '+money(f.bmax)],
+    [t("pub_band"), f.bandOff ? t("band_none") : money(f.bmin)+' '+t("pg4_to")+' '+money(f.bmax)],
+    [t("pub_gender"), t(f.gender === "m" ? "gen_m" : f.gender === "f" ? "gen_f" : "gen_any")],
     [t("pub_priv"), privLab],
     [t("pub_commit"), tf("pub_commit_v",{d:f.window, o:esc(ownerName(f.owner))})]
   ];
@@ -14178,8 +14307,8 @@ function continueDraft(jobId){
   f.must = (j.reqs || []).map(function(r){ return r.en; });
   var draftJd = jobJd(j);
   f.jdText = draftJd; f.jd = draftJd ? esc(draftJd) : "";
-  f.bmin = j.band ? j.band[0] : f.bmin; f.bmax = j.band ? j.band[1] : f.bmax;
-  f.conf = !!j.conf; f.seal = !!j.seal;
+  f.bmin = j.band ? j.band[0] : f.bmin; f.bmax = j.band ? j.band[1] : f.bmax; f.bandOff = !j.band;
+  f.conf = !!j.conf; f.seal = !!j.seal; f.gender = j.gender || "";
   var depts = DEPTS[state.tenant.id] || [];
   for (var i = 0; i < depts.length; i++){ if (j.dept && depts[i].en === j.dept.en){ f.dept = i; break; } }
   state.form = f;
@@ -14263,6 +14392,10 @@ function syncSwitches(){
   $("#swConf").setAttribute("aria-checked", String(f.conf));
   $("#swSeal").setAttribute("aria-checked", String(f.seal));
   $("#swAttest").setAttribute("aria-checked", String(f.attest));
+  /* a posting with no stated band hides the steppers outright: an inert control is worse than none */
+  $("#swBandNone").setAttribute("aria-checked", String(f.bandOff));
+  $("#bandRow").hidden = !!f.bandOff;
+  $("#bandHint").hidden = !!f.bandOff;
 }
 function makeChip(label, cls, onX){
   var el = document.createElement("span");
@@ -14300,6 +14433,7 @@ function renderSugg(){
 }
 function renderBandHint(){
   var f = state.form, el = $("#bandHint");
+  if (f.bandOff) return;   /* nothing to compare a posting against when it states no band */
   var ms = marketStats(f.func, f.sen, f.city || "ruh");
   if (!ms){ el.className = "band-hint ok"; el.innerHTML = ICONS.check + "<span>" + t("band_ok") + "</span>"; return; }
   var range = '<span class="num" dir="ltr">' + fmt(ms.p25) + "\u2013" + fmt(ms.p75) + '</span>';
@@ -14330,6 +14464,7 @@ function renderPreview(){
     chips.push('<span class="chip chip-plain">'+esc(sn[LANG])+'</span>');
     chips.push('<span class="chip chip-plain">'+locLabel(f)+'</span>');
     chips.push('<span class="chip chip-plain">'+t(f.etype)+'</span>');
+    if (f.gender) chips.push('<span class="chip chip-plain">'+t(f.gender === "m" ? "gen_m" : "gen_f")+'</span>');
     if (f.saudi) chips.push('<span class="chip chip-green">'+t("pg3_saudi")+'</span>');
     if (f.seal) chips.push('<span class="chip chip-blue">'+ICONS.lock+t("r_sealed")+'</span>');
     var reqs = f.must.slice(0,5).map(function(s){
@@ -14340,7 +14475,9 @@ function renderPreview(){
       '<span class="mw0"><b>'+esc(orgName)+'</b><span>'+t("prev_via")+'</span></span></div>'+
       '<div class="pc-title">'+(f.title.trim()?esc(f.title):"&hellip;")+'</div>'+
       '<div class="pc-chips">'+chips.join("")+'</div>'+
-      '<div class="pc-band">'+money(f.bmin)+' '+t("pg4_to")+' '+money(f.bmax)+'<span class="per">'+t("per_month")+'</span></div>'+
+      '<div class="pc-band">'+(f.bandOff
+        ? '<span style="color:var(--muted)">'+t("band_none")+'</span>'
+        : money(f.bmin)+' '+t("pg4_to")+' '+money(f.bmax)+'<span class="per">'+t("per_month")+'</span>')+'</div>'+
       (reqs ? '<div class="pc-reqs">'+reqs+'</div>' : "")+'</div>';
   }
   $("#privNote").textContent = f.seal ? t("priv_seal") : f.conf ? t("priv_conf") : t("priv_std");
@@ -14513,8 +14650,9 @@ function doPublish(){
   var deptObj = (DEPTS[state.tenant.id] || [])[f.dept] || {en:"-", ar:"-"};
   var job = {
     id:id, tenant: state.tenant.id, title:{en:f.title, ar:f.title}, func:f.func, sen:f.sen, mode: modeFromForm(f),
-    etype:f.etype, dept: deptObj, jd: clampJd(f.jdText),
-    status: needsApproval ? "approval" : "active", conf:f.conf, seal:f.seal, posted:{en:"just now",ar:"الآن"}, band:[f.bmin,f.bmax],
+    etype:f.etype, dept: deptObj, jd: clampJd(f.jdText), gender: f.gender || "",
+    status: needsApproval ? "approval" : "active", conf:f.conf, seal:f.seal, posted:{en:"just now",ar:"الآن"},
+    band: f.bandOff ? null : [f.bmin, f.bmax],
     win:{en:f.window+" days left", ar:"باقي "+f.window+" يوماً"},
     reqs:reqs, stages:{short:[],applied:[],screened:[],fit:[],invited:[],offer:[]},
     owner:{ en:owner.en, ar:owner.ar },
@@ -14754,7 +14892,7 @@ function palItems(){
       run:(function(id){ return function(){ go("role", id); }; })(j.id)
     });
   });
-  /* open pools, initiatives and the six settings subjects are addressable by name */
+  /* open pools, projects and the six settings subjects are addressable by name */
   visibleJobs().forEach(function(j){
     if (j.poolOpen && j.status === "active" && hit([t("pool_browse"), "pool", j.title.en, j.title.ar]))
       items.push({ sec:"pal_jobs", lab:t("pool_browse")+" · "+j.title[LANG], ic:"people",
@@ -14993,6 +15131,8 @@ function wire(){
     if (mode){ state.form.mode = mode.getAttribute("data-mode"); buildPostForm(); return; }
     var wnd = e.target.closest("[data-window]");
     if (wnd){ state.form.window = parseInt(wnd.getAttribute("data-window"), 10); buildPostForm(); return; }
+    var gsel = e.target.closest("[data-gender]");
+    if (gsel){ state.form.gender = gsel.getAttribute("data-gender"); buildPostForm(); return; }
     var jm = e.target.closest("#jwManage");
     if (jm){ openManageSheet(); return; }
     var jc = e.target.closest("#jwClose");
@@ -15129,7 +15269,7 @@ function wire(){
   });
   $("#fOwner").addEventListener("change", function(){ state.form.owner = parseInt(this.value, 10) || 0; });
   $("#fAttestRef").addEventListener("input", function(){ state.form.attestRef = this.value; });
-  [["swSaudi","saudi"],["swEng","eng"],["swClear","clear"],["swConf","conf"],["swSeal","seal"],["swAttest","attest"]].forEach(function(p){
+  [["swSaudi","saudi"],["swEng","eng"],["swClear","clear"],["swConf","conf"],["swSeal","seal"],["swAttest","attest"],["swBandNone","bandOff"]].forEach(function(p){
     $("#"+p[0]).addEventListener("click", function(){
       state.form[p[1]] = !state.form[p[1]];
       syncSwitches(); renderPreview();
