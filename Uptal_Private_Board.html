@@ -1809,7 +1809,7 @@
      The tiles are ACCOUNT states: each one changes what the dashboard will let you do next.
      Below them two panels share a top and a bottom edge and scroll inside themselves, so the
      page itself never scrolls and the tiles never leave the viewport. */
-  .htiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px}
+  .htiles{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:10px}
   .htile{background:#fff;border:1px solid var(--hair);border-radius:var(--r-card);padding:13px 15px;position:relative;overflow:hidden;
     text-align:start;font-family:inherit;font-size:inherit;color:inherit;cursor:pointer;min-height:96px;display:flex;flex-direction:column;align-items:flex-start}
   .htile::after{content:"";position:absolute;inset-block-start:0;inset-inline:0;height:3px;background:var(--hair-2)}
@@ -1817,6 +1817,8 @@
   .htile.s1::after{background:#E8A13A}
   .htile.s2::after{background:var(--persian)}
   .htile.s3::after{background:#CBD5EA}
+  .htile.s4::after{background:#DDE3EF}
+  .htile.quiet{cursor:default}
   .htile:hover{border-color:var(--hair-2);box-shadow:var(--sh-1)}
   .htile .ht-k{font-size:var(--fs-1);font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
   html[lang=ar] .htile .ht-k{letter-spacing:0}
@@ -1826,6 +1828,7 @@
   .htile.s1 .ht-v{color:#9A6516}
   .htile.s2 .ht-v{color:var(--persian)}
   .htile.s3 .ht-v{color:var(--slate)}
+  .htile.s4 .ht-v{color:var(--slate);font-weight:600}
   .htile .ht-due{display:block;font-family:var(--font-body);font-size:var(--fs-2);font-weight:700;color:#B23C39;margin-block-start:3px}
   html[lang=ar] .htile .ht-due{font-family:var(--font-ar)}
   .htile .ht-a{margin-block-start:auto;padding-block-start:9px;font-size:var(--fs-2);font-weight:650;color:var(--persian)}
@@ -1848,6 +1851,9 @@
   .hp-f{flex:none;display:flex;align-items:center;gap:10px;padding:8px 12px;border-block-start:1px solid var(--hair);background:var(--tint-blue-2)}
   .hp-f .hp-note{font-size:var(--fs-2);color:var(--muted);padding-inline-start:5px}
   .hp-f .home-foot{margin:0;padding:0;border:0;flex:1}
+  .hp-fa{margin-inline-start:auto;display:inline-flex;align-items:center;gap:4px;background:none;border:0;padding:0;
+    font-family:inherit;font-size:var(--fs-2);font-weight:650;color:var(--persian);cursor:pointer;white-space:nowrap}
+  .hp-fa svg{width:13px;height:13px}
   /* the frame: Home only, and only once it has panels to hold */
   html.home-fixed,html.home-fixed body{height:100%;overflow:hidden}
   html.home-fixed .shell.on{height:100dvh;min-height:0}
@@ -3624,7 +3630,10 @@ nav_settings:"Settings",
   ht_ap_1:"1 waiting",ht_ap_n:"{n} waiting",ht_se_1:"1 request",ht_se_n:"{n} requests",
   ht_st_1:"1 role to fix",ht_st_n:"{n} roles to fix",ht_nw_1:"Open on 1 role",ht_nw_n:"Open on {n} roles",
   ht_cta_clear:"Clear the backlog",ht_cta_seat:"Approve or decline",ht_cta_stand:"Open Settings",ht_cta_net:"Search the network",
-  ht_more:"+{n}",ht_clear_h:"Nothing is owed by you",ht_clear_s:"Every deadline this board tracks is clear.",
+  ht_v_ok:"Verified",ht_p_open:"Open",ht_s_flow:"Flowing",ht_r_clear:"Clear",ht_a_none:"None owed",
+  ht_ap_none:"None waiting",ht_se_none:"No requests",ht_nw_none:"Closed",
+  ht_open_jobs:"Open Jobs",ht_all_activity:"All activity",
+  ht_more:"+{n}",
   home_stand_open:"{n} items need your attention",
   home_view_all:"View all roles · {n}",
   badge_review_aria:"{n} candidates awaiting review",
@@ -5347,7 +5356,10 @@ nav_settings:"الإعدادات",
   ht_ap_1:"واحد بالانتظار",ht_ap_n:"{n} بالانتظار",ht_se_1:"طلب واحد",ht_se_n:"{n} طلبات",
   ht_st_1:"دور واحد يحتاج معالجة",ht_st_n:"{n} أدوار تحتاج معالجة",ht_nw_1:"مفتوحة على دور واحد",ht_nw_n:"مفتوحة على {n} أدوار",
   ht_cta_clear:"صفِّ المتراكم",ht_cta_seat:"اعتمد أو ارفض",ht_cta_stand:"افتح الإعدادات",ht_cta_net:"ابحث في الشبكة",
-  ht_more:"+{n}",ht_clear_h:"لا شيء مستحق عليك",ht_clear_s:"كل مهلة تتابعها اللوحة سليمة.",
+  ht_v_ok:"موثّق",ht_p_open:"مفتوح",ht_s_flow:"تتدفق",ht_r_clear:"لا شيء",ht_a_none:"لا ردود مستحقة",
+  ht_ap_none:"لا شيء بالانتظار",ht_se_none:"لا طلبات",ht_nw_none:"مغلقة",
+  ht_open_jobs:"افتح الوظائف",ht_all_activity:"كل النشاط",
+  ht_more:"+{n}",
   home_stand_open:"{n} بنود تحتاج انتباهك",
   home_view_all:"عرض كل الأدوار · {n}",
   badge_review_aria:"{n} مرشحين بانتظار المراجعة",
@@ -9161,6 +9173,12 @@ function enter(tenantId){
      pm1 is a good-fit candidate with a disposition clock already running */
   if (tenantId === "qimam"){ state.invited["q2|hr1"] = true; state.invited["q4|pd1"] = true; }
   if (tenantId === "ndpc"){ state.disp["n2|pm1"] = 4; }
+  /* The sample dashboard has to SHOW the states the board enforces, not just describe
+     them: the strip is the product’s promise made visible. Everything below is a real
+     state the tenant can clear from the UI. The two that would freeze the demo itself,
+     a verification hold and a publishing block, are deliberately NOT seeded — a sample
+     dashboard nobody can post from teaches the wrong thing. */
+  if (tenantId === "qimam") seedDemoStates();
   if (state.tenant.type === "gov"){ state.form.seal = true; state.form.saudi = true; }
   /* the gate screen is gone; showAuth() already hides the auth layer */
   hideAuthLayer();
@@ -9607,34 +9625,47 @@ function poolOpenJobs(){ return visibleJobs().filter(function(j){ return j.poolO
 function approvalJobs(){ return canApprove() ? visibleJobs().filter(function(j){ return j.status === "approval"; }) : []; }
 function homeTiles(reviewN, invQ, due, acts){
   var T = [], vs = verifState();
-  function add(sev, k, v, cta, attr, quiet){ T.push({ sev:sev, k:k, v:v, cta:cta, attr:attr || "", quiet:!!quiet }); }
+  function add(sev, k, v, cta, attr, quiet){ T.push({ sev:sev, k:k, v:v, cta:cta || "", attr:attr || "", quiet:!!quiet }); }
+  /* a quiet state still holds its column: the strip is a control panel, so it reads the
+     same shape every morning and only its colours move. QUIET sorts last and asks nothing. */
+  function quiet(k, v){ add(4, k, v, "", "", true); }
   /* 1 · verification outranks everything: it is the one state that freezes the rest */
   if (vs === "needinfo") add(0, "ht_h_verif", t("ht_v_ni"), t("hv_ni_cta"), 'id="heroVerify"');
   else if (vs === "none" && acts.length) add(0, "ht_h_verif", t("ht_v_none"), t("hv_ni_cta"), 'id="heroVerify"');
-  else if (vs === "pending") add(3, "ht_h_verif", t("hv_pending_h"), t("hv_pending_s"), "", true);
+  else if (vs === "pending") add(3, "ht_h_verif", t("hv_pending_h"), "", "", true);
+  else quiet("ht_h_verif", t("ht_v_ok"));
   /* 2 · can this dashboard publish at all */
   var owed = outcomesBlocking();
   if (owed.length) add(0, "ht_h_pub", t("ht_p_paused"), t("oc_report"), 'data-recout="'+esc(owed[0].id)+'"');
   else if (!isViewer() && slotsFree() <= 0) add(1, "ht_h_pub", tf("ht_p_full",{u:slotsUsed(), n:slotsTotal()}), t("slot_add"), "data-slots");
+  else quiet("ht_h_pub", t("ht_p_open"));
   /* 3 · new applicants stop arriving while an unreviewed backlog sits */
   var sp = subsPausedJobs();
   if (sp.length) add(0, "ht_h_subs", sp.length === 1 ? t("ht_s_paused_1") : tf("ht_s_paused_n",{n:nn(fmt(sp.length))}), t("ht_cta_clear"), 'data-deck="all|review"');
+  else quiet("ht_h_subs", t("ht_s_flow"));
   /* 4 · the day’s work */
   if (reviewN > 0) add(1, "ht_h_rev", tf("ht_r_wait",{n:nn(fmt(reviewN))}), t("home_start"), 'data-deck="all|review"');
+  else quiet("ht_h_rev", t("ht_r_clear"));
   /* 5 · people already shortlisted, waiting on a decision */
   if (invQ.length){
     var av = (invQ.length === 1 ? t("ht_a_1") : tf("ht_a_n",{n:nn(fmt(invQ.length))}))+
       (due > 0 ? '<span class="ht-due">'+tf("ht_a_due",{n:nn(fmt(due))})+'</span>' : "");
     add(1, "ht_h_ans", av, t("home_start_inv"), 'data-deck="all|invite"');
-  }
+  } else quiet("ht_h_ans", t("ht_a_none"));
   var ap = approvalJobs();
   if (ap.length) add(2, "ht_h_appr", ap.length === 1 ? t("ht_ap_1") : tf("ht_ap_n",{n:nn(fmt(ap.length))}), t("ap_review_btn"), 'data-openrole="'+esc(ap[0].id)+'"');
-  var sr = isAdmin() ? seatReqs() : [];
-  if (sr.length) add(2, "ht_h_seat", sr.length === 1 ? t("ht_se_1") : tf("ht_se_n",{n:nn(fmt(sr.length))}), t("ht_cta_seat"), 'data-goset="team"');
+  else if (canApprove()) quiet("ht_h_appr", t("ht_ap_none"));
+  if (isAdmin()){
+    var sr = seatReqs();
+    if (sr.length) add(2, "ht_h_seat", sr.length === 1 ? t("ht_se_1") : tf("ht_se_n",{n:nn(fmt(sr.length))}), t("ht_cta_seat"), 'data-goset="team"');
+    else quiet("ht_h_seat", t("ht_se_none"));
+  }
   var warns = state.intWarnings || [];
   if (warns.length) add(1, "ht_h_stand", warns.length === 1 ? t("ht_st_1") : tf("ht_st_n",{n:nn(fmt(warns.length))}), t("ht_cta_stand"), 'data-goset="standing"');
+  else quiet("ht_h_stand", realBandLabel());
   var po = poolOpenJobs();
   if (po.length) add(3, "ht_h_net", po.length === 1 ? t("ht_nw_1") : tf("ht_nw_n",{n:nn(fmt(po.length))}), t("ht_cta_net"), 'data-openpool="'+esc(po[0].id)+'"');
+  else quiet("ht_h_net", t("ht_nw_none"));
   /* stable within a severity: the order above is the order of consequence */
   T.forEach(function(x, i){ x.i = i; });
   T.sort(function(a, b){ return a.sev - b.sev || a.i - b.i; });
@@ -9642,22 +9673,44 @@ function homeTiles(reviewN, invQ, due, acts){
 }
 function homeTilesHTML(reviewN, invQ, due, acts){
   var T = homeTiles(reviewN, invQ, due, acts);
-  if (!T.length)
-    return '<div class="htiles"><div class="htile s3 more" style="grid-column:1 / -1;min-height:0">'+
-      '<span class="ht-v">'+t("ht_clear_h")+'</span><span class="ht-k">'+t("ht_clear_s")+'</span></div></div>';
+  if (!T.length) return "";
   var shown = T.slice(0, HOME_TILE_CAP), rest = T.slice(HOME_TILE_CAP);
   var html = shown.map(function(x, i){
     /* the one-verb law survives the redesign: exactly one lead action, the top one */
     var lead = i === 0 && !x.quiet;
-    var tag = x.quiet ? "div" : "button";
-    return '<'+tag+' class="htile s'+x.sev+(lead ? " lead" : "")+'"'+(tag === "button" ? ' type="button"' : "")+' '+x.attr+'>'+
+    var tag = x.quiet || !x.attr ? "div" : "button";
+    return '<'+tag+' class="htile s'+x.sev+(x.quiet ? " quiet" : "")+(lead ? " lead" : "")+'"'+(tag === "button" ? ' type="button"' : "")+' '+x.attr+'>'+
       '<span class="ht-k">'+t(x.k)+'</span><span class="ht-v">'+x.v+'</span>'+
-      '<span class="ht-a'+(x.quiet ? " quiet" : "")+(lead ? " ha-lead" : "")+'">'+x.cta+(x.quiet ? "" : " \u2192")+'</span></'+tag+'>';
+      (x.cta ? '<span class="ht-a'+(lead ? " ha-lead" : "")+'">'+x.cta+' \u2192</span>' : "")+'</'+tag+'>';
   }).join("");
   if (rest.length)
     html += '<div class="htile more"><span class="ht-v">'+tf("ht_more",{n:nn(fmt(rest.length))})+'</span>'+
       '<span class="ht-k">'+rest.map(function(x){ return t(x.k); }).join(" \u00b7 ")+'</span></div>';
   return '<div class="htiles">'+html+'</div>';
+}
+/* Sample-data states for the demo dashboard. Idempotent: re-entering must not stack.
+   Each one is clearable from the UI, so the demo teaches the loop rather than a picture. */
+function seedDemoStates(){
+  var q1 = jobById("q1"), q3 = jobById("q3"), q4 = jobById("q4");
+  /* two people are shortlisted and owed an answer, one of them inside the last two days */
+  if (q1){
+    var st = jobStages(q1);
+    if (!st.fit.length){
+      ["de1","de2"].forEach(function(cid){
+        var i = st.screened.indexOf(cid);
+        if (i >= 0){ st.screened.splice(i, 1); st.fit.push(cid); }
+      });
+    }
+    if (st.fit.indexOf("de1") >= 0) state.disp["q1|de1"] = 2;
+    if (st.fit.indexOf("de2") >= 0) state.disp["q1|de2"] = 9;
+  }
+  /* the next batch is held behind an unreviewed backlog on the Treasury role */
+  if (q3 && !q3.batchReleasing) q3.batchPending = true;
+  /* the matching promise was missed on the design role, so its wider network is open */
+  if (q4) q4.poolOpen = true;
+  /* a teammate is locked out until an admin answers */
+  if (!SEATREQS.qimam || !SEATREQS.qimam.length)
+    SEATREQS.qimam = [{ email:"yousef@qimamcapital.sa", role:"rec", byEn:"Maha Al-Suwailem", byAr:"مها السويلم" }];
 }
 /* Home is the only screen that owns the viewport; the frame goes on with the panels */
 function setHomeFixed(on){
@@ -9717,14 +9770,16 @@ function renderHome(){
     html = homeTilesHTML(reviewN, invQ, due, acts)+
       '<div class="home-grid hframe">'+
         '<section class="hpanel"><header class="hp-h"><h2>'+t("home_ops_h")+'</h2>'+
+          '<button class="hp-link" data-nav="roles" type="button">'+t("ht_open_jobs")+CHEV+'</button>'+
           '<span class="sec-count num" dir="ltr">'+fmt(acts.length)+'</span>'+
-          '<button class="hp-link" data-nav="roles" type="button">'+t("nav_jobs")+CHEV+'</button>'+
         '</header><div class="hp-b">'+board+'</div>'+
-        '<footer class="hp-f">'+homeFootHTML()+'</footer></section>'+
+        '<footer class="hp-f">'+homeFootHTML()+
+          (isViewer() ? '' : '<button class="hp-fa" data-post type="button">'+t("nav_post")+CHEV+'</button>')+'</footer></section>'+
         '<section class="hpanel"><header class="hp-h"><h2>'+t("feed_h")+'</h2>'+
           '<button class="hp-link" data-nav="reports" type="button">'+t("nav_insights")+CHEV+'</button>'+
         '</header><div class="hp-b">'+feedHTML()+'</div>'+
-        '<footer class="hp-f"><span class="hp-note">'+t("nf_email_note")+'</span></footer></section>'+
+        '<footer class="hp-f"><span class="hp-note">'+t("nf_email_note")+'</span>'+
+          '<button class="hp-fa" data-nav="reports" type="button">'+t("ht_all_activity")+CHEV+'</button></footer></section>'+
       '</div>';
     framed = true;
   }
