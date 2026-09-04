@@ -124,6 +124,10 @@ html[dir=rtl] .btn .arr{transform:scaleX(-1)}
   border-radius:var(--r-ctl);padding:10px 12px;font-size:12.5px;color:var(--flash-tag);margin-block-end:16px}
 .sent svg{width:15px;height:15px;flex:none;margin-block-start:2px;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
 .sent b{display:block;color:var(--flash-tag)}
+.warn{display:flex;gap:9px;align-items:flex-start;background:var(--red-tint);border:1px solid rgba(201,64,60,.22);
+  border-radius:var(--r-ctl);padding:10px 12px;font-size:12.5px;color:var(--red-ink);margin-block-end:16px}
+.warn svg{width:15px;height:15px;flex:none;margin-block-start:2px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round}
+.warn b{display:block}
 .linkrow{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;
   margin-block-start:16px;padding-block-start:16px;border-top:1px solid var(--hair);font-size:13px}
 .linkrow .ghost{color:var(--persian);font-weight:600;background:none}
@@ -159,6 +163,11 @@ html[dir=rtl] .btn .arr{transform:scaleX(-1)}
     <span class="eyebrow" data-i18n="eyebrow"></span>
     <h1 data-i18n="h"></h1>
     <p class="sub" id="sub"></p>
+
+    <div class="warn" id="noWs" hidden>
+      <svg viewBox="0 0 24 24"><path d="M12 8v5M12 16.5v.01"/><circle cx="12" cy="12" r="9"/></svg>
+      <span><b id="noWsH"></b><span id="noWsS"></span></span>
+    </div>
 
     <div class="sent" id="sentNote" hidden>
       <svg viewBox="0 0 24 24"><path d="m4.5 12.8 4.7 4.7L19.5 7"/></svg>
@@ -216,6 +225,8 @@ en: {
   sent_s: "Prototype: any 6 digits work.",
   email_bad: "Use your work email, not a personal address.",
   code_bad: "Enter the 6-digit code.",
+  nows_h: "No dashboard on that email.",
+  nows_s: "Check the address, or start free and we will set one up.",
   new_here: "No account yet?",
   try_cta: "Try it free",
   help: "Trouble signing in? Write to",
@@ -239,6 +250,8 @@ ar: {
   sent_s: "نموذج تجريبي: أي ٦ أرقام تعمل.",
   email_bad: "استخدم بريد عملك لا بريداً شخصياً.",
   code_bad: "أدخل الرمز المكوّن من ٦ أرقام.",
+  nows_h: "لا توجد لوحة تحكم على هذا البريد.",
+  nows_s: "تحقق من العنوان، أو ابدأ مجاناً وننشئ لك واحدة.",
   new_here: "لا يوجد لديك حساب؟",
   try_cta: "جرّبها مجاناً",
   help: "تواجه صعوبة في الدخول؟ راسلنا على",
@@ -265,6 +278,8 @@ function applyLang(){
   $("#sub").textContent = step === "code" ? t("sub_code") : t("sub_email");
   $("#submitTx").textContent = step === "code" ? t("signin_cta") : t("send_cta");
   $("#sentH").textContent = t("sent_h");
+  $("#noWsH").textContent = t("nows_h");
+  $("#noWsS").textContent = t("nows_s");
   $("#sentS").textContent = t("sent_s");
   $("#tryLink").setAttribute("href", boardHref("#try"));
   $("#homeLink").setAttribute("href", homeHref());
@@ -316,6 +331,16 @@ $("#loginForm").addEventListener("submit", function(e){
   $("#submitBtn").disabled = true;
   location.href = boardHref("#signin");
 });
+
+/* the board sends people back here when the address has no dashboard */
+(function(){
+  var e = null;
+  try { e = new URLSearchParams(location.search).get("e"); } catch(err){}
+  if (e === "nows"){
+    $("#noWs").hidden = false;
+    try { history.replaceState(null, "", location.pathname + (LANG === "ar" ? "?lang=ar" : "")); } catch(err){}
+  }
+})();
 
 applyLang();
 </script>

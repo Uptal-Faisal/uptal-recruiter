@@ -252,31 +252,11 @@
     transition:background .15s ease;min-height:36px;
   }
   .lang-pill:hover{background:rgba(255,255,255,.12)}
-  .gate-main{
-    position:relative;flex:1;display:grid;
-    grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);
-    gap:clamp(32px,5vw,72px);align-items:center;
-    padding:clamp(12px,3vh,40px) clamp(20px,5vw,56px) clamp(28px,5vh,64px);
-    max-width:1200px;width:100%;margin-inline:auto;
-  }
-  .gate-eyebrow{
-    display:inline-flex;align-items:center;gap:9px;
-    font-size:var(--fs-1);font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--on-dark-soft);
-    border:1px solid var(--hair-dark);border-radius:var(--r-pill);padding:6px 13px;
-  }
   html[lang=ar] .gate-eyebrow{letter-spacing:0;font-size:var(--fs-2)}
-  .gate-eyebrow .dot{width:7px;height:7px;border-radius:50%;background:var(--flash);flex:none}
   .gate h1{color:#fff;font-size:clamp(27px,3.4vw,42px);margin-block:18px 14px;font-weight:800}
   .gate .accent{color:#8FB8FF}
-  .gate-body{font-size:var(--fs-5);color:var(--on-dark-soft);max-width:58ch;margin-block-end:22px}
-  .gate-points{list-style:none;display:grid;gap:11px;margin-block-end:26px}
-  .gate-points li{display:flex;align-items:flex-start;gap:10px;font-size:var(--fs-4);color:var(--on-dark-soft)}
-  .gate-points strong{color:#fff;font-weight:600}
   .tick{width:18px;height:18px;flex:none;border-radius:50%;background:rgba(76,234,99,.14);display:grid;place-items:center;margin-top:2px}
   .tick svg{width:10px;height:10px;stroke:var(--flash);stroke-width:2.4;fill:none}
-  .gate-meta{display:flex;flex-wrap:wrap;gap:8px}
-  .gate-meta .chip{background:rgba(255,255,255,.05);border:1px solid var(--hair-dark);color:var(--on-dark-soft);font-size:var(--fs-2);padding:5px 11px}
-  .gate-meta .chip svg{stroke:var(--flash);fill:none;stroke-width:2}
 
   .gate-card{
     position:relative;background:#fff;color:var(--slate);
@@ -290,25 +270,7 @@
   .gate-card .btn{width:100%}
   .gate-note{font-size:var(--fs-2);color:var(--muted);text-align:center;margin-block-start:12px}
   .gate-note a{color:var(--persian);font-weight:600}
-  .gate-div{display:flex;align-items:center;gap:12px;margin-block:18px;color:var(--muted);font-size:var(--fs-1);font-weight:600;letter-spacing:.06em;text-transform:uppercase}
   html[lang=ar] .gate-div{letter-spacing:0}
-  .gate-div::before,.gate-div::after{content:"";flex:1;height:1px;background:var(--hair)}
-  .demo-btn{
-    width:100%;display:flex;align-items:center;gap:12px;text-align:start;
-    background:#fff;border:1px solid var(--hair-2);
-    border-radius:10px;padding:11px 14px;margin-block-end:8px;
-    transition:border-color .15s ease,background .15s ease;min-height:58px;
-  }
-  .demo-btn:hover{border-color:var(--persian);background:var(--tint-blue-2)}
-  .demo-btn .demo-ic{width:36px;height:36px;flex:none;border-radius:var(--r-ic);display:grid;place-items:center}
-  .demo-ic-co{background:var(--flash-tint)}
-  .demo-ic-gov{background:var(--tint-blue)}
-  .demo-btn .demo-ic svg{width:18px;height:18px;fill:none;stroke-width:1.8}
-  .demo-ic-co svg{stroke:var(--flash-tag)}
-  .demo-ic-gov svg{stroke:var(--persian)}
-  .demo-btn b{display:block;color:var(--ink);font-size:var(--fs-4);font-weight:700}
-  .demo-btn span{display:block;font-size:var(--fs-2);color:var(--muted)}
-  .demo-btn .arr{margin-inline-start:auto;width:15px;height:15px;stroke:var(--muted);fill:none;stroke-width:2;flex:none}
 
   /* ============ app shell: top bar ============ */
   .shell{display:none;min-height:100dvh}
@@ -1795,10 +1757,7 @@
     .tab.tab-post .tab-ic{background:var(--persian);border-radius:9px;width:36px;height:24px;display:grid;place-items:center}
     .tab.tab-post svg{width:15px;height:15px;stroke:#fff}
     .tab.tab-post{color:var(--persian)}
-    .gate-main{grid-template-columns:1fr;padding-top:6px;gap:26px}
     .gate h1{font-size:clamp(25px,7vw,32px)}
-    .gate-points{display:none}
-    .gate-body{font-size:var(--fs-4);margin-block-end:16px}
     .tbl .tr:not(.rep-tr){grid-template-columns:minmax(0,1fr) auto;gap:6px 12px;padding:13px 16px}
     .tbl .tr.head{display:none}
     .jt-band{grid-column:1/-1}
@@ -2720,66 +2679,6 @@
 <body>
 
 <!-- ==================== GATE ==================== -->
-<section class="gate" id="gate">
-  <header class="gate-head">
-    <span class="wordmark">
-      <svg class="logo" viewBox="0 0 1193 412" aria-label="Uptal" role="img"><path d="M543.02,137.1c17.44,18.83,25.97,42.11,25.97,69.51s-8.88,50.66-26.31,69.49c-17.44,18.83-39.32,28.41-65.62,28.41-22.9,0-42.39-8.55-58.45-26.02v54.56l-1.2,1.19c-8.78,8.76-13.65,13.62-18.53,18.48-5.81,5.79-11.62,11.6-24.08,24.03l-1.48-88.73c13.27-12.94,28.52-27.32,44.68-42.58,2.71-2.56,5.46-5.16,8.23-7.76,1.67,2.55,3.56,4.97,5.71,7.26,9.58,10.27,21.87,15.41,36.91,15.41s27.7-5.14,37.26-15.41c9.58-10.27,14.36-22.93,14.36-38s-4.78-27.73-14.36-38c-6.32-6.79-13.85-11.33-22.66-13.63-2.43-.43-4.91-.72-7.52-.83-8.79-.35-20.43,1.58-36.27,11.56-17.04,10.72-37,29.7-58.63,51.59-4.19,4.23-8.45,8.58-12.73,12.95-16.86,17.24-34.19,34.96-49.67,47.99-15.5,13.05-29.94,18.54-43.13,22.41-11.14,3.29-20.66,3.1-27.35,2.97-1.19-.03-2.3-.04-3.3-.04-52.51,0-84.7-30.55-84.7-82.49v-47.18l47.78-46.62v93.8c0,23.42,13.88,38.69,36.93,38.69,1.55,0,3.03.03,4.43.04,4.94.07,9.11.13,13.47-.74,1.22-.28,2.51-.59,3.88-1,6.21-2.03,13.27-6.27,23.58-15.08,13.14-11.84,30.15-29.15,44.52-43.82,4.51-4.61,9.13-9.33,13.85-14.1,21.18-21.43,44.63-44.18,66.78-58.13,22.16-13.95,42.14-18.92,60.39-18.59.55-.01,1.09-.01,1.64-.01,26.32,0,48.2,9.58,65.62,28.41Z"/><path d="M720.96,251.25l14.5,37.46c-15.54,10.13-33.83,15.2-55.57,15.2-43.14,0-65.58-24.99-65.58-72.58v-75.95h-30.71v-39.82h31.06v-42.3h48.31v42.3h62.13v39.82h-62.13v72.91c0,21.6,8.98,32.41,26.58,32.41,9.31,0,20.02-3.04,31.41-9.45Z"/><polygon points="294.49 114.51 224.39 114.51 265.28 73.72 335.37 73.72 335.37 143.64 294.49 184.44 294.49 114.51"/><rect x="986.62" y="74.68" width="46.72" height="226.31"/><path d="M896.77,135.65c-16.5-18.09-36.42-26.96-59.79-26.96-26.45,0-48.79,9.21-66.32,27.64-17.51,18.09-26.45,41.3-26.45,69.27s8.59,51.54,26.12,70.32c17.51,18.76,39.85,27.99,66.65,27.99,23.7,0,43.63-8.53,59.79-25.95v21.5h46.04V113.46h-46.04v22.19ZM882.34,244.51c-9.97,10.59-22.34,15.7-37.46,15.7s-27.48-5.11-37.45-15.7c-9.97-10.57-14.78-23.21-14.78-38.21s4.81-27.31,14.43-37.88c9.97-10.59,22.34-15.7,37.79-15.7s27.5,5.11,37.46,15.7c9.95,10.58,15.11,23.21,15.11,37.88s-5.16,27.64-15.11,38.21Z"/></svg>
-      <span class="wm-sep"></span>
-      <span class="wm-tx" data-i18n="brand_recruiter"></span>
-      <span class="wm-chip" data-i18n="chip_private"></span>
-    </span>
-    <div class="head-right">
-      <button class="lang-pill" id="langBtnGate" type="button"></button>
-    </div>
-  </header>
-  <div class="gate-main">
-    <div class="gate-copy">
-      <span class="gate-eyebrow"><span class="dot"></span><span data-i18n="gate_eyebrow"></span></span>
-      <h1 id="gateH1"></h1>
-      <p class="gate-body" data-i18n="gate_body"></p>
-      <ul class="gate-points">
-        <li><span class="tick"><svg viewBox="0 0 24 24"><path d="M4 12.5 9.5 18 20 6.5"/></svg></span><span><strong data-i18n="gate_p1b"></strong> <span data-i18n="gate_p1"></span></span></li>
-        <li><span class="tick"><svg viewBox="0 0 24 24"><path d="M4 12.5 9.5 18 20 6.5"/></svg></span><span><strong data-i18n="gate_p2b"></strong> <span data-i18n="gate_p2"></span></span></li>
-        <li><span class="tick"><svg viewBox="0 0 24 24"><path d="M4 12.5 9.5 18 20 6.5"/></svg></span><span><strong data-i18n="gate_p3b"></strong> <span data-i18n="gate_p3"></span></span></li>
-      </ul>
-      <div class="gate-meta">
-        <span class="chip"><svg viewBox="0 0 24 24"><path d="M12 3 4 6.5v5c0 4.6 3.4 8.4 8 9.5 4.6-1.1 8-4.9 8-9.5v-5L12 3Z"/></svg><span data-i18n="gate_m1"></span></span>
-        <span class="chip"><svg viewBox="0 0 24 24"><rect x="4" y="10" width="16" height="10" rx="2.5"/><path d="M8 10V7.5a4 4 0 0 1 8 0V10"/></svg><span data-i18n="gate_m2"></span></span>
-        <span class="chip"><svg viewBox="0 0 24 24"><path d="M17 20v-1.5a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4V20"/><circle cx="10" cy="7.5" r="3.5"/><path d="m16.5 10.5 1.5 1.5 3-3.5"/></svg><span data-i18n="gate_m3"></span></span>
-      </div>
-    </div>
-    <div class="gate-card">
-      <button class="btn btn-pri btn-lg" id="signupBtn" type="button"><span data-i18n="gate_signup_cta"></span><svg class="arr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
-      <p class="sub" style="text-align:center;margin-block:8px 0" data-i18n="gate_signup_sub"></p>
-      <div class="gate-div" data-i18n="gate_or2"></div>
-      <h2 data-i18n="gate_card_h"></h2>
-      <p class="sub" data-i18n="gate_card_sub"></p>
-      <form id="gateForm" novalidate>
-        <div class="field">
-          <label for="gEmail" data-i18n="gate_email"></label>
-          <input class="in" id="gEmail" type="email" autocomplete="email" data-i18n-ph="gate_email_ph">
-        </div>
-        <div class="field">
-          <label for="gCode" data-i18n="gate_code"></label>
-          <input class="in" id="gCode" type="text" inputmode="text" autocomplete="one-time-code" data-i18n-ph="gate_code_ph">
-        </div>
-        <button class="btn btn-pri btn-lg" type="submit"><span data-i18n="gate_cta"></span><svg class="arr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
-      </form>
-      <p class="gate-note"><span data-i18n="gate_note"></span> <a href="mailto:private@uptal.com">private@uptal.com</a></p>
-      <div class="gate-div" data-i18n="gate_or"></div>
-      <button class="demo-btn" type="button" data-demo="qimam">
-        <span class="demo-ic demo-ic-co"><svg viewBox="0 0 24 24"><path d="M4 21V5.5A1.5 1.5 0 0 1 5.5 4h7A1.5 1.5 0 0 1 14 5.5V21M14 9h4.5A1.5 1.5 0 0 1 20 10.5V21M2.5 21h19M7.5 8h3M7.5 12h3M7.5 16h3M17 13h.01M17 17h.01"/></svg></span>
-        <span class="demo-tx"><b data-i18n="gate_demo_co"></b><span data-i18n="gate_demo_co_s"></span></span>
-        <svg class="arr" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-      </button>
-      <button class="demo-btn" type="button" data-demo="ndpc">
-        <span class="demo-ic demo-ic-gov"><svg viewBox="0 0 24 24"><path d="M3 21h18M4 18h16M6 18v-7M10 18v-7M14 18v-7M18 18v-7M3 8.5 12 3l9 5.5v1H3v-1Z"/></svg></span>
-        <span class="demo-tx"><b data-i18n="gate_demo_gov"></b><span data-i18n="gate_demo_gov_s"></span></span>
-        <svg class="arr" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-      </button>
-    </div>
-  </div>
-</section>
 
 <!-- ==================== SIGNUP WIZARD ==================== -->
 <section class="gate" id="scr-signup" style="display:none">
@@ -3485,24 +3384,20 @@
 var I18N = {
 en:{
   brand_recruiter:"Recruiter",chip_private:"Private",
-  gate_eyebrow:"Invite-only dashboard",
-  gate_h1:'The job board the public <em class="accent">never sees</em>.',
-  gate_body:"Post roles the market never learns exist. Uptal privately matches vetted candidates from its network to your role, screens every one of them against your job description, and sends you only those who fit. You receive pre-screened, genuinely interested applicants. No listing, no sourcing.",
-  gate_p1b:"Zero-knowledge posting.",gate_p1:"Your job is processed by the matching engine alone. Never listed, never public, never visible to other employers.",
-  gate_p2b:"Every applicant is pre-screened.",gate_p2:"Uptal matches candidates to your job description and screens each one for fit before they ever reach you. No unscreened applicants, no sifting.",
-  gate_p3b:"No sourcing, no advertising.",gate_p3:"Qualified, interested applicants arrive on their own. You contact only the people you invite to interview.",
-  gate_m1:"Zero-knowledge by design",gate_m2:"Data resides in-Kingdom",gate_m3:"Works with your ATS",
-  gate_card_h:"Enter your dashboard",gate_card_sub:"Sign in with your work email. We send a one-time code.",
-  gate_email:"Work email",gate_email_ph:"you@organization.gov.sa",
-  gate_code:"Sign-in code",gate_code_ph:"6-digit code",gate_code_sent:"We emailed a 6-digit sign-in code. Prototype: any 6 digits work.",gate_no_ws:"No dashboard is registered to this email. Create a company account, or open a demo below.",
-  gate_cta:"Continue",
-  gate_note:"No invitation yet? Write to",
-  gate_or:"Or preview a demo dashboard",
-  gate_demo_co:"Qimam Capital",gate_demo_co_s:"Company dashboard, investment sector",
-  gate_demo_gov:"National Programs Center",gate_demo_gov_s:"Government dashboard, sealed jobs",
-  gate_signup_cta:"Create a company account",
-  gate_signup_sub:"For enterprise and government employers, verified by Uptal.",
-  gate_or2:"Have an invitation?",
+ 
+ 
+
+
+
+
+ 
+ 
+ 
+
+
+ 
+ 
+ 
   su_proto:"Prototype",
   
    su_type_co:"Company", su_type_gov:"Government entity",
@@ -5198,24 +5093,20 @@ rep_first_s:"After publishing",
 },
 ar:{
   brand_recruiter:"Recruiter",chip_private:"خاص",
-  gate_eyebrow:"لوحة تحكم بدعوة فقط",
-  gate_h1:'لوحة الوظائف التي <em class="accent">لا يراها العامة</em>.',
-  gate_body:"انشر أدواراً لن يعلم السوق بوجودها أصلاً. تطابق أبتال بخصوصية تامة كفاءات موثّقة من شبكتها مع دورك، وتفرز كل واحد منهم وفق وصفك الوظيفي، ولا ترسل إليك إلا من يناسب. تصلك طلبات مفروزة مسبقاً من باحثين فعليين عن عمل. لا إعلان ولا بحث يدوي.",
-  gate_p1b:"نشر بانعدام المعرفة.",gate_p1:"وظيفتك يعالجها محرك المطابقة وحده، دون أن تُدرج أو تُعلن، ولا يطلع عليها أي صاحب عمل آخر.",
-  gate_p2b:"كل متقدم مفروز مسبقاً.",gate_p2:"تطابق أبتال الكفاءات مع وصفك الوظيفي وتفرز كلاً منها للملاءمة قبل أن تصل إليك. لا متقدمين دون فرز، ولا غربلة.",
-  gate_p3b:"لا إعلان ولا بحث عن الكفاءات.",gate_p3:"يصلك متقدمون مؤهلون وراغبون من تلقاء أنفسهم. ولا تتواصل إلا مع من تدعوه للمقابلة.",
-  gate_m1:"انعدام المعرفة بحكم التصميم",gate_m2:"البيانات داخل المملكة",gate_m3:"يتكامل مع نظام التوظيف لديك",
-  gate_card_h:"ادخل إلى لوحة تحكمك",gate_card_sub:"ادخل ببريد عملك، ونرسل إليك رمزاً لمرة واحدة.",
-  gate_email:"البريد الإلكتروني للعمل",gate_email_ph:"you@organization.gov.sa",
-  gate_code:"رمز الدخول",gate_code_ph:"رمز من 6 أرقام",gate_code_sent:"أرسلنا رمز دخول من 6 أرقام إلى بريدك. نموذج تجريبي: أي 6 أرقام تكفي.",gate_no_ws:"لا توجد لوحة تحكم مسجلة بهذا البريد. أنشئ حساباً لجهتك، أو افتح عرضاً تجريبياً أدناه.",
-  gate_cta:"متابعة",
-  gate_note:"لا تملك دعوة بعد؟ راسلنا على",
-  gate_or:"أو استعرض لوحة تحكم تجريبية",
-  gate_demo_co:"قمم كابيتال",gate_demo_co_s:"لوحة تحكم شركة، قطاع الاستثمار",
-  gate_demo_gov:"مركز البرامج الوطنية",gate_demo_gov_s:"لوحة تحكم حكومية، وظائف مختومة",
-  gate_signup_cta:"إنشاء حساب لجهة",
-  gate_signup_sub:"لجهات القطاع الخاص والحكومي، بعد التحقق من قِبَل أبتال.",
-  gate_or2:"لديك دعوة؟",
+ 
+ 
+
+
+
+
+ 
+ 
+ 
+
+
+ 
+ 
+ 
   su_proto:"نموذج تجريبي",
   
    su_type_co:"شركة", su_type_gov:"جهة حكومية",
@@ -8827,8 +8718,6 @@ function applyBand(){
 function applyStatic(){
   $$("[data-i18n]").forEach(function(el){ el.textContent = t(el.getAttribute("data-i18n")); });
   $$("[data-i18n-ph]").forEach(function(el){ el.setAttribute("placeholder", t(el.getAttribute("data-i18n-ph"))); });
-  $("#gateH1").innerHTML = t("gate_h1");
-  $("#langBtnGate").textContent = t("lang_btn");
   $("#langBtnApp").textContent = t("lang_btn");
   ["Signup","Review","Verify"].forEach(function(s){ var b=$("#langBtn"+s); if(b) b.textContent=t("lang_btn"); });
   document.title = LANG === "ar" ? "أبتال Recruiter · اللوحة الخاصة" : "Uptal Recruiter · The private board";
@@ -9153,9 +9042,9 @@ function exitWs(){
   state.verifApp = null;
   state.autoTimers.forEach(clearTimeout);
   state.autoTimers = [];
-  closeScrSheet();   /* a sign-out mid-call must not leave the call console over the gate */
+  closeScrSheet();   /* a sign-out mid-call must not leave the call console open */
   try { sessionStorage.removeItem("upb_tenant"); } catch(e){}
-  showAuth("gate");
+  goLogin();
 }
 
 /* ================= home / today ================= */
@@ -14924,23 +14813,8 @@ function addChipFromInput(inp, arr){
   }
 }
 function wire(){
-  $("#langBtnGate").addEventListener("click", function(){ setLang(LANG === "ar" ? "en" : "ar"); });
   $("#langBtnApp").addEventListener("click", function(){ setLang(LANG === "ar" ? "en" : "ar"); });
-  $$(".demo-btn").forEach(function(b){
-    b.addEventListener("click", function(){ enter(b.getAttribute("data-demo")); });
-  });
-  $("#gateForm").addEventListener("submit", function(e){
-    e.preventDefault();
-    var em = ($("#gEmail").value || "").trim().toLowerCase(), cd = ($("#gCode").value || "").trim();
-    if (!isCorpEmailShape(em)){ toast(t("su_email_bad"), "error"); markFieldErr($("#gEmail"), t("su_email_bad")); $("#gEmail").focus(); return; }
-    if (!cd){ toast(t("gate_code_sent")); $("#gCode").focus(); return; }
-    var byEmail = rehydrateWorkspaces();
-    var wid = byEmail[em];
-    if (wid && TENANTS[wid]){ enter(wid); return; }
-    toast(t("gate_no_ws"), "error");
-  });
   /* account layer: signup-lite / reviewer console / the delegate's verification page */
-  $("#signupBtn").addEventListener("click", function(){ if(location.hash==="#try"){ startTry(); } else { startSignup(); } });
   ["Signup","Review","Verify"].forEach(function(s){ var b=$("#langBtn"+s); if(b) b.addEventListener("click", function(){ setLang(LANG==="ar"?"en":"ar"); }); });
   $("#scr-signup").addEventListener("click", onSignupClick);
   $("#scr-signup").addEventListener("input", onSignupInput);
@@ -16125,11 +15999,16 @@ function genRef(){ var a="ABCDEFGHJKLMNPQRSTUVWXYZ23456789", s=""; for(var i=0;i
 
 /* ---- section toggler ---- */
 function hideAuthSections(){ ["scr-signup","scr-review","scr-verify"].forEach(function(id){ var e=$("#"+id); if(e) e.style.display="none"; }); }
+/* the board has no marketing gate of its own any more: anyone without a live
+   dashboard goes to the real login page, which is the single sign-in surface */
+function goLogin(q){
+  location.href = "Uptal_Board_Login.html" + (LANG === "ar" ? "?lang=ar" : "") + (q || "");
+}
 function showAuth(name){
-  var map={gate:"gate",signup:"scr-signup",review:"scr-review",verify:"scr-verify"};
+  var map={signup:"scr-signup",review:"scr-review",verify:"scr-verify"};
   Object.keys(map).forEach(function(k){ var e=$("#"+map[k]); if(e) e.style.display=(k===name?"":"none"); });
   $("#shell").classList.remove("on");
-  state.authScreen = (name==="gate")?null:name;
+  state.authScreen = name;
   if(name==="signup") renderSignup();
   else if(name==="review") renderReviewConsole();
   else if(name==="verify") renderVerifyPage();
@@ -16436,9 +16315,9 @@ function onSignupClick(e){
     }
     return; }
   var wiz=e.target.closest("[data-wiz]");
-  if(wiz && wiz.getAttribute("data-wiz")==="back"){ clearSignup(); showAuth("gate"); }
-  /* someone who already has a dashboard is not signing up: hand them the gate */
-  if(wiz && wiz.getAttribute("data-wiz")==="signin"){ clearSignup(); showAuth("gate"); var ge=$("#gEmail"); if(ge) ge.focus(); }
+  if(wiz && wiz.getAttribute("data-wiz")==="back"){ clearSignup(); goLogin(); }
+  /* someone who already has a dashboard is not signing up: hand them the login page */
+  if(wiz && wiz.getAttribute("data-wiz")==="signin"){ clearSignup(); goLogin(); }
 }
 function focusFirstErr(root){ var el=document.querySelector((root||"#wizBody")+" .in.err"); if(el && el.focus){ try{ el.focus(); }catch(x){} } }
 /* needs-info reasons map to the fields they implicate; the err values are dict keys */
@@ -19011,6 +18890,9 @@ document.addEventListener("DOMContentLoaded", function(){
     if (ltry && ltry.status === "draft" && ltry.mode === "try"){ state.signup = ltry; showAuth("signup"); return; }
     startTry(); return;
   }
+  /* the demo dashboards the old gate used to list: reachable by link for the team */
+  var dm = /^#demo-(qimam|ndpc)$/.exec(location.hash || "");
+  if (dm && TENANTS[dm[1]]){ enter(dm[1]); return; }
   /* the login page's handoff: it collected the work email and the code, we run
      the real sign-in here so auth lives in one place. Ahead of any half-finished
      signup draft - someone asking to log in is not signing up. */
@@ -19018,15 +18900,13 @@ document.addEventListener("DOMContentLoaded", function(){
     var lg = null;
     try { lg = JSON.parse(localStorage.getItem("upb_login") || "null"); } catch(e){}
     try { localStorage.removeItem("upb_login"); } catch(e){}
-    showAuth("gate");
     if (lg && lg.email && (Date.now() - (lg.at || 0)) < 600000){
       var lgBy = rehydrateWorkspaces(), lgWid = lgBy[String(lg.email).toLowerCase()];
       if (lgWid && TENANTS[lgWid]){ enter(lgWid); return; }
-      /* no dashboard on that address: keep them on the gate with it filled in */
-      var gEm = $("#gEmail"); if (gEm) gEm.value = lg.email;
-      toast(t("gate_no_ws"), "error");
+      /* no dashboard on that address: back to the login page, which says so */
+      goLogin("?e=nows"); return;
     }
-    return;
+    goLogin(); return;
   }
   /* a signup in progress (auth layer, localStorage) takes precedence over a live shell
      (sessionStorage); the one-screen signup only ever holds a draft */
@@ -19047,7 +18927,11 @@ document.addEventListener("DOMContentLoaded", function(){
     try { sc = sessionStorage.getItem("upb_screen"); jb = sessionStorage.getItem("upb_job"); pj = sessionStorage.getItem("upb_proj"); } catch(e){}
     if (sc === "project" && pj && projectById(pj)){ state.projId = pj; go("project"); }
     else if (sc && sc !== "roles" && $("#scr-" + sc)){ go(sc, jb || undefined); }
+    return;
   }
+  /* nothing to open: no live session, no draft, no deep link. The board used to
+     show its own gate here; sign-in now lives on one page, so go there. */
+  goLogin();
 });
 </script>
 </body>
