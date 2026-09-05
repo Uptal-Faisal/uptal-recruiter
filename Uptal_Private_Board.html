@@ -407,11 +407,29 @@
 
   .tbl{width:100%}
   .tbl .tr{
-    display:grid;grid-template-columns:minmax(0,2.2fr) minmax(0,1.6fr) 110px 130px 40px;
+    display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1.3fr) minmax(0,1.1fr) 104px 118px 40px;
     gap:12px;align-items:center;padding:13px 18px;
   }
   .tbl .tr.head{padding-block:10px;border-bottom:1px solid var(--hair)}
   .tbl .th{font-size:var(--fs-1);font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted)}
+  .jt-cb{inline-size:17px;block-size:17px;flex:none;border-radius:5px;border:1.5px solid var(--hair-2);background:#fff;
+    display:inline-block;vertical-align:-3px;margin-inline-end:9px;position:relative}
+  .jt-cb.on{background:var(--persian);border-color:var(--persian)}
+  .jt-cb.on::after{content:"";position:absolute;inset-inline-start:5px;inset-block-start:2px;inline-size:4px;block-size:8px;
+    border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg)}
+  .tbl .tr.row.sel{background:var(--tint-blue-2)}
+  .jbulk{display:flex;align-items:center;gap:11px;flex-wrap:wrap;padding:10px 16px;margin-block-end:10px;
+    background:var(--tint-blue);border:1px solid rgba(53,60,216,.22);border-radius:var(--r-card)}
+  .jbulk .jb-n{font-size:var(--fs-3);font-weight:700;color:var(--ink)}
+  .jbulk .jb-clear{background:none;border:0;font-family:inherit;font-size:var(--fs-2);font-weight:600;color:var(--persian);cursor:pointer}
+  .jbulk .jb-acts{margin-inline-start:auto;display:flex;gap:8px;flex-wrap:wrap}
+  .jt-own{display:flex;align-items:center;gap:7px;min-inline-size:0}
+  .jt-own .ow-av{inline-size:22px;block-size:22px;flex:none;border-radius:50%;background:var(--tint-blue);color:var(--persian);
+    display:grid;place-items:center;font-size:9.5px;font-weight:800;letter-spacing:.02em}
+  /* the ellipsis belongs on the text, not on the flex row that holds it */
+  .jt-own .ow-nm{min-inline-size:0;font-size:var(--fs-2);color:var(--slate);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .jt-own.none .ow-nm{color:var(--muted);font-style:italic}
+  .op-own{color:var(--muted)}
   html[lang=ar] .tbl .th{letter-spacing:0;font-size:var(--fs-2)}
   .tbl .tr.row{border-top:1px solid var(--hair);cursor:pointer;transition:background .12s ease;text-align:start;width:100%}
   .tbl .tr.row:first-of-type{border-top:none}
@@ -1579,6 +1597,9 @@
   .paused-card p{font-size:var(--fs-2);color:var(--slate);margin:5px 0 9px}
   .paused-card .btn{min-height:30px;padding:4px 14px;font-size:var(--fs-2)}
   .int-how{margin-block-start:13px;padding-top:12px;border-top:1px solid var(--hair)}
+  .fr-rules{padding:16px 18px}
+  .fr-rules .int-b{padding:7px 0}
+  .fr-rules .int-b p{font-size:var(--fs-3);color:var(--slate)}
   .int-how > b{display:block;font-size:var(--fs-3);color:var(--ink);margin-block-end:7px}
   .int-b{display:flex;gap:10px;align-items:flex-start;padding:5px 0}
   .int-dot{width:20px;height:20px;flex:none;border-radius:var(--r-ic);background:var(--tint-blue);color:var(--persian);display:grid;place-items:center;font-size:var(--fs-1);font-weight:800;margin-top:1px}
@@ -1831,7 +1852,10 @@
   .htile.s4 .ht-v{color:var(--slate);font-weight:600}
   .htile .ht-due{display:block;font-family:var(--font-body);font-size:var(--fs-2);font-weight:700;color:#B23C39;margin-block-start:3px}
   html[lang=ar] .htile .ht-due{font-family:var(--font-ar)}
-  .htile .ht-a{margin-block-start:auto;padding-block-start:9px;font-size:var(--fs-2);font-weight:650;color:var(--persian)}
+  .htile .ht-a{margin-block-start:auto;padding-block-start:9px;font-size:var(--fs-2);font-weight:650;color:var(--persian);
+    display:inline-flex;align-items:center;gap:5px}
+  /* U+2192 is not bidi-mirrored; the file’s own chevron is, via html[dir=rtl] .arr */
+  .htile .ht-a .arr{width:13px;height:13px;flex:none}
   .htile .ht-a.quiet{color:var(--muted);font-weight:500}
   .htile.more{background:var(--tint-blue-2);border-style:dashed;justify-content:center;align-items:center;text-align:center;cursor:default}
   .htile.more .ht-v{font-size:15px;color:var(--slate);margin:0}
@@ -2554,6 +2578,10 @@
   .slots-strip .ss-tx{flex:1;min-inline-size:0;font-size:var(--fs-3);color:var(--slate)}
   .slots-strip .ss-tx b{display:block;color:var(--amber-ink);font-size:var(--fs-3)}
   .slots-strip .btn{flex:none}
+  /* a block that has already landed is not the same news as a warning with days left */
+  .slots-strip.hard{background:var(--red-tint);border-color:rgba(201,64,60,.3)}
+  .slots-strip.hard>svg{stroke:var(--red-ink)}
+  .slots-strip.hard .ss-tx b{color:var(--red-ink)}
   .qty-row{display:flex;align-items:center;justify-content:space-between;gap:12px}
   .qty-lab{font-size:var(--fs-3);font-weight:600;color:var(--ink)}
   .qty{display:inline-flex;align-items:center;gap:14px;border:1px solid var(--hair);border-radius:var(--r-pill);padding:5px 8px;direction:ltr}
@@ -2886,6 +2914,7 @@
           </div>
           <div class="filt-bar" id="jobsFilterBar"></div>
           <div class="card">
+            <div id="jobsBulk" hidden></div>
             <div class="tbl" id="jobsTbl"></div>
           </div>
         </div>
@@ -3171,6 +3200,7 @@
             <button data-range="90d" class="on" type="button" data-i18n="range_90"></button>
             <button data-range="12mo" type="button" data-i18n="range_12"></button>
           </div>
+          <button class="btn btn-ondark" id="repSnap" type="button"><svg style="width:14px;height:14px;flex:none;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round" viewBox="0 0 24 24"><path d="M6 3h9l4 4v14H6z"/><path d="M9 12h7M9 16h5"/></svg><span data-i18n="snap_btn"></span></button>
           <button class="btn btn-ondark" id="repExport" type="button"><svg style="width:14px;height:14px;flex:none;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round" viewBox="0 0 24 24"><path d="M12 3v12M8 11l4 4 4-4M4 20h16"/></svg><span data-i18n="rep_export"></span><span class="rc-paid" id="repExportPaid" hidden><svg viewBox="0 0 24 24"><rect x="4" y="10" width="16" height="10" rx="2.5"/><path d="M8 10V7.5a4 4 0 0 1 8 0V10"/></svg><span data-i18n="paid_chip"></span></span></button>
         </div>
       </div>
@@ -3840,6 +3870,17 @@ nav_settings:"Settings",
   oc_record_btn:"Record outcome",
   oc_rec_hire:"Record the hire",
   oc_rec_what:"Record what happened",
+  iv_btn:"Record the interview outcome",iv_h:"What happened with this candidate?",
+  iv_sub:"You invited {n} and they were told. Record where they stand, and Uptal answers them the same day.",
+  iv_p1:"Moving to an offer",iv_p1s:"They stay in your pipeline and the offer stage opens.",
+  iv_p2:"Interviewed, not selected",iv_p2s:"They are told today, and the reason stays between you and the engine.",
+  iv_p3:"The interview did not happen",iv_p3s:"Withdrawn, unreachable, or cancelled by either side.",
+  iv_note:"Uptal does not send the invitation or hold the calendar. Recording it here is what closes the answer this candidate is owed.",
+  iv_done_offer:"Interview recorded · offer",iv_done_ns:"Interview recorded · not selected",iv_done_nomeet:"Interview did not happen",
+  act_intv_offer:"Interview recorded, moving to an offer: {n}",
+  act_intv_ns:"Interview recorded, not selected: {n}",
+  act_intv_nomeet:"Interview did not happen: {n}",
+  pr_intv_ns:"Interviewed, not selected",pr_intv_nomeet:"The interview did not happen",
   oc_clock_chip:"Outcome update in {d}",
   oc_clock_now:"Outcome update due",
   oc_soft_h:"How did the interviews go?",
@@ -3848,9 +3889,13 @@ nav_settings:"Settings",
   oc_defer_toast:"Deferred. New postings stay paused until this role's outcome is recorded.",
   oc_pub_ready:"Outcome recorded. You can publish now.",
   post_owed_h:"Answer the outcome for {r} to post again",
+  post_warn_h:"Record the outcome for {r}",
+  post_warn_s:"New postings stop for this dashboard in {d}.",
+  oc_strip_in:"New postings stop in {d} unless this is answered.",
+  cdays:"{d} days",
   post_owed_s:"One question, then this posting can go live.",
-  iw_outcome:"{job} \u2014 an outcome is due. Candidates you invited are waiting.",
-  iw_outcome_late:"{job} \u2014 the outcome is overdue and new postings are on hold.",
+  iw_outcome:"{job} \u2014 an outcome is due. Invited and still waiting: {n}.",
+  iw_outcome_late:"{job} \u2014 the outcome is overdue and new postings are on hold. Invited and still waiting: {n}.",
   nf_outcome:"A role needs its outcome reported. Candidates you invited are waiting to hear back.",
   act_congrats:"Uptal congratulated the hired candidate: {n}",
   fb_nofit:"No one matched the bar",
@@ -4314,6 +4359,13 @@ nav_settings:"Settings",
   nf_pref_3:"Standing and integrity changes",
   fr_hero_h:"Your dashboard is ready.",
   fr_slot:"Your free plan is live: one job slot and two seats, no credit card needed. Postings go to the matching engine only, never to a public board.",
+  fr_rules_h:"What this dashboard commits you to",
+  fr_rules_s:"Five rules bind every posting from the moment you publish. Each one exists because a candidate is waiting on the other side of it.",
+  fr_rule_1:"Post only a role you are genuinely hiring for. The attestation is signed with a named person, and a role you are not filling ends your access to the board.",
+  fr_rule_2:"Answer everyone you shortlist within {d}. The clock starts when you mark them a good fit, and missing it costs your standing.",
+  fr_rule_3:"Applicants arrive sealed and one at a time. Identity opens only when you invite someone to interview, and the candidate is told the moment it does.",
+  fr_rule_4:"New applicants stop arriving while an unreviewed backlog sits, and a role receives at most {n} in its lifetime. Clearing the queue is what releases the next batch.",
+  fr_rule_5:"Record what happened on every role that reached a candidate. The board asks after {d}, and {g} after that new postings stop until you answer.",
   fr_cta:"Post your first job",
   fr_draft_h:"Your draft is ready to publish.",
   fr_draft_s:"Nothing is live yet. Publish it and the engine starts matching.",
@@ -4394,7 +4446,14 @@ review_next:"Review next candidate",
   ff_none:"No project",conf_std:"Standard",ff_clear:"Clear all",ff_show:"Show {n} jobs",jf_remove:"Remove filter",r_paused:"Paused",
   r_active:"Active",r_draft:"Draft",r_approval:"Awaiting approval",
   r_conf:"Confidential",r_sealed:"Sealed",
-  th_job:"Job",th_band:"Salary band",th_apps:"Applicants",th_posted:"Posted",
+  th_job:"Job",th_band:"Salary band",th_apps:"Applicants",th_posted:"Posted",th_owner:"Owner",
+  jb_sel:"{n} selected",jb_clear:"Clear selection",
+  jb_ext_sub:"Add 21 days to the close date of {n} roles.",
+  jb_ext_skip:"{n} of them have used both extensions and will be left as they are.",
+  jb_ext_done:"Close date extended on {n} roles.",
+  jb_own_sub:"Hand {n} roles to one accountable owner.",
+  jb_own_done:"{n} roles are now owned by {o}.",
+  own_none:"Unassigned",own_by:"Owner: {o}",
   job_review:"{n} to review",
   jobs_empty:"No jobs match your filter.",
   jobs_first_h:"You have not posted a job yet",
@@ -4637,7 +4696,7 @@ dr_cv_s:"Parsed and verified by the engine",
   push_ats:"Send to {a}",pushed_ats:"Sent {n} to {a}.",
   ats_sync_chip:"Auto-syncs to {a}",
   dr_notes:"Your notes",dr_notes_ph:"Private to your dashboard, e.g. strong for the Riyadh team",dr_saved:"Saved",
-  dr_advance:"Shortlist",dr_pass:"Not a fit",dr_offer:"Record offer",
+  dr_advance:"Shortlist",dr_pass:"Not a fit",
   verdict_rec:"Recommended",verdict_str:"Strong fit",
   toast_advanced:"Shortlisted {n}.",
   toast_offer:"Moved {n} to offer.",
@@ -4990,7 +5049,7 @@ mod_out_s:"Contact candidates directly from the dashboard. Ships separately.",
   band_monitored_s:"Batches are halved until the ledger clears.",
   band_restricted_s:"Each new posting passes an integrity check until the ledger clears.",
   band_paused_s:"New postings are paused. Your open roles, pipelines and invited candidates stay fully yours.",
-  band_prov_s:"Fewer than 5 decided jobs. Warnings show, nothing is throttled yet.",
+  band_prov_s:"Fewer than {n} decided jobs. Warnings show, nothing is throttled yet.",
   int_ledger:"Score ledger",
   int_ledger_s:"The score is 100 minus what is on this ledger. Nothing here was ever a surprise.",
   int_none:"Nothing on the ledger. Score is 100.",
@@ -5075,6 +5134,10 @@ mod_out_s:"Contact candidates directly from the dashboard. Ships separately.",
   ins_funnel_line:"{p}% of screened applicants reached your shortlist.",
   ins_saudi_line:"{p}% of confirmed hires are Saudi nationals.",
   rep_export:"Export audit pack",
+  snap_btn:"Role status pack",snap_h:"Where every role stands",snap_asat:"Position as at {d}",
+  snap_posted:"Open for",snap_closes:"Closes in",snap_waiting:"Waiting on",
+  snap_note:"Candidates appear as counts only. No name, profile or contact detail leaves this document — an identity is opened by an interview invitation inside the dashboard and nowhere else. Figures are the position at the moment of export.",
+  snap_done:"Role status pack downloaded, as a page you can print and a spreadsheet.",snap_hired:"Hire recorded",
   exp_blocked:"Download was blocked by the browser — try again in a regular window.",
   exp_retry:"Try again",
   range_30:"30 days",range_90:"90 days",range_12:"12 months",
@@ -5133,7 +5196,7 @@ rep_first_s:"After publishing",
   ext_used:"Both extensions on this job are used.",
   act_hold:"Hold declared: {r}. Clocks and submissions paused",
   act_hold_lift:"Hold lifted. Submissions resumed",
-  act_ext:"Posting close date extended by 21 days by {o}",
+  act_ext:"Posting close date extended by 21 days — signed by {o}",
   cal_chip:"Paused for Eid, resumes 14 Shawwal",
   warn_h:"Action needed, no score effect yet",
   warn_s:"{n} shortlisted candidates reach their decision deadline in {d}. Invite them or release them — act in time and nothing counts against your standing.",
@@ -5566,6 +5629,17 @@ nav_settings:"الإعدادات",
   oc_record_btn:"سجّل النتيجة",
   oc_rec_hire:"سجّل التعيين",
   oc_rec_what:"سجّل ما حصل",
+  iv_btn:"سجّل نتيجة المقابلة",iv_h:"ماذا جرى مع هذا المرشح؟",
+  iv_sub:"دعوتَ {n} وأُبلغ بذلك. سجّل موقفه، وتتولى أبتال إبلاغه في اليوم نفسه.",
+  iv_p1:"ننتقل إلى عرض",iv_p1s:"يبقى ضمن مسارك وتُفتح مرحلة العرض.",
+  iv_p2:"قوبل ولم يُختر",iv_p2s:"يُبلَّغ اليوم، ويبقى السبب بينك وبين المحرك.",
+  iv_p3:"لم تتم المقابلة",iv_p3s:"انسحب أو تعذّر الوصول إليه أو أُلغيت من أي من الطرفين.",
+  iv_note:"لا ترسل أبتال الدعوة ولا تدير التقويم. تسجيلك هنا هو ما يُغلق الرد المستحق لهذا المرشح.",
+  iv_done_offer:"سُجّلت المقابلة · عرض",iv_done_ns:"سُجّلت المقابلة · لم يُختر",iv_done_nomeet:"لم تتم المقابلة",
+  act_intv_offer:"سُجّلت المقابلة والانتقال إلى عرض: {n}",
+  act_intv_ns:"سُجّلت المقابلة ولم يُختر: {n}",
+  act_intv_nomeet:"لم تتم المقابلة: {n}",
+  pr_intv_ns:"قوبل ولم يُختر",pr_intv_nomeet:"لم تتم المقابلة",
   oc_clock_chip:"تحديث النتيجة خلال {d}",
   oc_clock_now:"حان تحديث النتيجة",
   oc_soft_h:"كيف سارت المقابلات؟",
@@ -5574,9 +5648,13 @@ nav_settings:"الإعدادات",
   oc_defer_toast:"أُجّلت الإجابة. يبقى نشر الإعلانات الجديدة متوقفاً حتى تُسجَّل نتيجة هذا الدور.",
   oc_pub_ready:"سُجّلت النتيجة. يمكنك النشر الآن.",
   post_owed_h:"سجّل نتيجة {r} لتتمكن من النشر مجدداً",
+  post_warn_h:"سجّل نتيجة {r}",
+  post_warn_s:"يتوقف نشر أي إعلان جديد من هذه اللوحة بعد {d}.",
+  oc_strip_in:"يتوقف نشر أي إعلان جديد بعد {d} ما لم تُسجَّل النتيجة.",
+  cdays:"{d} يوماً",
   post_owed_s:"سؤال واحد، ثم يمكن نشر هذا الإعلان.",
-  iw_outcome:"{job} — النتيجة مستحقة، ومن دعوتموهم بانتظارها.",
-  iw_outcome_late:"{job} — تأخرت النتيجة والإعلانات الجديدة معلّقة.",
+  iw_outcome:"{job} — النتيجة مستحقة. المدعوون بانتظار الرد: {n}.",
+  iw_outcome_late:"{job} — تأخرت النتيجة والإعلانات الجديدة معلّقة. المدعوون بانتظار الرد: {n}.",
   nf_outcome:"دور بحاجة إلى تسجيل نتيجته، ومن دعوتموهم بانتظار الرد.",
   act_congrats:"هنّأت أبتال المرشح المعيَّن: {n}",
   fb_nofit:"لم يبلغ أحد المستوى المطلوب",
@@ -6040,6 +6118,13 @@ nav_settings:"الإعدادات",
   nf_pref_3:"تغيّرات المكانة والنزاهة",
   fr_hero_h:"لوحة تحكمك جاهزة.",
   fr_slot:"خطتك المجانية جاهزة: شاغر نشط واحد ومقعدان، دون بطاقة ائتمانية. تُوجّه الإعلانات إلى محرك المطابقة وحده ولا تظهر في أي لوحة عامة.",
+  fr_rules_h:"ما تلتزم به هذه اللوحة",
+  fr_rules_s:"خمس قواعد تسري على كل إعلان منذ لحظة نشره. كل قاعدة منها قائمة لأن مرشحاً ينتظر على الطرف الآخر.",
+  fr_rule_1:"انشر الدور الذي توظّف له فعلاً لا غير. يُوقَّع الإقرار باسم شخص محدد، والدور الذي لا توظّف له يُنهي وصولك إلى اللوحة.",
+  fr_rule_2:"أجب كل من تضعه في القائمة المختصرة خلال {d}. تبدأ المهلة عند وسمه مرشحاً مناسباً، وتفويتها يكلّفك مكانتك.",
+  fr_rule_3:"يصل المتقدمون بهوية محجوبة وواحداً تلو الآخر. لا تُكشف الهوية إلا حين تدعو أحدهم للمقابلة، ويُبلَّغ المرشح فور حدوث ذلك.",
+  fr_rule_4:"تتوقف التقديمات الجديدة ما دام هناك متراكم دون مراجعة، ولا يستقبل الدور أكثر من {n} متقدماً طوال عمره. وتصفية القائمة هي ما يُطلق الدفعة التالية.",
+  fr_rule_5:"سجّل ما حدث في كل دور وصل إلى مرشح. تسأل اللوحة بعد {d}، وبعدها بـ{g} يتوقف نشر أي إعلان جديد حتى تجيب.",
   fr_cta:"انشر وظيفتك الأولى",
   fr_draft_h:"مسودتك جاهزة للنشر.",
   fr_draft_s:"لا شيء منشور بعد. انشرها ويبدأ المحرك المطابقة.",
@@ -6120,7 +6205,14 @@ review_next:"راجع المرشح التالي",
   ff_none:"دون مشروع",conf_std:"قياسية",ff_clear:"مسح الكل",ff_show:"عرض {n} وظيفة",jf_remove:"إزالة عامل التصفية",r_paused:"موقوفة",
   r_active:"نشطة",r_draft:"مسودة",r_approval:"بانتظار الاعتماد",
   r_conf:"سرّية",r_sealed:"مختومة",
-  th_job:"الوظيفة",th_band:"نطاق الراتب",th_apps:"المتقدمون",th_posted:"تاريخ النشر",
+  th_job:"الوظيفة",th_band:"نطاق الراتب",th_apps:"المتقدمون",th_posted:"تاريخ النشر",th_owner:"المسؤول",
+  jb_sel:"{n} محددة",jb_clear:"إلغاء التحديد",
+  jb_ext_sub:"إضافة 21 يوماً إلى موعد إغلاق {n} من الأدوار.",
+  jb_ext_skip:"{n} منها استنفدت التمديدين وستبقى كما هي.",
+  jb_ext_done:"مُدّد موعد الإغلاق في {n} من الأدوار.",
+  jb_own_sub:"إسناد {n} من الأدوار إلى مسؤول واحد.",
+  jb_own_done:"أصبح {o} مسؤولاً عن {n} من الأدوار.",
+  own_none:"دون مسؤول",own_by:"المسؤول: {o}",
   job_review:"{n} بانتظار مراجعتك",
   jobs_empty:"لا توجد وظائف تطابق التصفية.",
   jobs_first_h:"لم تنشر أي وظيفة بعد",
@@ -6363,7 +6455,7 @@ dr_cv_s:"محلّلة وموثّقة من المحرك",
   push_ats:"أرسل إلى {a}",pushed_ats:"تم إرسال {n} إلى {a}.",
   ats_sync_chip:"مزامنة تلقائية مع {a}",
   dr_notes:"ملاحظاتك",dr_notes_ph:"خاصة بلوحة تحكمك، مثال: مناسب لفريق الرياض",dr_saved:"تم الحفظ",
-  dr_advance:"إلى القائمة المختصرة",dr_pass:"غير مناسب",dr_offer:"سجّل العرض",
+  dr_advance:"إلى القائمة المختصرة",dr_pass:"غير مناسب",
   verdict_rec:"موصى به",verdict_str:"ملاءمة قوية",
   toast_advanced:"أُضيف {n} إلى القائمة المختصرة.",
   toast_offer:"تم نقل {n} إلى مرحلة العرض.",
@@ -6716,7 +6808,7 @@ mod_out_s:"تواصل مع المرشحين مباشرة من اللوحة. تص
   band_monitored_s:"تُقلَّص الدفعات إلى النصف حتى يُخلى السجل.",
   band_restricted_s:"يخضع كل إعلان جديد لفحص نزاهة حتى يُخلى السجل.",
   band_paused_s:"النشر الجديد موقوف. أدوارك المفتوحة ومساراتك ومن دعوتهم تبقى لك بالكامل.",
-  band_prov_s:"أقل من 5 وظائف مبتوتة. تظهر التنبيهات دون أي تقييد بعد.",
+  band_prov_s:"أقل من {n} وظائف مبتوتة. تظهر التنبيهات دون أي تقييد بعد.",
   int_ledger:"سجل الدرجة",
   int_ledger_s:"الدرجة هي 100 ناقص ما في هذا السجل. ولم يكن أي بند هنا مفاجأة.",
   int_none:"لا قيود في السجل. الدرجة 100.",
@@ -6801,6 +6893,10 @@ mod_out_s:"تواصل مع المرشحين مباشرة من اللوحة. تص
   ins_funnel_line:"وصل {p}% من المتقدمين المفروزين إلى قائمتك المختصرة.",
   ins_saudi_line:"يمثل السعوديون {p}% من التعيينات المؤكدة.",
   rep_export:"صدّر حزمة التدقيق",
+  snap_btn:"حزمة حالة الأدوار",snap_h:"أين يقف كل دور",snap_asat:"الوضع بتاريخ {d}",
+  snap_posted:"مفتوح منذ",snap_closes:"يُغلق خلال",snap_waiting:"بانتظار",
+  snap_note:"يظهر المرشحون كأعداد فقط. لا يغادر هذه الوثيقة اسم ولا ملف ولا بيانات تواصل — تُكشف الهوية بدعوة مقابلة داخل اللوحة وحدها. والأرقام تمثل الوضع لحظة التصدير.",
+  snap_done:"نُزّلت حزمة حالة الأدوار: صفحة قابلة للطباعة وجدول بيانات.",snap_hired:"سُجّل التعيين",
   exp_blocked:"منع المتصفح التنزيل — جرّب مرة أخرى من نافذة عادية.",
   exp_retry:"أعد المحاولة",
   range_30:"30 يوماً",range_90:"90 يوماً",range_12:"12 شهراً",
@@ -6859,7 +6955,7 @@ rep_first_s:"بعد النشر",
   ext_used:"استُخدم التمديدان المتاحان لهذه الوظيفة.",
   act_hold:"أُعلن إيقاف مؤقت: {r}. أُوقفت المهل والتقديمات",
   act_hold_lift:"رُفع الإيقاف. استؤنفت التقديمات",
-  act_ext:"مدّد {o} موعد الإغلاق 21 يوماً",
+  act_ext:"مُدّد موعد الإغلاق 21 يوماً — بتوقيع {o}",
   cal_chip:"موقوفة لعطلة العيد، وتُستأنف في 14 شوال",
   warn_h:"مطلوب إجراء، ولا أثر على الدرجة بعد",
   warn_s:"{n} من مرشحي القائمة المختصرة يبلغون مهلة الرد خلال {d}. ادعُهم أو اصرف النظر عنهم — تصرّف في الوقت ولا أثر على درجتك.",
@@ -7532,18 +7628,45 @@ var BILLING = {};
    days = age of the posting; candidate details are cleared for privacy after RETENTION_DAYS. */
 var RETENTION_DAYS = 60;
 var JOB_META = {
-  q1:{ win:{en:"21 days left",ar:"باقي 21 يوماً"}, due:{en:"3 days",ar:"3 أيام"}, days:6 },
-  q2:{ win:{en:"9 days left",ar:"باقي 9 أيام"}, due:{en:"2 days",ar:"يومين"}, days:14 },
-  q3:{ win:{en:"27 days left",ar:"باقي 27 يوماً"}, days:3 },
-  q4:{ win:{en:"14 days left",ar:"باقي 14 يوماً"}, days:7 },
+  /* own = index into TEAM[tenant]: the accountable owner rides the seed so a list can name
+     somebody real. Without it jobOwner() falls back to the first admin and every row lies. */
+  q1:{ win:{en:"21 days left",ar:"باقي 21 يوماً"}, due:{en:"3 days",ar:"3 أيام"}, days:6, own:1 },
+  q2:{ win:{en:"9 days left",ar:"باقي 9 أيام"}, due:{en:"2 days",ar:"يومين"}, days:14, own:0 },
+  q3:{ win:{en:"27 days left",ar:"باقي 27 يوماً"}, days:3, own:1 },
+  q4:{ win:{en:"14 days left",ar:"باقي 14 يوماً"}, days:7, own:0 },
   q6:{ days:64, expired:true },
-  q7:{ win:{en:"19 days left",ar:"باقي 19 يوماً"}, days:11 },
-  n1:{ win:{en:"26 days left",ar:"باقي 26 يوماً"}, due:{en:"2 days",ar:"يومين"}, days:4 },
-  n2:{ win:{en:"18 days left",ar:"باقي 18 يوماً"}, days:7 },
-  n3:{ win:{en:"28 days left",ar:"باقي 28 يوماً"}, paused:true, days:2 }
+  q7:{ win:{en:"19 days left",ar:"باقي 19 يوماً"}, days:11, own:1 },
+  n1:{ win:{en:"26 days left",ar:"باقي 26 يوماً"}, due:{en:"2 days",ar:"يومين"}, days:4, own:1 },
+  n2:{ win:{en:"18 days left",ar:"باقي 18 يوماً"}, days:7, own:0 },
+  n3:{ win:{en:"28 days left",ar:"باقي 28 يوماً"}, paused:true, days:2, own:1 }
 };
-JOBS.forEach(function(j){ var m = JOB_META[j.id]; if (m){ j.win = m.win; j.due = m.due; j.paused = !!m.paused; j.days = m.days || 0; j.expired = !!m.expired; } });
-function jobDays(job){ return job.days || 0; }
+JOBS.forEach(function(j){ var m = JOB_META[j.id]; if (m){ j.win = m.win; j.due = m.due; j.paused = !!m.paused; j.days = m.days || 0; j.expired = !!m.expired;
+  if (m.own !== undefined){ var mem = (TEAM[j.tenant] || [])[m.own]; if (mem) j.owner = { en: mem.en, ar: mem.ar }; } } });
+/* ===== the day substrate =====
+   A stored day count cannot age. Every day figure derives from a MOMENT instead: the job
+   carries postedAt and jobDays() computes the difference when the screen is drawn, so a role
+   left overnight reads a day older without anything ticking in the background. Day boundaries
+   are local, matching the date arithmetic the ledger and the console already use — one clock,
+   not two. Anything without a stamp keeps the old seeded number, so nothing changes until it
+   is anchored or posted. */
+var DAY_MS = 86400000;
+function boardNow(){ return Date.now(); }
+function dayStart(ms){ var d = new Date(ms); d.setHours(0,0,0,0); return d.getTime(); }
+/* never negative: a machine whose clock runs behind must read a role as new, never as
+   posted in the future, and no age may run backwards mid-session */
+function calDaysSince(ms){ return Math.max(0, Math.round((dayStart(boardNow()) - dayStart(ms)) / DAY_MS)); }
+function calDaysAgo(n){ return dayStart(boardNow()) - n * DAY_MS; }
+function jobDays(job){ return job.postedAt ? calDaysSince(job.postedAt) : (job.days || 0); }
+/* Seeded roles carry an age, not a date. Anchoring that age to the moment of entry keeps the
+   sample dashboard reading the same on every visit while the clock underneath is real. A role
+   published in-session has no JOB_META row and keeps the true stamp it was given. */
+function anchorJobClocks(tenantId){
+  JOBS.forEach(function(j){
+    if (j.tenant !== tenantId) return;
+    var m = JOB_META[j.id];
+    if (m) j.postedAt = calDaysAgo(m.days || 0);
+  });
+}
 /* ---- hiring-outcome reporting ----
    A role that reached a real candidate owes an answer: hired, or not hired. The board
    asks after OUTCOME_DAYS, warns, and after OUTCOME_GRACE stops the dashboard opening
@@ -7562,6 +7685,8 @@ function outcomeOwed(job){ return outcomeReached(job) && !job.outcome; }
 function outcomeOverdueBy(job){ return Math.max(0, jobDays(job) - OUTCOME_DAYS); }
 function outcomesDue(){ return visibleJobs().filter(outcomeDue); }
 /* past the grace window the requirement bites: no new postings until it is answered */
+/* how long a role that owes an outcome has before it stops the whole dashboard posting */
+function outcomeGraceLeft(job){ return Math.max(0, OUTCOME_GRACE - outcomeOverdueBy(job)); }
 function outcomesBlocking(){ return tenantJobs().filter(function(j){ return outcomeDue(j) && outcomeOverdueBy(j) >= OUTCOME_GRACE; }); }
 /* ---- the courtesy outcome clock ----
    The invite modal names a 10-working-day outcome term, so the board keeps it: a per
@@ -8133,6 +8258,16 @@ function appsLabel(n){
   return n === 1 ? "1 applicant" : n + " applicants";
 }
 /* Arabic number agreement for working days: 1 يوم, 2 يومان, 3-10 أيام, 11+ يوماً */
+/* Calendar days, agreed in Arabic the way the working-day label already is. Returns HTML:
+   the numeral is LTR-isolated so it reads left to right inside a mirrored sentence, which
+   means this belongs in innerHTML only — never assign it to textContent. */
+function cdaysHTML(n){
+  if (LANG !== "ar") return tf("cdays", { d: nn(fmt(n)) });
+  if (n === 1) return "يوم واحد";
+  if (n === 2) return "يومين";
+  if (n >= 3 && n <= 10) return nn(fmt(n)) + " أيام";
+  return nn(fmt(n)) + " يوماً";
+}
 function wdaysLabel(n){
   if (LANG !== "ar") return tf("wdays", {d:n});
   if (n === 1) return "يوم عمل واحد";
@@ -8211,7 +8346,7 @@ var state = {
   tenant: null, screen: "roles", jobId: null,
   role: "admin", me: null, ats: null, postStep: 1,
   bandPreview: null, repRange: "90d", disp: {}, dispHold: {}, invited: {}, invDay: {}, appeal: null, pendingPublish: false,
-  jtab: "pipe", stageTab: "all", sel: {}, deck: null, swipe: null, poolView: null, roleDetail: false, roleFrom: null,
+  jtab: "pipe", stageTab: "all", sel: {}, jobSel: {}, intv: {}, deck: null, swipe: null, poolView: null, roleDetail: false, roleFrom: null,
   authScreen: null, signup: null, slots: FREE_SLOTS, seats: FREE_SEATS, actSeq: 0, notifs: [], notifPrefs: { applicants:true, clocks:true, standing:true }, editingDraft: null, reqApproval: false, billTerm: "1m", payMethods: [], payDefault: null, setTab: null,
   poolUnlocks: {}, poolQuery: "", poolTier: "all", poolCity: "all", poolAvail: "all",
   projId: null, projFilter: "all",
@@ -8596,10 +8731,13 @@ function integrityScore(){
   ledgerRows().forEach(function(r){ if (r.status === "active") s -= r.pts; });
   return Math.max(0, Math.min(100, s));
 }
+/* the provisional shield: below this many decided roles the board warns but throttles nothing.
+   The figure lives here, not in a sentence — the copy interpolates it so the two cannot drift. */
+var PROVISIONAL_DECIDED = 3;
 function decidedJobs(){
   return tenantJobs().filter(function(j){ return j.status === "closed" || j.status === "hired"; }).length;
 }
-function isProvisional(){ return decidedJobs() < 3; }
+function isProvisional(){ return decidedJobs() < PROVISIONAL_DECIDED; }
 /* Deliberate abuse (pipeline-building, ignoring a posting) is never shielded by the provisional grace. */
 function hasSeriousActive(){
   return ledgerRows().some(function(r){ return r.status === "active" && (r.serious || SERIOUS_CODES.indexOf(r.code) >= 0); });
@@ -8628,7 +8766,9 @@ function computeIntWarnings(){
     var minLeft = Infinity;
     st.fit.forEach(function(cid){ if (dispRunning(ck(j.id, cid))) minLeft = Math.min(minLeft, dispLeft(ck(j.id, cid))); });
     if (minLeft !== Infinity && minLeft <= 2) warns.push({ k:"iw_clock", jobId:j.id, p:{ d:minLeft } });
-    if (outcomeDue(j)) warns.push({ k: outcomeOverdueBy(j) >= OUTCOME_GRACE ? "iw_outcome_late" : "iw_outcome", jobId:j.id, p:{ n: jobDays(j) } });
+    /* the figure is the people still waiting, not the posting’s age: a reader takes any number
+       beside an overdue outcome as the amount overdue, and jobDays() is not that */
+    if (outcomeDue(j)) warns.push({ k: outcomeOverdueBy(j) >= OUTCOME_GRACE ? "iw_outcome_late" : "iw_outcome", jobId:j.id, p:{ n: st.invited.length + st.offer.length } });
   });
   return warns;
 }
@@ -8788,7 +8928,7 @@ function bandLabel(){
   return t("band_" + previewBand());
 }
 function bandNote(){
-  if (!state.bandPreview && !bandOverride() && shielded()) return t("band_prov_s");
+  if (!state.bandPreview && !bandOverride() && shielded()) return tf("band_prov_s", { n: nn(fmt(PROVISIONAL_DECIDED)) });
   return t("band_" + previewBand() + "_s");
 }
 /* the Settings switcher illustrates a band; everywhere else must state the REAL one */
@@ -8815,12 +8955,39 @@ function appealDateLabel(ap){
 }
 function dispDays(){ return DISP_DAYS[state.tenant && state.tenant.type === "gov" ? "gov" : "co"]; }
 /* Disposition clock: starts at the employer's own good-fit mark, per candidate. */
+/* The answer window is counted in KSA working days: Sunday to Thursday. A Friday and a
+   Saturday do not spend a candidate’s patience, and the copy has always said "working days". */
+function isWorkday(ms){ var d = new Date(ms).getDay(); return d !== 5 && d !== 6; }
+function wdaysSince(ms){
+  var d = new Date(dayStart(ms)), end = dayStart(boardNow()), n = 0, guard = 0;
+  /* walk by calendar date rather than by adding milliseconds, so a DST shift cannot skip a day;
+     the guard keeps a machine with a wildly skewed clock from spinning */
+  while (d.getTime() < end && guard++ < 4000){
+    if (isWorkday(d.getTime())) n++;
+    d.setDate(d.getDate() + 1);
+  }
+  return n;
+}
+function wdaysAgo(n){
+  var d = new Date(dayStart(boardNow())), guard = 0;
+  while (n > 0 && guard++ < 4000){ d.setDate(d.getDate() - 1); if (isWorkday(d.getTime())) n--; }
+  return d.getTime();
+}
+/* the moment that leaves exactly this many working days on the window — how a paused clock
+   is resumed, and how a seeded demo state is expressed as a real date */
+function dispStampFor(left){ return wdaysAgo(Math.max(0, dispDays() - left)); }
+/* a value below this is not a moment: sessions saved before the clock was real, and the
+   demo seeds, hold a plain remaining-days integer. They read as frozen, exactly as they did. */
+var DISP_STAMP_MIN = 1e12;
 function dispLeft(key){
   var d = state.disp[key];
-  return (d === undefined || d === null) ? dispDays() : d;
+  if (d === undefined || d === null) return dispDays();
+  if (d < DISP_STAMP_MIN) return d;
+  return Math.max(0, dispDays() - wdaysSince(d));
 }
 function dispRunning(key){ return state.disp[key] !== undefined && state.disp[key] !== null; }
-function startDisp(key){ if (state.disp[key] === undefined) state.disp[key] = dispDays(); intWatch(); }
+/* the clock starts at the employer’s own good-fit mark, and stores that moment */
+function startDisp(key){ if (state.disp[key] === undefined) state.disp[key] = boardNow(); intWatch(); }
 function stopDisp(key){ delete state.disp[key]; intWatch(); }
 function inviteUsed(job){
   var st = jobStages(job), n = 0;
@@ -9140,7 +9307,7 @@ function enter(tenantId){
   state.tenant = TENANTS[tenantId];
   state.jobState = {}; state.newIds = {}; state.notes = {}; state.actLog = {}; state.actSeq = 0; state.form = defaultForm(); state.editingDraft = null;
   state.seatStripN = 0;
-  state.jobFilters = emptyJobFilters(); state.roleQuery = ""; state.sel = {};
+  state.jobFilters = emptyJobFilters(); state.roleQuery = ""; state.sel = {}; state.jobSel = {};
   state.projId = null; state.projFilter = "all";
   state.poolUnlocks = {}; state.poolQuery = ""; state.poolTier = "all"; state.poolCity = "all"; state.poolAvail = "all";
   state.role = "admin"; state.ats = null; state.bandPreview = null; state.repRange = "90d";
@@ -9150,7 +9317,7 @@ function enter(tenantId){
      would let an onboarding invite mint a paid seat (and silently leave the free plan) */
   state.seats = SEATS[tenantId] || FREE_SEATS;
   state.me = (TEAM[tenantId] || [])[0] || null;
-  state.disp = {}; state.dispHold = {}; state.invited = {}; state.invDay = {}; state.pendingPublish = false;
+  state.disp = {}; state.dispHold = {}; state.invited = {}; state.invDay = {}; state.intv = {}; state.pendingPublish = false;
   /* a pending posting-pause appeal is durable evidence, not a toast: reload must keep it */
   try { state.appeal = JSON.parse(localStorage.getItem("upb_appeal_" + tenantId) || "null"); } catch(e){ state.appeal = null; }
   /* sealed screening calls: attempts and outcomes are per (job, candidate), session-scoped
@@ -9172,12 +9339,14 @@ function enter(tenantId){
   /* seeded live states: hr1 and pd1 were already invited, their contact is open;
      pm1 is a good-fit candidate with a disposition clock already running */
   if (tenantId === "qimam"){ state.invited["q2|hr1"] = true; state.invited["q4|pd1"] = true; }
-  if (tenantId === "ndpc"){ state.disp["n2|pm1"] = 4; }
+  if (tenantId === "ndpc"){ state.disp["n2|pm1"] = dispStampFor(4); }
   /* The sample dashboard has to SHOW the states the board enforces, not just describe
      them: the strip is the product’s promise made visible. Everything below is a real
      state the tenant can clear from the UI. The two that would freeze the demo itself,
      a verification hold and a publishing block, are deliberately NOT seeded — a sample
      dashboard nobody can post from teaches the wrong thing. */
+  /* seeded ages become real dates, re-pinned on entry so the demo never drifts between visits */
+  anchorJobClocks(tenantId);
   if (tenantId === "qimam") seedDemoStates();
   if (state.tenant.type === "gov"){ state.form.seal = true; state.form.saudi = true; }
   /* the gate screen is gone; showAuth() already hides the auth layer */
@@ -9481,6 +9650,8 @@ function opRowHTML(j){
   /* quiet meta under the title + THE one action */
   var meta = "";
   if (j.win && chip.indexOf("c-win") < 0 && !jobExpired(j)) meta += '<span>'+tf("win_left",{d:esc(winLabel(j))})+'</span>';
+  /* on a team of five, a count with no name is nobody's job */
+  meta += '<span class="op-own">'+tf("own_by",{o:ownerLabel(j)})+'</span>';
   if (j.poolOpen && j.status === "active") meta += '<span>'+tf("pool_open_meta",{d:'<span class="num" dir="ltr">'+poolLeft(j)+'</span>', u:'<span class="num" dir="ltr">'+poolUnlocksLeft(j)+'</span>'})+'</span>';
   /* NO row buttons. The row is state; clicking it opens the role, where every contextual
      action already lives. One verb on the page (the hero), zero training required. */
@@ -9561,6 +9732,23 @@ function frPromiseHTML(){
     '<div class="how-step"><span class="how-num">3</span><div><b>'+t("next_3b")+'</b><p>'+t("next_3")+'</p></div></div>'+
   '</div></div>';
 }
+/* What a new dashboard is agreeing to, before it agrees. Every figure is interpolated from
+   the constant that enforces it, so this card cannot drift from the rules the code applies.
+   It counts nothing about the tenant, which is why it can never be empty or go stale. */
+function frRulesHTML(){
+  var rules = [
+    t("fr_rule_1"),
+    tf("fr_rule_2", { d: wdaysLabel(dispDays()) }),
+    t("fr_rule_3"),
+    tf("fr_rule_4", { n: nn(fmt(SUBMIT_CAP)) }),
+    tf("fr_rule_5", { d: cdaysHTML(OUTCOME_DAYS), g: cdaysHTML(OUTCOME_GRACE) })
+  ];
+  return '<div class="card fr-rules"><div class="int-how" style="margin-block-start:0;padding-top:0;border-top:0">'+
+    '<b>'+t("fr_rules_h")+'</b><p class="sc-sub mbe10">'+t("fr_rules_s")+'</p>'+
+    rules.map(function(r, i){
+      return '<div class="int-b"><span class="int-dot num">'+(i+1)+'</span><p>'+r+'</p></div>';
+    }).join("")+'</div></div>';
+}
 /* the 60-day gift announces itself where the tenant is, phrased as the gift it is */
 function firstRunHTML(){
   var slotCopy = t("fr_slot");
@@ -9568,7 +9756,7 @@ function firstRunHTML(){
     '<span class="nb-tx"><b>'+t("fr_hero_h")+'</b> '+slotCopy+'</span>'+
     (isViewer()?'':'<span class="nb-cta"><button class="btn btn-flash" data-post type="button">'+t("fr_cta")+'</button></span>')+
     '</div>';
-  return hero + frPromiseHTML() + homeFootHTML();
+  return hero + frPromiseHTML() + frRulesHTML() + homeFootHTML();
 }
 /* nothing published, only drafts: the draft is the hero and Continue is THE action —
    never "post your next role", never the matching-is-running hero */
@@ -9585,7 +9773,7 @@ function draftFirstRunHTML(){
       '<span class="op-act"><button class="btn btn-pri" data-draft="'+j.id+'" type="button">'+t("draft_continue")+'</button></span></span>'+
     '</div>';
   }).join("")+'</div>';
-  return hero + cards + frPromiseHTML() + homeFootHTML();
+  return hero + cards + frPromiseHTML() + frRulesHTML() + homeFootHTML();
 }
 /* a viewer's first session gets orientation with real doors, not a posting pitch */
 function viewerFirstRunHTML(){
@@ -9681,7 +9869,7 @@ function homeTilesHTML(reviewN, invQ, due, acts){
     var tag = x.quiet || !x.attr ? "div" : "button";
     return '<'+tag+' class="htile s'+x.sev+(x.quiet ? " quiet" : "")+(lead ? " lead" : "")+'"'+(tag === "button" ? ' type="button"' : "")+' '+x.attr+'>'+
       '<span class="ht-k">'+t(x.k)+'</span><span class="ht-v">'+x.v+'</span>'+
-      (x.cta ? '<span class="ht-a'+(lead ? " ha-lead" : "")+'">'+x.cta+' \u2192</span>' : "")+'</'+tag+'>';
+      (x.cta ? '<span class="ht-a'+(lead ? " ha-lead" : "")+'">'+x.cta+CHEV+'</span>' : "")+'</'+tag+'>';
   }).join("");
   if (rest.length)
     html += '<div class="htile more"><span class="ht-v">'+tf("ht_more",{n:nn(fmt(rest.length))})+'</span>'+
@@ -9701,8 +9889,8 @@ function seedDemoStates(){
         if (i >= 0){ st.screened.splice(i, 1); st.fit.push(cid); }
       });
     }
-    if (st.fit.indexOf("de1") >= 0) state.disp["q1|de1"] = 2;
-    if (st.fit.indexOf("de2") >= 0) state.disp["q1|de2"] = 9;
+    if (st.fit.indexOf("de1") >= 0) state.disp["q1|de1"] = dispStampFor(2);
+    if (st.fit.indexOf("de2") >= 0) state.disp["q1|de2"] = dispStampFor(9);
   }
   /* the next batch is held behind an unreviewed backlog on the Treasury role */
   if (q3 && !q3.batchReleasing) q3.batchPending = true;
@@ -10397,9 +10585,84 @@ function renderJobs(){
   renderJobsRail();
   renderJobFilterBar();
   var head = '<div class="tr head"><span class="th">'+t("th_job")+'</span><span class="th">'+t("th_band")+'</span>'+
+    '<span class="th">'+t("th_owner")+'</span>'+
     '<span class="th">'+t("th_apps")+'</span><span class="th">'+t("th_posted")+'</span><span></span></div>';
+  pruneJobSel();
+  renderJobsBulk();
   $("#jobsTbl").innerHTML = jobs.length ? head + jobs.map(jobRow).join("")
     : '<div class="tbl-empty">'+t("jobs_empty")+'</div>';
+}
+/* ===== selecting roles =====
+   Two verbs only. Closing a role asks for its outcome — a named decision about named people —
+   so it stays one role at a time through the modal that already exists. */
+function jobSelIds(){ return Object.keys(state.jobSel).filter(function(id){ return state.jobSel[id]; }); }
+function jobSelJobs(){ return jobSelIds().map(jobById).filter(Boolean); }
+/* a selection may only ever hold rows the reader can still see */
+function pruneJobSel(){
+  var live = {};
+  filteredJobs().forEach(function(j){ if (state.jobSel[j.id]) live[j.id] = true; });
+  state.jobSel = live;
+}
+function renderJobsBulk(){
+  var el = $("#jobsBulk"); if (!el) return;
+  var ids = jobSelIds();
+  if (!ids.length || isViewer()){ el.innerHTML = ""; el.hidden = true; return; }
+  el.hidden = false;
+  el.innerHTML = '<div class="jbulk"><span class="jb-n">'+tf("jb_sel",{n:nn(fmt(ids.length))})+'</span>'+
+    '<button class="jb-clear" id="jbClear" type="button">'+t("jb_clear")+'</button>'+
+    '<span class="jb-acts"><button class="btn btn-out" id="jbExt" type="button">'+t("ext_btn")+'</button>'+
+    (isAdmin() ? '<button class="btn btn-out" id="jbOwn" type="button">'+t("reassign_btn")+'</button>' : "")+'</span></div>';
+  $("#jbClear").addEventListener("click", function(){ state.jobSel = {}; renderJobs(); });
+  $("#jbExt").addEventListener("click", openBulkExtModal);
+  var bo = $("#jbOwn"); if (bo) bo.addEventListener("click", openBulkOwnModal);
+}
+function openBulkExtModal(){
+  var jobs = jobSelJobs(), able = jobs.filter(function(j){ return (j.exts || 0) < EXT_MAX; });
+  openModal(
+    '<div class="modal-head"><h3>'+t("ext_h")+'</h3><button class="x" id="mX" type="button" aria-label="'+esc(t("pub_cancel"))+'"><svg viewBox="0 0 24 24" stroke-linecap="round"><path d="m6 6 12 12M18 6 6 18"/></svg></button></div>'+
+    '<div class="modal-body"><p class="sub mbe10">'+tf("jb_ext_sub",{n:nn(fmt(able.length))})+'</p>'+
+    (able.length < jobs.length ? '<p class="role-desc">'+tf("jb_ext_skip",{n:nn(fmt(jobs.length - able.length))})+'</p>' : "")+
+    '<p class="role-desc">'+t("ext_note")+'</p></div>'+
+    '<div class="modal-foot"><button class="btn btn-ghost" id="mCancel" type="button">'+t("pub_cancel")+'</button>'+
+    (able.length ? '<button class="btn btn-pri" id="mGo" type="button">'+t("ext_go")+'</button>' : "")+'</div>'
+  );
+  $("#mX").addEventListener("click", closeModal);
+  $("#mCancel").addEventListener("click", closeModal);
+  var go = $("#mGo");
+  if (go) go.addEventListener("click", function(){
+    closeModal();
+    var done = 0;
+    able.forEach(function(j){ if (extendJob(j)) done++; });
+    state.jobSel = {};
+    renderJobs();
+    toast(tf("jb_ext_done",{n:nn(fmt(done))}));
+  });
+}
+function openBulkOwnModal(){
+  var jobs = jobSelJobs();
+  var team = activeTeam().filter(function(m){ return m.role !== "viewer"; });
+  var rows = team.map(function(m, i){
+    return '<button class="pick-job" type="button" data-bown="'+i+'"><span class="mw0"><b>'+esc(m[LANG])+'</b>'+
+      '<span>'+t("role_"+m.role)+'</span></span></button>';
+  }).join("");
+  openModal(
+    '<div class="modal-head"><h3>'+t("reassign_btn")+'</h3><button class="x" id="mX" type="button" aria-label="'+esc(t("pub_cancel"))+'"><svg viewBox="0 0 24 24" stroke-linecap="round"><path d="m6 6 12 12M18 6 6 18"/></svg></button></div>'+
+    '<div class="modal-body"><p class="sub mbe10">'+tf("jb_own_sub",{n:nn(fmt(jobs.length))})+'</p>'+rows+'</div>'
+  );
+  $("#mX").addEventListener("click", closeModal);
+  $$("#modalBox [data-bown]").forEach(function(b){
+    b.addEventListener("click", function(){
+      var m = team[+b.getAttribute("data-bown")];
+      closeModal();
+      jobs.forEach(function(j){
+        j.owner = { en: m.en, ar: m.ar };
+        pushLog(j.id, "act_reassign", { oEn: m.en, oAr: m.ar });
+      });
+      state.jobSel = {};
+      renderJobs();
+      toast(tf("jb_own_done",{n:nn(fmt(jobs.length)), o:esc(m[LANG])}));
+    });
+  });
 }
 function jobRow(j){
   var st = jobStages(j);
@@ -10417,10 +10680,17 @@ function jobRow(j){
   if (j.seal) subChips.push('<span class="chip chip-blue">'+ICONS.lock+t("r_sealed")+'</span>');
   var jp = projectOf(j.id);
   if (jp) subChips.push('<span class="chip chip-soft jt-proj" data-proj-open="'+jp.id+'">'+ICONS.brief+esc(jp.name[LANG])+'</span>');
-  return '<button class="tr row" type="button" data-job="'+j.id+'">'+
-    '<span class="jt-title"><span class="jt-nm">'+esc(j.title[LANG])+'</span>'+
+  var sel = !!state.jobSel[j.id];
+  /* a span, not an input: the row itself is a <button> and nesting a control inside one is
+     invalid. The click handler for [data-jobsel] runs before the row's, so it wins. */
+  var box = isViewer() ? '' : '<span class="jt-cb'+(sel?' on':'')+'" role="checkbox" aria-checked="'+(sel?'true':'false')+'" data-jobsel="'+j.id+'"></span>';
+  return '<button class="tr row'+(sel?' sel':'')+'" type="button" data-job="'+j.id+'">'+
+    '<span class="jt-title"><span class="jt-nm">'+box+esc(j.title[LANG])+'</span>'+
     '<span class="jt-sub">'+subChips.join("")+'</span></span>'+
     '<span class="jt-band">'+salaryLabel(j)+(j.band?'<span class="per">'+t("per_month")+'</span>':'')+'</span>'+
+    '<span class="jt-own'+(jobOwnerSet(j)?'':' none')+'">'+
+      (jobOwnerSet(j) ? '<span class="ow-av">'+esc(ownerInitials(j))+'</span>' : '')+
+      '<span class="ow-nm">'+ownerLabel(j)+'</span></span>'+
     '<span class="jt-apps"><b>'+appsLabel(apps)+'</b>'+(review?'<span class="rev">'+tf("job_review",{n:review})+'</span>':"")+'</span>'+
     '<span class="jt-posted">'+esc(j.posted[LANG])+
     (j.win && j.status === "active" ? '<span style="display:block;font-size:10.5px;color:var(--muted)">'+tf("win_left",{d:esc(winLabel(j))})+'</span>' : "")+'</span>'+
@@ -10657,7 +10927,7 @@ function repostJob(job){
   if (outcomeOwed(job)){ toast(t("oc_repost_block"), "error"); openOutcomeModal(job, { forced: true }); return; }
   /* reposting puts the role back on the board, so it needs a free slot again */
   if (slotsFree() <= 0){ openSlotsModal(); return; }
-  job.expired = false; job.days = 0; job.status = "active";
+  job.expired = false; job.days = 0; job.postedAt = boardNow(); job.status = "active";
   job.outcome = null;              /* a new run owes its own answer */
   if (state.ocNotified) delete state.ocNotified[job.id];
   job.posted = { en:"just now", ar:"الآن" };
@@ -11423,6 +11693,48 @@ function moveCandTo(cid, to){
   else if (to === "offer") toast(tf("toast_offer",{n:esc(pipeName(job.id, cid))}));
   if (state.deck) deckStep();
 }
+/* ===== the interview receipt =====
+   The file’s position is that there is no interviewing anywhere, and this keeps it: Uptal
+   sends no invitation, holds no calendar and chases no reschedule. What it records is what
+   happened AFTER, because that is the part the hiring record was losing. Three answers, each
+   routed into a path that already exists, so nothing is logged twice. */
+function intvKey(jobId, cid){ return ck(jobId, cid); }
+function intvOf(jobId, cid){ return (state.intv || {})[intvKey(jobId, cid)] || null; }
+function openIntvModal(cid){
+  var job = jobById(state.jobId); if (!job) return;
+  var nm = pipeName(job.id, cid);
+  var picks = [
+    ["offer", "iv_p1", "iv_p1s"],
+    ["ns",    "iv_p2", "iv_p2s"],
+    ["nomeet","iv_p3", "iv_p3s"]
+  ].map(function(p){
+    return '<button class="pick-job" type="button" data-ivr="'+p[0]+'"><span class="mw0"><b>'+t(p[1])+'</b>'+
+      '<span>'+t(p[2])+'</span></span></button>';
+  }).join("");
+  openModal(
+    '<div class="modal-head"><h3>'+t("iv_h")+'</h3><button class="x" id="mX" type="button" aria-label="'+esc(t("pub_cancel"))+'"><svg viewBox="0 0 24 24" stroke-linecap="round"><path d="m6 6 12 12M18 6 6 18"/></svg></button></div>'+
+    '<div class="modal-body"><p class="sub mbe10">'+tf("iv_sub",{n:esc(nm)})+'</p>'+picks+
+    '<p class="terms-note">'+ICONS.lock+'<span>'+t("iv_note")+'</span></p></div>'
+  );
+  $("#mX").addEventListener("click", closeModal);
+  $$("#modalBox [data-ivr]").forEach(function(b){
+    b.addEventListener("click", function(){ recordIntv(cid, b.getAttribute("data-ivr")); });
+  });
+}
+function recordIntv(cid, r){
+  var job = jobById(state.jobId); if (!job) return;
+  closeModal();
+  state.intv = state.intv || {};
+  state.intv[intvKey(job.id, cid)] = { r: r, at: boardNow() };
+  /* spelled out rather than built from the answer: a key you cannot grep is a key nobody
+     can retire, and the dictionary check cannot see it either */
+  var LOGK = { offer:"act_intv_offer", ns:"act_intv_ns", nomeet:"act_intv_nomeet" };
+  pushLog(job.id, LOGK[r], { cid: cid });
+  if (r === "offer"){ moveCandTo(cid, "offer"); return; }
+  /* the exit itself is the existing path, and it writes its own line — this one must not
+     write a second. The reason rides along so the composer still learns from it. */
+  passCand(cid, false, r === "ns" ? "pr_intv_ns" : "pr_intv_nomeet");
+}
 function passCand(cid, isRemove, rk){
   var job = jobById(state.jobId); if (!job) return;
   var from = findStage(job, cid);
@@ -11772,17 +12084,19 @@ function renderPanel(){
     } else if (stage === "invited"){
       /* the courtesy clock rides the drawer too, and the outcome door is one tap away */
       var oclD = job ? outcomeClockLeft(job, cid) : null;
+      var ivRec = intvOf(job ? job.id : "", cid);
+      var ivChip = ivRec ? '<span class="chip chip-soft">'+ICONS.check+t("iv_done_" + ivRec.r)+'</span>' : "";
       var oclChip = oclD === null ? "" : oclD > 0
         ? '<span class="chip chip-soft">'+ICONS.clock+tf("oc_clock_chip",{d: wdaysLabel(oclD)})+'</span>'
         : '<span class="chip chip-amber">'+ICONS.clock+t("oc_clock_now")+'</span>';
       /* same composed grammar as the shortlist foot: facts and quiet exits start-side,
          the record sequence end-side */
-      foot = '<span class="df-l">'+oclChip+
+      foot = '<span class="df-l">'+ivChip+oclChip+
                '<button class="btn-text" id="drPass" type="button">'+t("dr_pass")+'</button>'+
                (connectedATS() ? '<button class="btn-text" id="drPush" type="button">'+tf("push_ats",{a:connectedATS()})+'</button>' : '')+
              '</span>'+
              '<span class="df-r"><button class="btn btn-ghost" id="drRecOut" type="button">'+t("oc_rec_what")+'</button>'+
-               '<button class="btn btn-pri" id="drVerdict" data-to="offer" type="button">'+t("dr_offer")+'</button></span>';
+               '<button class="btn btn-pri" id="drIntv" type="button">'+t("iv_btn")+'</button></span>';
     } else if (stage === "offer"){
       /* the offer itself lives outside the board; these record its outcome so the role
          never falsely reads as filled and the shortlist reopens. The happy path is the
@@ -11807,6 +12121,8 @@ function renderPanel(){
     var hj = jobById(state.jobId);
     if (hj) openOutcomeConfirm(hj, cid, outcomeOverdueBy(hj) >= OUTCOME_GRACE);
   });
+  var ivBtn = $("#drIntv");
+  if (ivBtn) ivBtn.addEventListener("click", function(){ openIntvModal(cid); });
   var roBtn = $("#drRecOut");
   if (roBtn) roBtn.addEventListener("click", function(){
     var oj = jobById(state.jobId);
@@ -13166,10 +13482,23 @@ function canSeeJob(j){
   return !!(state.me && j.owner.en === state.me.en);
 }
 function visibleJobs(){ return tenantJobs().filter(canSeeJob); }
+/* whether anybody actually owns this role. A list must never print a borrowed name:
+   "Unassigned" is a true statement and an invitation to fix it, a wrong name is neither. */
+function jobOwnerSet(job){ return !!(job && job.owner && job.owner.en); }
 function jobOwner(job){
-  if (job.owner && job.owner.en) return job.owner;
+  if (jobOwnerSet(job)) return job.owner;
   var team = TEAM[state.tenant.id] || [];
   return team[0] || { en:"-", ar:"-" };
+}
+/* the name a LIST shows: the real owner, or the fact that there is not one */
+function ownerLabel(job){ return jobOwnerSet(job) ? esc(jobOwner(job)[LANG]) : t("own_none"); }
+function ownerInitials(job){
+  if (!jobOwnerSet(job)) return "";
+  /* nearly every Saudi surname here begins Al-, so initialling it gives every teammate
+     the same second letter. Take the family name after the article instead. */
+  var p = String(jobOwner(job).en || "").replace(/^Dr\.\s*/, "").split(/\s+/);
+  var last = (p[1] || "").replace(/^[Aa]l[-\u2019']/, "");
+  return ((p[0] || "").charAt(0) + last.charAt(0)).toUpperCase();
 }
 function openReassignModal(job){
   var team = activeTeam().filter(function(m){ return m.role !== "viewer"; });
@@ -13189,7 +13518,9 @@ function openReassignModal(job){
       pushLog(job.id, "act_reassign", { oEn:m.en, oAr:m.ar });
       closeModal();
       toast(tf("reassign_toast", { o: esc(m[LANG]) }));
-      renderWorkspace();
+      /* repaint whatever the reader is actually looking at: renderWorkspace reads state.jobId,
+         so from a list it would repaint a stale role or nothing at all */
+      render(state.screen);
     });
   });
 }
@@ -13230,7 +13561,8 @@ function openHoldModal(job){
   if (job.hold){
     job.hold = null; job.paused = false;
     Object.keys(state.dispHold).forEach(function(key){
-      if (key.indexOf(job.id + "|") === 0){ state.disp[key] = state.dispHold[key]; delete state.dispHold[key]; }
+      /* resume where it stopped: the remaining days become a fresh moment */
+      if (key.indexOf(job.id + "|") === 0){ state.disp[key] = dispStampFor(state.dispHold[key]); delete state.dispHold[key]; }
     });
     pushLog(job.id, "act_hold_lift", {});
     renderWorkspace();
@@ -13257,13 +13589,31 @@ function openHoldModal(job){
          The remaining days are shadow-saved so lifting the hold resumes them where they stopped. */
       jobStages(job).fit.forEach(function(cid){
         var key = ck(job.id, cid);
-        if (dispRunning(key)){ state.dispHold[key] = state.disp[key]; delete state.disp[key]; }
+        /* shadow-save what is LEFT, not when it started: a paused clock must not spend
+           the days it was paused for */
+        if (dispRunning(key)){ state.dispHold[key] = dispLeft(key); delete state.disp[key]; }
       });
       pushLog(job.id, "act_hold", {rk:rk});
       renderWorkspace(); renderJobsBadge();
       toast(tf("hold_on", {r: t(rk)}));
     });
   });
+}
+/* The 21 days, in one place. openExtModal owned this arithmetic and the bulk bar needed the
+   same rule, so it moved here rather than being copied — an extension signed two different
+   ways is how an audit trail starts disagreeing with itself. Returns false at the cap. */
+var EXT_DAYS = 21, EXT_MAX = 2;
+function extendJob(job){
+  job.exts = job.exts || 0;
+  if (job.exts >= EXT_MAX) return false;
+  job.exts++;
+  /* ext_note promises the extension is signed by the accountable owner: sign it with them */
+  var owner = jobOwner(job);
+  var m = (job.win && job.win.en || "").match(/\d+/);
+  var d = (m ? parseInt(m[0], 10) : 30) + EXT_DAYS;
+  job.win = { en: d + " days left", ar: "باقي " + d + " يوماً" };
+  pushLog(job.id, "act_ext", { oEn: owner.en, oAr: owner.ar });
+  return true;
 }
 function openExtModal(job){
   job.exts = job.exts || 0;
@@ -13279,12 +13629,7 @@ function openExtModal(job){
   $("#mCancel").addEventListener("click", closeModal);
   $("#mGo").addEventListener("click", function(){
     closeModal();
-    job.exts++;
-    var owner = (TEAM[state.tenant.id] || [])[0] || {en:"",ar:""};
-    var m = (job.win && job.win.en || "").match(/\d+/);
-    var d = (m ? parseInt(m[0],10) : 30) + 21;
-    job.win = { en: d + " days left", ar: "باقي " + d + " يوماً" };
-    pushLog(job.id, "act_ext", {oEn:owner.en, oAr:owner.ar});
+    extendJob(job);
     renderWorkspace();
     toast(t("ext_done"));
   });
@@ -13516,7 +13861,8 @@ function outcomeStripHTML(job){
   var late = outcomeOverdueBy(job) >= OUTCOME_GRACE;
   return '<div class="oc-strip'+(late?" late":"")+'">'+ICONS.clock+
     '<span class="oc-tx"><b>'+t(late ? "oc_strip_late_h" : "oc_strip_h")+'</b>'+
-    '<span>'+t(late ? "oc_strip_late_s" : "oc_strip_s")+'</span></span>'+
+    '<span>'+(late ? t("oc_strip_late_s")
+      : t("oc_strip_s")+' '+tf("oc_strip_in",{d:cdaysHTML(outcomeGraceLeft(job))}))+'</span></span>'+
     '<button class="btn btn-pri" id="ocOpen" type="button">'+t("oc_report")+'</button></div>';
 }
 function renderIntWatch(){
@@ -14460,15 +14806,29 @@ function renderPostStep(){
     '<span class="sl-bar"><i style="width:'+Math.min(100, n ? (u/n)*100 : 100)+'%"></i></span>';
   /* an outcome block is stated at the wizard's DOOR, never after five composed steps */
   var owedJobs = outcomesBlocking();
+  /* the warning the founder asked for: read once, at the one door the block will close.
+     It states the interval only while the interval is still true — once the block has
+     landed there is nothing to count down to, and the blocked wording takes over. */
+  var dueSoon = owedJobs.length ? [] : outcomesDue();
   var owedBanner = owedJobs.length
-    ? '<div class="slots-strip">'+ICONS.clock+
+    ? '<div class="slots-strip hard">'+ICONS.clock+
       '<span class="ss-tx"><b>'+tf("post_owed_h",{r:esc(owedJobs[0].title[LANG])})+'</b><span>'+t("post_owed_s")+'</span></span>'+
       (isViewer() ? '' : '<button class="btn btn-pri" id="postOwedGo" type="button">'+t("oc_report")+'</button>')+'</div>'
+    : dueSoon.length
+    ? '<div class="slots-strip">'+ICONS.clock+
+      '<span class="ss-tx"><b>'+tf("post_warn_h",{r:esc(dueSoon[0].title[LANG])})+'</b>'+
+      '<span>'+tf("post_warn_s",{d:cdaysHTML(outcomeGraceLeft(dueSoon[0]))})+'</span></span>'+
+      (isViewer() ? '' : '<button class="btn btn-out" id="postWarnGo" type="button">'+t("oc_report")+'</button>')+'</div>'
     : "";
   $("#slotsNotice").innerHTML = owedBanner + (u >= n
     ? '<div class="slots-strip">'+ICONS.clock+
       '<span class="ss-tx"><b>'+t("slots_full_h")+'</b><span>'+t(isAdmin() ? "slots_full" : "slot_admin_only")+'</span></span>'+
       (isAdmin() ? '<button class="btn btn-pri" id="slotsAdd" type="button">'+t("slot_add")+'</button>' : '')+'</div>' : "");
+  var pwg = $("#postWarnGo");
+  if (pwg) pwg.addEventListener("click", function(){
+    /* a warning is not a block: answering it must not hijack the posting being composed */
+    openOutcomeModal(dueSoon[0], { forced: false });
+  });
   var pog = $("#postOwedGo");
   if (pog) pog.addEventListener("click", function(){
     state.pendingPublish = false;   /* answering from the door re-renders the door, no auto-publish */
@@ -14876,6 +15236,7 @@ function doPublish(){
   var job = {
     id:id, tenant: state.tenant.id, title:{en:f.title, ar:f.title}, func:f.func, sen:f.sen, mode: modeFromForm(f),
     etype:f.etype, dept: deptObj, jd: clampJd(f.jdText), gender: f.gender || "",
+    postedAt: boardNow(),   /* the role starts ageing the moment it is published */
     status: needsApproval ? "approval" : "active", conf:f.conf, seal:f.seal, posted:{en:"just now",ar:"الآن"},
     band: f.bandOff ? null : [f.bmin, f.bmax],
     win:{en:f.window+" days left", ar:"باقي "+f.window+" يوماً"},
@@ -15340,6 +15701,17 @@ function wire(){
     if (projAddEl){ openProjPicker(projAddEl.getAttribute("data-projadd")); return; }
     var projRoleEl = e.target.closest("#projBody [data-jobcard]");
     if (projRoleEl){ go("role", projRoleEl.getAttribute("data-jobcard")); return; }
+    /* a control INSIDE a row must be tested before the row itself, or the row swallows it */
+    var jsel = e.target.closest("[data-jobsel]");
+    if (jsel){
+      var sid = jsel.getAttribute("data-jobsel");
+      state.jobSel[sid] = !state.jobSel[sid];
+      if (!state.jobSel[sid]) delete state.jobSel[sid];
+      renderJobs();
+      return;
+    }
+    var jr = e.target.closest("[data-reassign]");
+    if (jr){ var rj = jobById(jr.getAttribute("data-reassign")); if (rj) openReassignModal(rj); return; }
     var jobRowEl = e.target.closest("[data-job]");
     if (jobRowEl){ go("role", jobRowEl.getAttribute("data-job")); return; }
     var sg = e.target.closest("#suggMust [data-skill]");
@@ -15370,8 +15742,6 @@ function wire(){
     if (je){ var ej = jobById(state.jobId); if (ej) openExtModal(ej); return; }
     var ja = e.target.closest("#jwAmend");
     if (ja){ var aj = jobById(state.jobId); if (aj) openAmendModal(aj); return; }
-    var jr = e.target.closest("[data-reassign]");
-    if (jr){ var rj = jobById(jr.getAttribute("data-reassign")); if (rj) openReassignModal(rj); return; }
     var ptab = e.target.closest("[data-ptab]");
     if (ptab){ state.panelTab = ptab.getAttribute("data-ptab"); renderPanel(); return; }
   });
@@ -15536,6 +15906,9 @@ function wire(){
   });
   $("#fDept").addEventListener("change", function(){ state.form.dept = parseInt(this.value, 10); });
   $("#btnPreview").addEventListener("click", openPreviewModal);
+  /* the pack is for people outside the dashboard, so it is not behind the paid gate the
+     audit pack sits behind: a status page nobody can send is a status page nobody reads */
+  $("#repSnap").addEventListener("click", exportRolePack);
   $("#repExport").addEventListener("click", function(){
     /* exports are a paid-plan feature: the free plan is the included slot alone */
     if (onFreePlan()){ openSlotsModal(1, { exportGate:true }); return; }
@@ -15607,6 +15980,78 @@ function downloadFile(name, mime, content){
 }
 function exportStamp(){
   return new Date().toLocaleDateString(LANG==="ar"?"ar-u-ca-gregory-nu-latn":"en-GB",{day:"numeric",month:"long",year:"numeric"});
+}
+/* ===== the role status pack =====
+   For the people who never sign in. One dated page saying where every role stands, in the
+   reader’s own language, printable to PDF by the browser and downloadable as CSV. It carries
+   COUNTS, never candidates: a name leaves this dashboard through an interview invitation and
+   through nothing else, and a document that travels by email is exactly where that must hold. */
+function packRows(){
+  return visibleJobs().filter(function(j){ return j.status !== "draft"; }).map(function(j){
+    var st = jobStages(j);
+    return {
+      title: j.title[LANG],
+      dept: (j.dept && j.dept[LANG]) || "",
+      owner: jobOwnerSet(j) ? jobOwner(j)[LANG] : t("own_none"),
+      status: t("r_" + j.status) + (j.conf ? " · " + t("r_conf") : "") + (j.poolOpen && j.status === "active" ? " · " + t("pool_strip_h") : ""),
+      posted: cdaysHTMLPlain(jobDays(j)),
+      closes: j.status === "active" && j.win ? winLabel(j) : "—",
+      applied: jobAppCount(j),
+      review: jobReviewN(j),
+      shortlisted: st.fit.length + st.invited.length + st.offer.length,
+      waiting: packWaiting(j)
+    };
+  });
+}
+/* the plain-text twin of cdaysHTML: a document and a CSV take text, never markup */
+function cdaysHTMLPlain(d){ return String(cdaysHTML(d)).replace(/<[^>]*>/g, ""); }
+/* what the role is waiting on, in the words the dashboard already uses */
+function packWaiting(j){
+  if (j.status === "hired") return t("snap_hired");
+  if (j.status === "approval") return t("r_approval");
+  if (outcomeDue(j)) return t("oc_strip_h");
+  var rn = jobReviewN(j), vn = jobInviteN(j);
+  if (rn > 0) return tf("op_chip_review", { n: rn });
+  if (vn > 0) return tf("op_chip_invite", { n: vn });
+  if (j.matching) return t("match_pill");
+  return "—";
+}
+function exportRolePack(){
+  logActivity("ga_export", { w: t("snap_h") });
+  var tn = state.tenant, rows = packRows();
+  var head = [t("th_job"), t("rd_owner"), t("ff_status"), t("snap_posted"), t("snap_closes"),
+    t("th_apps2"), t("fun_sealed"), t("st_fit"), t("snap_waiting")];
+  var body = rows.map(function(r){
+    return "<tr><td><b>"+esc(r.title)+"</b><span class=\"d\">"+esc(r.dept)+"</span></td>"+
+      "<td>"+esc(r.owner)+"</td><td>"+esc(r.status)+"</td><td>"+esc(r.posted)+"</td><td>"+esc(r.closes)+"</td>"+
+      '<td class="n">'+fmt(r.applied)+"</td><td class=\"n\">"+fmt(r.review)+"</td><td class=\"n\">"+fmt(r.shortlisted)+"</td>"+
+      "<td>"+esc(r.waiting)+"</td></tr>";
+  }).join("");
+  var doc = '<!doctype html><html lang="'+LANG+'" dir="'+(LANG==="ar"?"rtl":"ltr")+'"><head><meta charset="utf-8">'+
+    '<title>'+esc(tn.name[LANG])+' · '+t("snap_h")+'</title>'+
+    '<style>body{font-family:-apple-system,Segoe UI,Tahoma,sans-serif;color:#061430;max-width:1000px;margin:32px auto;padding:0 20px;line-height:1.5}'+
+    'h1{font-size:24px;margin:0 0 4px}.sub{color:#7C8496;font-size:13px;margin:0 0 18px}'+
+    'table{width:100%;border-collapse:collapse;font-size:12.5px}th{text-align:start;font-size:10px;letter-spacing:.08em;'+
+    'text-transform:uppercase;color:#7C8496;border-bottom:2px solid #061430;padding:0 8px 6px}'+
+    'td{padding:9px 8px;border-bottom:1px solid #E4E7EF;vertical-align:top}'+
+    'td .d{display:block;color:#7C8496;font-size:11px;margin-top:2px}td.n{text-align:center;font-weight:700}'+
+    '.stamp{font-size:11px;color:#7C8496;margin-top:28px;border-top:1px solid #E4E7EF;padding-top:10px}'+
+    '@media print{body{margin:8mm auto;max-width:none}}</style></head><body>'+
+    '<h1>'+t("snap_h")+'</h1>'+
+    '<p class="sub">'+esc(tn.name[LANG])+' · '+tf("snap_asat",{d:exportStamp()})+'</p>'+
+    '<table><thead><tr>'+head.map(function(h){ return "<th>"+esc(h)+"</th>"; }).join("")+'</tr></thead>'+
+    '<tbody>'+body+'</tbody></table>'+
+    '<p class="stamp">'+t("snap_note")+'</p></body></html>';
+  var ok = downloadFile("Uptal_Role_Status_"+tn.id+".html", "text/html;charset=utf-8", doc);
+  /* the same rows for a spreadsheet; the BOM is what makes Excel read the Arabic */
+  function cell(v){ return '"'+String(v).replace(/"/g, '""')+'"'; }
+  var csv = "\uFEFF" + head.map(cell).join(",") + "\n" +
+    rows.map(function(r){
+      return [r.title, r.owner, r.status, r.posted, r.closes, r.applied, r.review, r.shortlisted, r.waiting].map(cell).join(",");
+    }).join("\n");
+  downloadFile("Uptal_Role_Status_"+tn.id+".csv", "text/csv;charset=utf-8", csv);
+  if (ok) toast(t("snap_done"));
+  else toast(t("exp_blocked"), "error", { lab:t("exp_retry"), fn:exportRolePack });
 }
 /* the audit pack: a standalone, print-ready Hiring Record document */
 function exportAuditPack(){
