@@ -2582,6 +2582,9 @@
   .slots-strip.hard{background:var(--red-tint);border-color:rgba(201,64,60,.3)}
   .slots-strip.hard>svg{stroke:var(--red-ink)}
   .slots-strip.hard .ss-tx b{color:var(--red-ink)}
+  .oc-strip.ret{border-inline-start-color:var(--persian)}
+  .ex-kept{margin-block-start:6px;font-size:var(--fs-2);color:var(--slate)}
+  .ex-owed{margin-block-start:6px;font-size:var(--fs-2);color:var(--red-ink);font-weight:600}
   .qty-row{display:flex;align-items:center;justify-content:space-between;gap:12px}
   .qty-lab{font-size:var(--fs-3);font-weight:600;color:var(--ink)}
   .qty{display:inline-flex;align-items:center;gap:14px;border:1px solid var(--hair);border-radius:var(--r-pill);padding:5px 8px;direction:ltr}
@@ -3892,7 +3895,7 @@ nav_settings:"Settings",
   post_warn_h:"Record the outcome for {r}",
   post_warn_s:"New postings stop for this dashboard in {d}.",
   oc_strip_in:"New postings stop in {d} unless this is answered.",
-  cdays:"{d} days",
+  cdays:"{d} days",cday_1:"1 day",
   post_owed_s:"One question, then this posting can go live.",
   iw_outcome:"{job} \u2014 an outcome is due. Invited and still waiting: {n}.",
   iw_outcome_late:"{job} \u2014 the outcome is overdue and new postings are on hold. Invited and still waiting: {n}.",
@@ -4775,8 +4778,18 @@ mod_out_s:"Contact candidates directly from the dashboard. Ships separately.",
   need_attest:"Sign the hiring attestation first",
   pub_commit:"Commitment",pub_commit_v:"Closes after {d} days, attested by {o}",
   win_left:"Closes in {d}",
-  retention_left:"Details clear in {d} days",
+  retention_left:"Details clear in {d}",
   expired_h:"Candidate details cleared",
+  expired_kept:"The record stays: {n} and every decision in the trail.",
+  expired_owed:"This role still owes an answer. Record it — the people you invited are still waiting, and this dashboard cannot publish until it is given.",
+  rd_ret_done:"Cleared; the hiring record remains",
+  ret_strip_h:"Candidate details clear in {d}",
+  ret_strip_s:"After that this posting keeps its numbers and its audit trail, and nothing that names a person. Export the record first, and name your hire while the board can still record it.",
+  ret_strip_btn:"Export the record",
+  nf_retention:"Candidate details on a posting clear within days. Export the record if you need it.",
+  nf_cleared:"Candidate details were cleared for privacy. The posting keeps its hiring record.",
+  act_cleared:"Candidate details cleared for privacy: {n}. The hiring record and this trail remain.",
+  ht_h_recs:"Records",ht_rc_n:"Clearing soon: {n}",ht_rc_none:"Nothing clearing",ht_cta_recs:"Export the record",
   expired_s:"This posting passed {d} days, so all applicant details were cleared for privacy. Repost to receive fresh, pre-screened applicants.",
   expired_chip:"Details cleared",repost_btn:"Repost job",
   repost_toast:"Reposted. Fresh pre-screened applicants will arrive shortly.",
@@ -5651,7 +5664,7 @@ nav_settings:"الإعدادات",
   post_warn_h:"سجّل نتيجة {r}",
   post_warn_s:"يتوقف نشر أي إعلان جديد من هذه اللوحة بعد {d}.",
   oc_strip_in:"يتوقف نشر أي إعلان جديد بعد {d} ما لم تُسجَّل النتيجة.",
-  cdays:"{d} يوماً",
+  cdays:"{d} يوماً",cday_1:"يوم واحد",
   post_owed_s:"سؤال واحد، ثم يمكن نشر هذا الإعلان.",
   iw_outcome:"{job} — النتيجة مستحقة. المدعوون بانتظار الرد: {n}.",
   iw_outcome_late:"{job} — تأخرت النتيجة والإعلانات الجديدة معلّقة. المدعوون بانتظار الرد: {n}.",
@@ -6534,8 +6547,18 @@ mod_out_s:"تواصل مع المرشحين مباشرة من اللوحة. تص
   need_attest:"وقّع إقرار التوظيف أولاً",
   pub_commit:"الالتزام",pub_commit_v:"يُغلق بعد {d} يوماً، بإقرار {o}",
   win_left:"يُغلق خلال {d}",
-  retention_left:"تُمحى البيانات خلال {d} يوماً",
+  retention_left:"تُمحى البيانات خلال {d}",
   expired_h:"مُحيت بيانات المرشحين",
+  expired_kept:"يبقى السجل: {n} وكل قرار في سجل التدقيق.",
+  expired_owed:"لا يزال هذا الدور مديناً بإجابة. سجّلها — فمن دعوتهم ما زالوا ينتظرون، ولن تنشر هذه اللوحة قبل ذلك.",
+  rd_ret_done:"مُحيت؛ ويبقى سجل التوظيف",
+  ret_strip_h:"تُمحى بيانات المرشحين خلال {d}",
+  ret_strip_s:"بعدها يحتفظ هذا الإعلان بأرقامه وسجل تدقيقه، ولا يبقى فيه ما يدل على شخص. صدّر السجل أولاً، وسمِّ من وظّفته ما دامت اللوحة قادرة على تسجيله.",
+  ret_strip_btn:"تصدير السجل",
+  nf_retention:"تُمحى بيانات المرشحين في أحد الإعلانات خلال أيام. صدّر السجل إن كنت تحتاجه.",
+  nf_cleared:"مُحيت بيانات المرشحين للخصوصية. ويحتفظ الإعلان بسجل التوظيف.",
+  act_cleared:"مُحيت بيانات المرشحين للخصوصية: {n}. ويبقى سجل التوظيف وهذا السجل.",
+  ht_h_recs:"السجلات",ht_rc_n:"تُمحى قريباً: {n}",ht_rc_none:"لا شيء يُمحى قريباً",ht_cta_recs:"صدّر السجل",
   expired_s:"تجاوز هذا الإعلان {d} يوماً، فمُحيت بيانات المتقدمين للخصوصية. أعد النشر لاستقبال متقدمين مفروزين جدد.",
   expired_chip:"مُحيت البيانات",repost_btn:"إعادة النشر",
   repost_toast:"أُعيد النشر. سيصل متقدمون مفروزون جدد قريباً.",
@@ -7627,6 +7650,7 @@ var BILLING = {};
 /* Hiring-integrity metadata: decision windows, review deadlines, paused state.
    days = age of the posting; candidate details are cleared for privacy after RETENTION_DAYS. */
 var RETENTION_DAYS = 60;
+var RET_WARN_DAYS = 7;   /* forewarning, in the same calendar days RETENTION_DAYS is counted in */
 var JOB_META = {
   /* own = index into TEAM[tenant]: the accountable owner rides the seed so a list can name
      somebody real. Without it jobOwner() falls back to the first admin and every row lies. */
@@ -7638,14 +7662,18 @@ var JOB_META = {
   q2:{ win:{en:"9 days left",ar:"باقي 9 أيام"}, due:{en:"2 days",ar:"يومين"}, days:38, own:0 },
   q3:{ win:{en:"27 days left",ar:"باقي 27 يوماً"}, days:3, own:1 },
   q4:{ win:{en:"14 days left",ar:"باقي 14 يوماً"}, days:7, own:0 },
-  q6:{ days:64, expired:true },
+  /* the after-state, with real numbers under the cleared card. invited and offer stay 0 so
+     the cleared role owes nothing and the Repost demo is never blocked by an answer it
+     could no longer name. */
+  q6:{ days:64, expired:true, cleared:{ sealed:24, fit:2, invited:0, offer:0, total:26 } },
   q7:{ win:{en:"19 days left",ar:"باقي 19 يوماً"}, days:11, own:1 },
   n1:{ win:{en:"26 days left",ar:"باقي 26 يوماً"}, due:{en:"2 days",ar:"يومين"}, days:4, own:1 },
   n2:{ win:{en:"18 days left",ar:"باقي 18 يوماً"}, days:7, own:0 },
   n3:{ win:{en:"28 days left",ar:"باقي 28 يوماً"}, paused:true, days:2, own:1 }
 };
 JOBS.forEach(function(j){ var m = JOB_META[j.id]; if (m){ j.win = m.win; j.due = m.due; j.paused = !!m.paused; j.days = m.days || 0; j.expired = !!m.expired;
-  if (m.own !== undefined){ var mem = (TEAM[j.tenant] || [])[m.own]; if (mem) j.owner = { en: mem.en, ar: mem.ar }; } } });
+  if (m.own !== undefined){ var mem = (TEAM[j.tenant] || [])[m.own]; if (mem) j.owner = { en: mem.en, ar: mem.ar }; }
+  if (m.cleared) j.cleared = JSON.parse(JSON.stringify(m.cleared)); } });
 /* ===== the day substrate =====
    A stored day count cannot age. Every day figure derives from a MOMENT instead: the job
    carries postedAt and jobDays() computes the difference when the screen is drawn, so a role
@@ -7677,6 +7705,8 @@ function anchorJobClocks(tenantId){
    NEW roles until the answer is given. Candidates waiting on a decision are the reason. */
 var OUTCOME_DAYS = 30, OUTCOME_GRACE = 14;
 function outcomeReached(job){
+  /* the people may be gone; the answer they were owed is not */
+  var c = job.cleared; if (c) return (c.invited + c.offer) > 0;
   var st = jobStages(job);
   return st.invited.length + st.offer.length > 0;
 }
@@ -7724,6 +7754,59 @@ function outcomeAskSoft(job){
 }
 function retentionLeft(job){ return Math.max(0, RETENTION_DAYS - jobDays(job)); }
 function jobExpired(job){ return !!job.expired || jobDays(job) >= RETENTION_DAYS; }
+/* ===== retention that deletes =====
+   For as long as the clock stood still this could never fire, and the board told a lie no
+   one could catch: at RETENTION_DAYS it said "candidate details were cleared" and cleared
+   nothing. The pipeline, the invite flags, the clocks and the screening records all stayed,
+   were written to storage on the next act, and came straight back on Repost. The clock is
+   real now, so the sentence has to be. What survives a clear is exactly what the copy
+   promises survives: the counts, the outcome, and the audit trail — nothing that names a
+   person. There is no timer: the sweep runs when the dashboard is entered and before any
+   screen draws, so the first eyes on a role past the line see it already cleared. */
+function retentionNear(job){
+  return job.status === "active" && !jobExpired(job) && jobAppCount(job) > 0 && retentionLeft(job) <= RET_WARN_DAYS;
+}
+function retentionNearJobs(){ return visibleJobs().filter(retentionNear); }
+/* the counts a role held, read once before the people are gone. Every count on every surface
+   routes through here, so a cleared role prints the numbers it kept instead of zeros. */
+function jobCounts(job){
+  if (job.cleared) return job.cleared;
+  var st = jobStages(job);
+  return { sealed: st.short.length + st.applied.length + st.screened.length, fit: st.fit.length,
+           invited: st.invited.length, offer: st.offer.length,
+           total: st.short.length + st.applied.length + st.screened.length + st.fit.length + st.invited.length + st.offer.length };
+}
+function clearJobDetails(job){
+  if (job.cleared) return false;   /* idempotent: a second sweep must not write a second line */
+  var c = jobCounts(job);
+  job.cleared = { sealed: c.sealed, fit: c.fit, invited: c.invited, offer: c.offer, total: c.total, at: boardNow() };
+  var st = jobStages(job), ids = [];
+  STAGES.forEach(function(k){ (st[k] || []).forEach(function(cid){ ids.push(cid); }); });
+  /* the people: the role’s own copy AND the mint it is lazily rebuilt from */
+  delete state.jobState[job.id];
+  job.stages = { short:[], applied:[], screened:[], fit:[], invited:[], offer:[] };
+  /* everything keyed by (job, candidate): invite flags, both clocks, screening calls, receipts */
+  var pre = job.id + "|";
+  ["invited","disp","dispHold","screens","invDay","intv","sel"].forEach(function(k){
+    var map = state[k]; if (!map) return;
+    Object.keys(map).forEach(function(key){ if (key.indexOf(pre) === 0) delete map[key]; });
+  });
+  /* and the saved copy a reload would restore them from */
+  var rp = REHYD_PIPE[job.tenant];
+  if (rp) ["invited","disp","screens","invDay","intv"].forEach(function(k){
+    var map = rp[k]; if (!map) return;
+    Object.keys(map).forEach(function(key){ if (key.indexOf(pre) === 0) delete map[key]; });
+  });
+  /* candidates minted for this role alone exist nowhere else: they go with it */
+  ids.forEach(function(cid){ var cand = CANDS[cid]; if (cand && cand.cloneOf) delete CANDS[cid]; });
+  pushLog(job.id, "act_cleared", { count: c.total });
+  notify("nf_cleared", job.id, {});
+  return true;
+}
+function retentionSweep(){
+  if (!state.tenant) return;
+  tenantJobs().forEach(function(j){ if (jobExpired(j)) clearJobDetails(j); });
+}
 /* fresh pre-screened applicants that arrive when an expired posting is reposted */
 var REPOST_POOL = { q6:["de3","de2"] };
 /* ===== The wider Uptal network: over a million vetted professionals, every level from
@@ -8266,7 +8349,7 @@ function appsLabel(n){
    the numeral is LTR-isolated so it reads left to right inside a mirrored sentence, which
    means this belongs in innerHTML only — never assign it to textContent. */
 function cdaysHTML(n){
-  if (LANG !== "ar") return tf("cdays", { d: nn(fmt(n)) });
+  if (LANG !== "ar") return tf(n === 1 ? "cday_1" : "cdays", { d: nn(fmt(n)) });
   if (n === 1) return "يوم واحد";
   if (n === 2) return "يومين";
   if (n >= 3 && n <= 10) return nn(fmt(n)) + " أيام";
@@ -8506,6 +8589,7 @@ function jobStages(job){
   return state.jobState[job.id];
 }
 function jobAppCount(job){
+  if (job.cleared) return job.cleared.total;
   var st = jobStages(job), n = 0;
   STAGES.forEach(function(k){ n += st[k].length; });
   return n;
@@ -8845,6 +8929,9 @@ function reconcileLedger(){
   master.forEach(function(m){
     if (!m.engine || m.status === "cured" || m.status === "waived") return;
     if (!live[m.auto]){
+      /* a role whose details were cleared is silent, not resolved: nobody may sit out a
+         deduction by waiting for the evidence to be deleted */
+      var mj = jobById(m.job); if (mj && mj.cleared) return;
       m.status = "cured";
       m.note = { en:"Resolved \u2014 the engine cleared it", ar:"عولجت — ورفعها المحرك" };
       changed = true;
@@ -8914,6 +9001,15 @@ function integrityScan(){
     state.ocNotified = state.ocNotified || {};
     state.ocNotified[j.id] = true;
     notify("nf_outcome", j.id, {});
+  });
+  /* a privacy deletion is announced before it happens, once per role. It is deliberately
+     in no notification category: nfAllowed() lets an admin silence a category, and this
+     is the one warning that must not be silenceable. */
+  retentionNearJobs().forEach(function(j){
+    if (state.retNotified && state.retNotified[j.id]) return;
+    state.retNotified = state.retNotified || {};
+    state.retNotified[j.id] = true;
+    notify("nf_retention", j.id, {});
   });
   /* band transitions are announced by the engine, never discovered by surprise */
   try {
@@ -9246,6 +9342,7 @@ function logoRowHTML(){
     '<div class="hint">'+t(state.tenant.logo?"lg_note":"lg_ph")+'</div></div>';
 }
 function render(screen){
+  retentionSweep();   /* whoever first looks at a role past the line sees it already cleared */
   if (screen === "home") renderHome();
   else if (screen === "roles") renderJobs();
   else if (screen === "role") renderWorkspace();
@@ -9353,6 +9450,7 @@ function enter(tenantId){
   /* seeded ages become real dates, re-pinned on entry so the demo never drifts between visits */
   anchorJobClocks(tenantId);
   if (tenantId === "qimam") seedDemoStates();
+  retentionSweep();
   if (state.tenant.type === "gov"){ state.form.seal = true; state.form.saudi = true; }
   /* the gate screen is gone; showAuth() already hides the auth layer */
   hideAuthLayer();
@@ -9477,7 +9575,7 @@ function inviteQueue(scope){
   out.sort(function(a,b){ return a.left - b.left; });
   return out;
 }
-function jobReviewN(j){ var st = jobStages(j); return st.short.length + st.applied.length + st.screened.length; }
+function jobReviewN(j){ if (j.cleared) return j.cleared.sealed; var st = jobStages(j); return st.short.length + st.applied.length + st.screened.length; }
 function jobInviteN(j){
   var st = jobStages(j), n = 0;
   st.fit.forEach(function(cid){ if (dispRunning(ck(j.id, cid))) n++; });
@@ -9597,12 +9695,12 @@ function homeFootHTML(){
 }
 /* the funnel bar: sealed → shortlisted → invited → offer, proportional, blind by construction */
 function funnelHTML(j){
-  var st = jobStages(j);
+  var st = jobCounts(j);
   var segs = [
-    { n: jobReviewN(j), cls:"s-sealed", lab:t("fun_sealed") },
-    { n: st.fit.length, cls:"s-fit", lab:t("st_fit") },
-    { n: st.invited.length, cls:"s-inv", lab:t("st_invited") },
-    { n: st.offer.length, cls:"s-off", lab:t("st_offer") }
+    { n: st.sealed, cls:"s-sealed", lab:t("fun_sealed") },
+    { n: st.fit, cls:"s-fit", lab:t("st_fit") },
+    { n: st.invited, cls:"s-inv", lab:t("st_invited") },
+    { n: st.offer, cls:"s-off", lab:t("st_offer") }
   ];
   var total = segs.reduce(function(a,s){ return a+s.n; }, 0);
   if (total === 0){
@@ -9719,6 +9817,7 @@ function feedHTML(){
   return '<div class="feed-card">'+rows.map(function(r){
     var e = r.e, p = {};
     if (e.cid && CANDS[e.cid]) p.n = "<b>"+esc(pipeName(r.j.id, e.cid))+"</b>";
+    else if (e.cid) p.n = "<b>"+esc(sealedRef(r.j.id, e.cid))+"</b>";   /* cleared: the ref, never a blank */
     else if (e.count !== undefined) p.n = "<b>"+appsLabel(e.count)+"</b>";
     if (e.oEn) p.o = "<b>"+esc(LANG === "ar" ? e.oAr : e.oEn)+"</b>";
     if (e.d !== undefined) p.d = e.d;
@@ -9802,8 +9901,9 @@ function everPublished(){
    will let you do next. Per-role facts (invites left, a hold, a funnel) stay on the role.
    A tile renders only when its state is not the quiet one, they sort by consequence, and
    Home keeps at most HOME_TILE_CAP with the rest collapsed into one "+n" tile.
-   No tile carries a countdown: jobDays() is seeded and never ticks, so a day figure here
-   would be theatre. States are stated; days are not. */
+   No tile carries a countdown. The clock is real now, so that is no longer a matter of
+   substrate: a tile is an account state read every morning, and the interval belongs at
+   the one door where it is read once, in the moment it is true. */
 var HOME_TILE_CAP = 5;
 /* submissions stop while a backlog sits: checkBatchRelease holds the next batch until
    applied + screened is clear, so the pause is a fact about the job, not a setting */
@@ -9860,6 +9960,9 @@ function homeTiles(reviewN, invQ, due, acts){
   var warns = state.intWarnings || [];
   if (warns.length) add(1, "ht_h_stand", warns.length === 1 ? t("ht_st_1") : tf("ht_st_n",{n:nn(fmt(warns.length))}), t("ht_cta_stand"), 'data-goset="standing"');
   else quiet("ht_h_stand", realBandLabel());
+  var rn = retentionNearJobs();
+  if (rn.length) add(2, "ht_h_recs", tf("ht_rc_n",{n:nn(fmt(rn.length))}), t("ht_cta_recs"), 'data-openrole="'+esc(rn[0].id)+'"');
+  else quiet("ht_h_recs", t("ht_rc_none"));
   var po = poolOpenJobs();
   if (po.length) add(3, "ht_h_net", po.length === 1 ? t("ht_nw_1") : tf("ht_nw_n",{n:nn(fmt(po.length))}), t("ht_cta_net"), 'data-openpool="'+esc(po[0].id)+'"');
   else quiet("ht_h_net", t("ht_nw_none"));
@@ -10937,6 +11040,7 @@ function repostJob(job){
   /* reposting puts the role back on the board, so it needs a free slot again */
   if (slotsFree() <= 0){ openSlotsModal(); return; }
   job.expired = false; job.days = 0; job.postedAt = boardNow(); job.status = "active";
+  delete job.cleared;              /* the new run starts from nothing, as the card promised */
   job.outcome = null;              /* a new run owes its own answer */
   if (state.ocNotified) delete state.ocNotified[job.id];
   job.posted = { en:"just now", ar:"الآن" };
@@ -11034,15 +11138,24 @@ function renderWorkspace(){
   if (state.jtab === "act"){ renderActivity(job); return; }
   /* candidate details are cleared after the retention window; the posting can be reposted */
   if (jobExpired(job)){
-    $("#jwClose").hidden = true; $("#jwOutcome").hidden = true; $("#jwHold").hidden = true; $("#jwExt").hidden = true; $("#jwAmend").hidden = true;
+    clearJobDetails(job);   /* the card below must never describe a clear that has not happened */
+    var owedStill = outcomeOwed(job);
+    /* the outcome door stays open: sixty days of silence does not release the answer */
+    $("#jwClose").hidden = true; $("#jwOutcome").hidden = isViewer() || !owedStill; $("#jwHold").hidden = true; $("#jwExt").hidden = true; $("#jwAmend").hidden = true;
     syncJwManage();
     $("#stageTabs").innerHTML = "";
+    var kept = jobCounts(job);
     $("#intStrip").innerHTML = '<div class="expired-card"><span class="ex-ic">'+ICONS.lock+'</span>'+
-      '<div class="ex-mid"><h4>'+t("expired_h")+'</h4><p>'+tf("expired_s",{d:RETENTION_DAYS})+'</p></div>'+
-      (isViewer()?"":'<button class="btn btn-pri" id="jwRepost" type="button">'+ICONS.refresh+'<span>'+t("repost_btn")+'</span></button>')+'</div>';
+      '<div class="ex-mid"><h4>'+t("expired_h")+'</h4><p>'+tf("expired_s",{d:nn(RETENTION_DAYS)})+'</p>'+
+      '<p class="ex-kept">'+tf("expired_kept",{n:appsLabel(kept.total)})+'</p>'+
+      (owedStill ? '<p class="ex-owed">'+t("expired_owed")+'</p>' : "")+'</div>'+
+      (isViewer() ? "" : (owedStill
+        ? '<button class="btn btn-pri" id="ocOpenX" type="button">'+t("oc_report")+'</button>'
+        : '<button class="btn btn-pri" id="jwRepost" type="button">'+ICONS.refresh+'<span>'+t("repost_btn")+'</span></button>'))+'</div>';
     $("#bulkWrap").innerHTML = "";
     $("#clist").innerHTML = "";
     var rb = $("#jwRepost"); if (rb) rb.addEventListener("click", function(){ repostJob(job); });
+    var ox = $("#ocOpenX"); if (ox) ox.addEventListener("click", function(){ openOutcomeModal(job, { forced: outcomeOverdueBy(job) >= OUTCOME_GRACE }); });
     return;
   }
   /* the wider pool opens once every matched applicant is reviewed and none is shortlisted */
@@ -11178,7 +11291,7 @@ function renderWorkspace(){
     }
   }
   /* the outcome ask leads the strips: it is the only one someone else is waiting on */
-  $("#intStrip").innerHTML = outcomeStripHTML(job) + strips.join("");
+  $("#intStrip").innerHTML = outcomeStripHTML(job) + retentionStripHTML(job) + strips.join("");
   var ocb = $("#ocOpen");
   if (ocb) ocb.addEventListener("click", function(){ openOutcomeModal(job, { forced: outcomeOverdueBy(job) >= OUTCOME_GRACE }); });
   var apA = $("#apApprove");
@@ -11547,7 +11660,7 @@ function renderRoleDetail(job){
       var ms = marketStats(job.func, job.sen, job.mode);
       return ms ? field(t("rd_market"), tf("rd_market_v", { n:'<span class="num" dir="ltr">'+fmt(ms.openPostings)+'</span>', d:'<span class="num" dir="ltr">'+ms.medianDaysOpen+'</span>' }), true) : "";
     })() +
-    field(t("rd_retention"), tf("retention_left",{d:'<span class="num" dir="ltr">'+retentionLeft(job)+'</span>'}), true) +
+    field(t("rd_retention"), jobExpired(job) ? t("rd_ret_done") : tf("retention_left",{d:cdaysHTML(retentionLeft(job))}), true) +
     (job.status === "active" && !jobExpired(job) ? field(t("excl_chip"), t("excl_tip"), true) : "") +
     (connectedATS() ? field(t("rd_ats"), tf("ats_sync_chip",{a:connectedATS()}), true) : "") +
     (wp
@@ -11669,6 +11782,7 @@ function renderActivity(job){
   $("#actList").innerHTML = state.actLog[job.id].slice().reverse().map(function(e){
     var p = {};
     if (e.cid && CANDS[e.cid]) p.n = "<b>" + esc(pipeName(job.id, e.cid)) + "</b>";
+    else if (e.cid) p.n = "<b>" + esc(sealedRef(job.id, e.cid)) + "</b>";   /* cleared: the ref, never a blank */
     else if (e.count !== undefined) p.n = "<b>" + appsLabel(e.count) + "</b>";
     if (e.a) p.a = esc(e.a);
     if (e.oEn) p.o = "<b>" + esc(LANG === "ar" ? e.oAr : e.oEn) + "</b>";
@@ -12132,6 +12246,8 @@ function renderPanel(){
   });
   var ivBtn = $("#drIntv");
   if (ivBtn) ivBtn.addEventListener("click", function(){ openIntvModal(cid); });
+  var rx = $("#retExport");
+  if (rx) rx.addEventListener("click", exportWorkspaceData);
   var roBtn = $("#drRecOut");
   if (roBtn) roBtn.addEventListener("click", function(){
     var oj = jobById(state.jobId);
@@ -13857,6 +13973,14 @@ function openJustifyModal(rowId){
   });
 }
 /* the outcome strip rides the role itself: the answer is asked where the work happened */
+/* seven days before a role’s details clear: one strip, one verb, after the outcome ask */
+function retentionStripHTML(job){
+  if (!retentionNear(job)) return "";
+  return '<div class="oc-strip ret">'+ICONS.lock+
+    '<span class="oc-tx"><b>'+tf("ret_strip_h",{d:cdaysHTML(retentionLeft(job))})+'</b>'+
+    '<span>'+t("ret_strip_s")+'</span></span>'+
+    (isAdmin() ? '<button class="btn btn-ghost" id="retExport" type="button">'+t("ret_strip_btn")+'</button>' : "")+'</div>';
+}
 function outcomeStripHTML(job){
   /* the courtesy ask: the 10-working-day clock named at the invite has run out, so the
      question appears — guidance tone, nothing blocked, enforcement math untouched */
@@ -14304,6 +14428,7 @@ function activityTrail(){
     (state.actLog[j.id] || []).forEach(function(e){
       var pp = {};
       if (e.cid && CANDS[e.cid]) pp.n = "<b>" + esc(pipeName(j.id, e.cid)) + "</b>";
+      else if (e.cid) pp.n = "<b>" + esc(sealedRef(j.id, e.cid)) + "</b>";
       else if (e.count !== undefined) pp.n = "<b>" + appsLabel(e.count) + "</b>";
       if (e.a) pp.a = esc(e.a);
       if (e.oEn) pp.o = "<b>" + esc(LANG === "ar" ? e.oAr : e.oEn) + "</b>";
@@ -16007,7 +16132,7 @@ function packRows(){
       closes: j.status === "active" && j.win ? winLabel(j) : "—",
       applied: jobAppCount(j),
       review: jobReviewN(j),
-      shortlisted: st.fit.length + st.invited.length + st.offer.length,
+      shortlisted: jobCounts(j).fit + jobCounts(j).invited + jobCounts(j).offer,
       waiting: packWaiting(j)
     };
   });
@@ -16183,7 +16308,7 @@ var LEGAL = {
       ["Candidate protections","Candidate identities remain sealed while you review. An interview invitation is the single act that opens a name and contact details. Applicants are decided one at a time, every decision is recorded, and every candidate receives an answer within the decision window."],
       ["Prohibited conduct","Data scraping, pipeline building, CV collecting, and fake postings are prohibited. Violations lead to immediate loss of access, termination of the dashboard, and legal action."],
       ["Plans and billing","Every activated dashboard includes one job slot. Each additional slot is billed monthly per the published price, exclusive of VAT. Only dashboard admins may change slots. Fees are non-refundable, and prices may change with notice effective at renewal."],
-      ["Data and retention","Candidate details clear from a posting sixty days after publication. Dashboard data can be exported by an admin at any time. All processing is governed by the Personal Data Protection Law of the Kingdom of Saudi Arabia."],
+      ["Data and retention","Candidate details clear from a posting '+nn(RETENTION_DAYS)+' days after publication. Dashboard data can be exported by an admin at any time. All processing is governed by the Personal Data Protection Law of the Kingdom of Saudi Arabia."],
       ["Non-circumvention","Candidates are introduced by Uptal. For twelve months from the date a candidate is presented, engaging that candidate outside the board carries an introduction fee of twelve and one half percent of first year total compensation."],
       ["Liability","The service is provided as is. Uptal does not guarantee any hire, offer, interview or hiring outcome. To the fullest extent the law permits, Uptal's total liability is capped at the fees paid in the three months preceding the claim, and indirect or consequential loss is excluded."],
       ["Termination","Either party may end the agreement. Uptal may suspend or terminate immediately for a breach of these terms or of acceptable use, without refund. On closure, export rights are honored first, postings close, and data is purged according to the retention schedule."],
@@ -16195,7 +16320,7 @@ var LEGAL = {
       ["ضمانات المرشحين","تبقى هويات المرشحين مغلقة أثناء المراجعة، ودعوة المقابلة هي الفعل الوحيد الذي يفتح الاسم ووسائل التواصل. يُبتّ في المتقدمين واحداً تلو الآخر، ويُسجَّل كل قرار، ويتلقى كل مرشح إجابة ضمن مهلة القرار."],
       ["الأفعال المحظورة","يحظر كشط البيانات وبناء قواعد المرشحين وجمع السير الذاتية ونشر إعلانات وهمية. تؤدي المخالفة إلى الحرمان الفوري من الوصول وإنهاء لوحة التحكم واتخاذ إجراءات قانونية."],
       ["الخطط والفوترة","تشمل كل لوحة تحكم مفعلة خانة وظيفية واحدة. تُفوتر كل خانة إضافية شهرياً وفق السعر المعلن غير شامل الضريبة. تغيير الخانات صلاحية لمديري لوحة التحكم وحدهم. الرسوم غير قابلة للاسترداد، وقد تتغير الأسعار بإشعار يسري عند التجديد."],
-      ["البيانات والاحتفاظ","تُمحى تفاصيل المرشحين من الإعلان بعد ستين يوماً من نشره. يمكن لمدير لوحة التحكم تصدير بياناتها في أي وقت. تخضع جميع المعالجات لنظام حماية البيانات الشخصية في المملكة العربية السعودية."],
+      ["البيانات والاحتفاظ","تُمحى تفاصيل المرشحين من الإعلان بعد '+nn(RETENTION_DAYS)+' يوماً من نشره. يمكن لمدير لوحة التحكم تصدير بياناتها في أي وقت. تخضع جميع المعالجات لنظام حماية البيانات الشخصية في المملكة العربية السعودية."],
       ["منع التجاوز","الكفاءات مقدَّمة من أبتال. ولمدة اثني عشر شهراً من تاريخ عرض الكفاءة، يترتب على التعاقد معها خارج اللوحة أتعاب تقديم تعادل اثني عشر ونصفاً في المئة من إجمالي أجر السنة الأولى."],
       ["المسؤولية","تُقدَّم الخدمة كما هي. ولا تضمن أبتال أي توظيف أو عرض أو مقابلة أو نتيجة توظيف. وإلى أقصى حد يجيزه النظام، تقتصر مسؤولية أبتال الإجمالية على الرسوم المسددة في الأشهر الثلاثة السابقة للمطالبة، وتُستثنى الخسائر غير المباشرة والتبعية."],
       ["الإنهاء","يجوز لأي من الطرفين إنهاء الاتفاقية. ولأبتال التعليق أو الإنهاء فوراً عند مخالفة هذه الشروط أو الاستخدام المقبول، دون استرداد. وعند الإغلاق تُحترم حقوق التصدير أولاً، وتُغلق الإعلانات، وتُمحى البيانات وفق جدول الاحتفاظ."],
@@ -16208,7 +16333,7 @@ var LEGAL = {
       ["What we hold","Account and verification details, dashboard records and decisions, candidate profiles held under seal, billing records, and technical logs. Card and bank credentials are handled by the payment provider and never reach the board."],
       ["Why","To verify entities, operate and secure dashboards, match and present candidates, measure hiring integrity, bill and meet tax duties, and prevent abuse."],
       ["Identity disclosure","A candidate's name and contact open to you only when you issue an interview invitation, and only for that vacancy."],
-      ["Location and retention","Data is processed and stored inside the Kingdom. Candidate details clear from a posting sixty days after publication; account, billing and audit records follow the statutory retention periods."],
+      ["Location and retention","Data is processed and stored inside the Kingdom. Candidate details clear from a posting '+nn(RETENTION_DAYS)+' days after publication; account, billing and audit records follow the statutory retention periods."],
       ["Your rights","Access, correction, destruction and withdrawal of consent are available under the Personal Data Protection Law. Write to privacy@uptal.com; complaints may be raised with the competent authority."],
       ["Automated processing","Matching, screening and account verification are automated. Uptal reviews and may override any automated outcome."]
     ],
@@ -16217,7 +16342,7 @@ var LEGAL = {
       ["ما نحتفظ به","بيانات الحساب والتوثيق، وسجلات لوحة التحكم والقرارات، وملفات الكفاءات المحفوظة مختومة، وسجلات الفوترة، والسجلات التقنية. أما بيانات البطاقات والحسابات البنكية فيتولاها مزود الدفع ولا تصل إلى اللوحة إطلاقاً."],
       ["الأسباب","توثيق الجهات، وتشغيل لوحات التحكم وتأمينها، ومطابقة الكفاءات وعرضها، وقياس نزاهة التوظيف، والفوترة والوفاء بالالتزامات الضريبية، ومنع إساءة الاستخدام."],
       ["كشف الهوية","لا يُفتح لك اسم الكفاءة ووسائل التواصل معها إلا عند إصدارك دعوة مقابلة، ولذلك الشاغر وحده."],
-      ["الموقع والاحتفاظ","تُعالج البيانات وتُخزن داخل المملكة. وتُمحى تفاصيل الكفاءات من الإعلان بعد ستين يوماً من نشره، وتتبع سجلات الحساب والفوترة والتدقيق المدد النظامية."],
+      ["الموقع والاحتفاظ","تُعالج البيانات وتُخزن داخل المملكة. وتُمحى تفاصيل الكفاءات من الإعلان بعد '+nn(RETENTION_DAYS)+' يوماً من نشره، وتتبع سجلات الحساب والفوترة والتدقيق المدد النظامية."],
       ["حقوقك","الاطلاع والتصحيح والإتلاف وسحب الموافقة حقوق مقررة بموجب نظام حماية البيانات الشخصية. راسلنا على privacy@uptal.com، ويمكن رفع الشكاوى إلى الجهة المختصة."],
       ["المعالجة الآلية","المطابقة والفرز وتوثيق الحسابات عمليات آلية. وتراجع أبتال أي نتيجة آلية ولها تجاوزها."]
     ]
@@ -16275,7 +16400,7 @@ function openLegalModal(kind){
    The board enforces clocks, so it must never be silent about them. In-app center here;
    the real product mirrors every entry to email (simulated — the prototype takes no mail). */
 var NF_ICONS = {
-  nf_applicants:"people", nf_applicants_all:"people", nf_seatreq:"people", nf_outcome:"clock", nf_sla:"people", nf_int_warn:"clock", nf_int_justify:"clock", nf_band_down:"clock", nf_band_up:"check", nf_batch:"check", nf_due:"clock", nf_paused:"clock",
+  nf_applicants:"people", nf_applicants_all:"people", nf_seatreq:"people", nf_outcome:"clock", nf_retention:"clock", nf_cleared:"clock", nf_sla:"people", nf_int_warn:"clock", nf_int_justify:"clock", nf_band_down:"clock", nf_band_up:"check", nf_batch:"check", nf_due:"clock", nf_paused:"clock",
   nf_pool:"people", nf_contact:"check", nf_window:"clock",
   nf_approval:"clock", nf_approved:"check", nf_declined:"clock",
   nf_verified:"check", nf_verif_needinfo:"clock"
@@ -16312,6 +16437,8 @@ var NF_ROUTES = {
   },
   nf_approval: function(n){ go("role", n.jobId); },
   nf_outcome: function(n){ go("role", n.jobId); },
+  nf_retention: function(n){ go("role", n.jobId); },
+  nf_cleared: function(n){ go("role", n.jobId); },
   /* verified: there is nothing left to do — the bell entry is the receipt, no route.
      needs-info routes back into the sheet with the flagged field carrying its reason. */
   nf_verif_needinfo: function(){ if (!isViewer()) openVerifSheet(); }
@@ -16319,6 +16446,8 @@ var NF_ROUTES = {
 /* condition-type kinds are re-verified against the CURRENT state on every panel render:
    the bell must never assert a state the board no longer holds. Event kinds keep history. */
 var NF_LIVE = {
+  /* the warning retires itself the moment the role clears or is answered; the receipt stays */
+  nf_retention: function(n){ var j = jobById(n.jobId); return !!j && retentionNear(j); },
   nf_paused: function(n){ var j = jobById(n.jobId); return !!(j && j.paused && j.status === "active"); },
   nf_due: function(n){ var j = jobById(n.jobId); return !!j && j.status === "active" && opMinLeft(j) <= 2; },
   nf_window: function(n){
