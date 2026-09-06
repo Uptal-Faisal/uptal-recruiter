@@ -7682,6 +7682,14 @@ function dayStart(ms){ var d = new Date(ms); d.setHours(0,0,0,0); return d.getTi
 function calDaysSince(ms){ return Math.max(0, Math.round((dayStart(boardNow()) - dayStart(ms)) / DAY_MS)); }
 function calDaysAgo(n){ return dayStart(boardNow()) - n * DAY_MS; }
 function jobDays(job){ return job.postedAt ? calDaysSince(job.postedAt) : (job.days || 0); }
+/* ===== two clocks, deliberately different =====
+   jobDays() is how long a candidate’s data has existed, and nothing an employer does may
+   slow it: retention counts real days. jobLiveDays() is how long the BOARD has been asking,
+   and it stops while the employer holds the role, because a sanctioned pause must not spend
+   the window it was declared to protect. A hold pauses the answer clocks already; this is
+   the same promise kept for the posting clock. */
+function jobHeldMs(job){ return (job.heldMs || 0) + (job.heldAt ? Math.max(0, boardNow() - job.heldAt) : 0); }
+function jobLiveDays(job){ return job.postedAt ? calDaysSince(job.postedAt + jobHeldMs(job)) : (job.days || 0); }
 /* Seeded roles carry an age, not a date. Anchoring that age to the moment of entry keeps the
    sample dashboard reading the same on every visit while the clock underneath is real. A role
    published in-session has no JOB_META row and keeps the true stamp it was given. */
@@ -7704,12 +7712,12 @@ function outcomeReached(job){
   return st.invited.length + st.offer.length > 0;
 }
 function outcomeDue(job){
-  return job.status === "active" && !job.outcome && outcomeReached(job) && jobDays(job) >= OUTCOME_DAYS;
+  return job.status === "active" && !job.outcome && outcomeReached(job) && jobLiveDays(job) >= OUTCOME_DAYS;
 }
 /* the answer is owed from the first invitation — the ASK is what waits for OUTCOME_DAYS.
    Closing or reposting cannot be used to walk away from it. */
 function outcomeOwed(job){ return outcomeReached(job) && !job.outcome; }
-function outcomeOverdueBy(job){ return Math.max(0, jobDays(job) - OUTCOME_DAYS); }
+function outcomeOverdueBy(job){ return Math.max(0, jobLiveDays(job) - OUTCOME_DAYS); }
 function outcomesDue(){ return visibleJobs().filter(outcomeDue); }
 /* past the grace window the requirement bites: no new postings until it is answered */
 /* how long a role that owes an outcome has before it stops the whole dashboard posting */
@@ -11034,6 +11042,7 @@ function repostJob(job){
   if (slotsFree() <= 0){ openSlotsModal(); return; }
   job.expired = false; job.days = 0; job.postedAt = boardNow(); job.status = "active";
   delete job.cleared;              /* the new run starts from nothing, as the card promised */
+  delete job.heldMs; delete job.heldAt;   /* including the paused time the last run banked */
   job.outcome = null;              /* a new run owes its own answer */
   if (state.ocNotified) delete state.ocNotified[job.id];
   job.posted = { en:"just now", ar:"الآن" };
@@ -11647,7 +11656,7 @@ function renderRoleDetail(job){
   var reqs = (job.reqs||[]).map(function(r){ return '<div class="rd-reqrow"><svg viewBox="0 0 24 24" fill="none" stroke="var(--flash-tag)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5 9.5 18 20 6.5"/></svg><span>'+esc(r[LANG])+'</span></div>'; }).join("");
   function field(lab, val, wide){ return '<div class="rd-field'+(wide?" rd-wide":"")+'"><span class="rd-lab">'+lab+'</span><span class="rd-val">'+val+'</span></div>'; }
   var g = field(t("rd_sen"), esc(sn?sn[LANG]:"-")) + field(t("rd_workplace"), esc(md?md[LANG]:"-")) +
-    field(t("rd_dept"), esc(job.dept?job.dept[LANG]:"-")) + field(t("rd_window"), job.win?esc(job.win[LANG]):"-") +
+    field(t("rd_dept"), esc(job.dept?job.dept[LANG]:"-")) + field(t("rd_window"), job.win?esc(winLabel(job)):"-") +
     field(t("rd_comp"), comp, true) +
     (function(){
       var ms = marketStats(job.func, job.sen, job.mode);
@@ -13676,6 +13685,8 @@ function doOfferExit(cid, kind, reason){
 function openHoldModal(job){
   if (job.hold){
     job.hold = null; job.paused = false;
+    /* bank the paused stretch so the role resumes at the age it was held at */
+    if (job.heldAt){ job.heldMs = jobHeldMs(job); delete job.heldAt; }
     Object.keys(state.dispHold).forEach(function(key){
       /* resume where it stopped: the remaining days become a fresh moment */
       if (key.indexOf(job.id + "|") === 0){ state.disp[key] = dispStampFor(state.dispHold[key]); delete state.dispHold[key]; }
@@ -13701,6 +13712,7 @@ function openHoldModal(job){
       var rk = b.getAttribute("data-holdr");
       closeModal();
       job.hold = rk; job.paused = true; job.holds = (job.holds || 0) + 1;
+      job.heldAt = boardNow();   /* the board stops asking from here */
       /* clocks PAUSE for everyone not yet invited: you owe an answer only to those you contacted.
          The remaining days are shadow-saved so lifting the hold resumes them where they stopped. */
       jobStages(job).fit.forEach(function(cid){
@@ -15303,6 +15315,9 @@ function approvePosting(job){
   /* the slot commitment happens here, where the checker can also buy one */
   if (slotsFree() <= 0){ openSlotsModal(1, { title: job.title[LANG] }); return; }
   job.status = "active";
+  /* the clock starts at go-live, not at submission: a posting waiting on its own approver
+     is not on the board, and must not be charged the days it spent waiting */
+  job.postedAt = boardNow();
   job.matching = true;
   job.declineNote = "";
   pushLog(job.id, "act_appr_ok", {});
@@ -18446,7 +18461,7 @@ function crmOverdueOf(id){
     if (j.status !== "active" || j.outcome) return false;
     var st = crmStagesOf(j);
     if ((st.invited || []).length + (st.offer || []).length === 0) return false;
-    return (j.days || 0) >= OUTCOME_DAYS;
+    return jobLiveDays(j) >= OUTCOME_DAYS;   /* the same clock the dashboard is judged by */
   }).length;
 }
 function crmActivityOf(id){ return opsLsGet("upb_activity_" + id) || []; }
