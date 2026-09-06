@@ -3760,8 +3760,8 @@ nav_settings:"Settings",
   opsk_dispute:"Marked a hire confirmation disputed",
   ops_dispute_btn:"Mark disputed",
   ops_disputed_toast:"Confirmation disputed \u2014 consequences frozen pending review.",
-  ops_conf_pending:"Hire confirmation pending with the candidate",
-  ops_conf_confirmed:"Hire confirmed by the candidate",
+  ops_conf_pending:"Start confirmation pending with the employer",
+  ops_conf_confirmed:"Start confirmed by the employer",
   ops_conf_disputed:"Hire confirmation DISPUTED \u2014 consequences frozen",
   opsk_case_needinfo:"Returned a case for more information",
   opsk_case_reject:"Declined a verification case",
@@ -4495,8 +4495,10 @@ pg1_years:"Minimum years of experience",
   start_pick_h:"When are they expected to start?",
   start_pick_s:"The slot returns to your plan now. Confirm they started by this date — the board stops accepting new postings if it passes unanswered.",
   start_due_chip:"Confirm the start within {d}",start_late_chip:"Start not confirmed",
+  start_due_today:"Confirm the start today",
   start_h:"Confirm this person started",
   start_s:"You have {d}. The slot is already back on your plan; this is the last thing the record needs.",
+  start_s_today:"Today is the date you gave. The slot is already back on your plan; this is the last thing the record needs.",
   start_late_h:"This hire was never confirmed",
   start_late_s:"The start date you gave has passed. New postings are on hold for this dashboard until you confirm what happened.",
   start_btn:"Confirm the start",start_done:"Start confirmed. The hiring record is closed.",
@@ -4947,7 +4949,7 @@ mod_out_s:"Contact candidates directly from the dashboard. Ships separately.",
   actor_engine:"Uptal engine",
   act_note:"Every event is recorded with the name of the person who took it.",
   act_closed:"Job closed: {r}",
-  act_hire:"Hire confirmation requested from {n}",
+  act_hire:"{n} accepted the offer",
   /* sealed screening call */
   scr_btn:"Talk before you invite",
   scr_h:"Sealed intro call",
@@ -5019,8 +5021,8 @@ mod_out_s:"Contact candidates directly from the dashboard. Ships separately.",
   fd_offer:"Offer stage: {n}",
   fd_off_decl:"{n} declined the offer — {r}",
   fd_off_wdrn:"Offer withdrawn for {n} — {r}",
-  fd_hire:"Hire recorded — awaiting {n}'s confirmation",
-  fd_congrats:"{n} confirmed the hire",
+  fd_hire:"{n} accepted the offer — the start is not confirmed yet",
+  fd_congrats:"Uptal congratulated {n} on the offer",
   fd_closed:"Closed — {r}",
   fd_appr_req:"Waiting on admin approval to go live",
   fd_appr_ok:"Approved — live to the engine",
@@ -5029,7 +5031,7 @@ mod_out_s:"Contact candidates directly from the dashboard. Ships separately.",
   hf_standing:"Standing",
   close_job:"Close job",close_h:"Close this job",
   jw_manage:"Manage role",
-  cr_hired_s:"Pick the candidate. We ask them to confirm the hire.",
+  cr_hired_s:"Pick the person who accepted. You confirm they started.",
   cr_else_s:"The role was filled through another channel.",
   cr_cancel_s:"Budget or plans changed. The posting is withdrawn.",
   r_closed:"Closed",r_hired:"Hired",
@@ -5116,7 +5118,7 @@ mod_out_s:"Contact candidates directly from the dashboard. Ships separately.",
   int_b3:"Applicants arrive in small batches, capped at 15 per role. The next batch follows your decisions, and every 'not a fit' needs a reason, so you cannot stockpile candidates.",
   int_b4:"The full CV opens identity-blind. Inviting to interview is the only thing that reveals name and contact, capped at 5 per role, and the candidate is told the moment it happens.",
   int_b5:"Every shortlisted candidate must be invited or released within {d} working days. Shortlisting people you never invite reads as pipeline-building and is penalized heavily. Warnings come first, then a short grace period, then the ledger.",
-  int_b6:"Closures are confirmed with the hired candidate. Deductions are steep and stack across causes. A dashboard that keeps building pipelines or ignoring postings is restricted, then paused, and the provisional grace does not cover either abuse.",
+  int_b6:"A closure is confirmed by the start you record. Deductions are steep and stack across causes. A dashboard that keeps building pipelines or ignoring postings is restricted, then paused, and the provisional grace does not cover either abuse.",
   int_cal:"Clocks count working days on the Saudi calendar and pause automatically for Eid, Ramadan's last ten days, National Day and Founding Day.",
   int_preview:"Preview the enforcement state as",
   rep_h:"Hiring Record",
@@ -5543,8 +5545,8 @@ nav_settings:"الإعدادات",
   opsk_dispute:"علّم تأكيد تعيين متنازعاً عليه",
   ops_dispute_btn:"علّم نزاعاً",
   ops_disputed_toast:"صار التأكيد متنازعاً عليه — جُمّدت الآثار حتى المراجعة.",
-  ops_conf_pending:"تأكيد التعيين بانتظار المرشح",
-  ops_conf_confirmed:"أكّد المرشح التعيين",
+  ops_conf_pending:"تأكيد المباشرة بانتظار جهة التوظيف",
+  ops_conf_confirmed:"أكّدت جهة التوظيف المباشرة",
   ops_conf_disputed:"تأكيد التعيين متنازع عليه — الآثار مجمّدة",
   opsk_case_needinfo:"أعاد حالة لطلب معلومات",
   opsk_case_reject:"رفض حالة تحقق",
@@ -6278,8 +6280,10 @@ pg1_years:"الحد الأدنى لسنوات الخبرة",
   start_pick_h:"متى يُتوقع أن يباشر؟",
   start_pick_s:"يعود الشاغر إلى باقتك الآن. أكّد مباشرته قبل هذا التاريخ — فإن مضى دون تأكيد توقفت اللوحة عن قبول إعلانات جديدة.",
   start_due_chip:"أكّد المباشرة خلال {d}",start_late_chip:"لم تُؤكَّد المباشرة",
+  start_due_today:"أكّد المباشرة اليوم",
   start_h:"أكّد مباشرة هذا الشخص",
   start_s:"أمامك {d}. عاد الشاغر إلى باقتك فعلاً، ولم يبقَ للسجل سوى هذا.",
+  start_s_today:"اليوم هو التاريخ الذي حدّدته. عاد الشاغر إلى باقتك فعلاً، ولم يبقَ للسجل سوى هذا.",
   start_late_h:"لم يُؤكَّد هذا التعيين",
   start_late_s:"مضى التاريخ الذي حدّدته والسجل ما زال مفتوحاً. نشر أي إعلان جديد من هذه اللوحة موقوف حتى تؤكد ما حدث.",
   start_btn:"أكّد المباشرة",start_done:"تأكّدت المباشرة. أُغلق سجل التوظيف.",
@@ -6730,7 +6734,7 @@ mod_out_s:"تواصل مع المرشحين مباشرة من اللوحة. تص
   actor_engine:"محرك أبتال",
   act_note:"يُسجَّل كل حدث باسم من قام به.",
   act_closed:"أُغلقت الوظيفة: {r}",
-  act_hire:"طُلب تأكيد التعيين من {n}",
+  act_hire:"قبِل {n} العرض",
   /* مكالمة الفرز المختومة */
   scr_btn:"اتصل قبل الدعوة",
   scr_h:"مكالمة تعارف مختومة",
@@ -6802,8 +6806,8 @@ mod_out_s:"تواصل مع المرشحين مباشرة من اللوحة. تص
   fd_offer:"مرحلة العرض: {n}",
   fd_off_decl:"اعتذر {n} عن العرض — {r}",
   fd_off_wdrn:"سُحب العرض عن {n} — {r}",
-  fd_hire:"سُجل التعيين — بانتظار تأكيد {n}",
-  fd_congrats:"أكّد {n} التعيين",
+  fd_hire:"قبِل {n} العرض — لم تُؤكَّد المباشرة بعد",
+  fd_congrats:"هنّأت أبتال {n} على العرض",
   fd_closed:"أُغلق — {r}",
   fd_appr_req:"بانتظار اعتماد المدير للنشر",
   fd_appr_ok:"اعتُمد — وأصبح حياً لدى المحرك",
@@ -6812,7 +6816,7 @@ mod_out_s:"تواصل مع المرشحين مباشرة من اللوحة. تص
   hf_standing:"الوضع",
   close_job:"أغلق الوظيفة",close_h:"إغلاق هذه الوظيفة",
   jw_manage:"إدارة الدور",
-  cr_hired_s:"اختر المرشح، وسنطلب منه تأكيد التعيين.",
+  cr_hired_s:"اختر من قبِل العرض، وأنت تؤكّد مباشرته.",
   cr_else_s:"مُلئ الدور عبر قناة أخرى.",
   cr_cancel_s:"تغيّرت الميزانية أو الخطط. سُحب الإعلان.",
   r_closed:"مغلقة",r_hired:"تم التعيين",
@@ -6899,7 +6903,7 @@ mod_out_s:"تواصل مع المرشحين مباشرة من اللوحة. تص
   int_b3:"يصل المتقدمون على دفعات صغيرة بحد أقصى 15 لكل دور. والدفعة التالية تتبع قراراتك، ولا يُوضع أحد خارج القائمة دون سبب، فلا يمكنك تكديس المرشحين.",
   int_b4:"تُفتح السيرة كاملةً والهوية محجوبة. ودعوة المقابلة وحدها تكشف الاسم والتواصل، بحد أقصى 5 لكل دور، ويُبلَّغ المرشح لحظتها.",
   int_b5:"كل مرشح في القائمة المختصرة يجب أن يُدعى أو يُصرف النظر عنه خلال {d} أيام عمل. وإضافة من لا تدعوهم إلى القائمة المختصرة تُقرأ بناءً لقاعدة مرشحين وتُعاقَب بشدة. تسبقه التنبيهات ثم مهلة تدارك قصيرة ثم السجل.",
-  int_b6:"يُؤكَّد الإغلاق مع المرشح المعيَّن. والخصومات كبيرة وتتراكم عبر الأسباب. ولوحة التحكم التي تُواصل بناء القواعد أو إهمال الإعلانات تُقيَّد ثم تُوقَف، ولا تشملها المهلة المؤقتة.",
+  int_b6:"يُؤكَّد الإغلاق بالمباشرة التي تسجّلها. والخصومات كبيرة وتتراكم عبر الأسباب. ولوحة التحكم التي تُواصل بناء القواعد أو إهمال الإعلانات تُقيَّد ثم تُوقَف، ولا تشملها المهلة المؤقتة.",
   int_cal:"تُحسب المهل بأيام العمل وفق التقويم السعودي وتتوقف تلقائياً في العيدين والعشر الأواخر من رمضان واليوم الوطني ويوم التأسيس.",
   int_preview:"استعرض حالة الإنفاذ بصفة",
   rep_h:"سجل التوظيف",
@@ -7804,6 +7808,9 @@ function startLeft(job){
 }
 /* the window has run out and the board still does not know whether the person started */
 function startOverdue(job){ var c = startConfirm(job); return !!(c && c.status === "pending" && dayStart(boardNow()) > c.due); }
+/* the role wears the state it is in: "Hired" is earned when someone starts, and until then
+   every surface that names status says the same thing the role header says */
+function acceptedNotStarted(job){ return !!job && job.status === "hired" && startPending(job); }
 function startsOverdue(){ return tenantJobs().filter(startOverdue); }
 function startsNear(){ return tenantJobs().filter(function(j){ return startPending(j) && !startOverdue(j) && startLeft(j) <= START_WARN_DAYS; }); }
 function retentionLeft(job){ return Math.max(0, RETENTION_DAYS - jobDays(job)); }
@@ -7818,7 +7825,9 @@ function jobExpired(job){ return !!job.expired || jobDays(job) >= RETENTION_DAYS
    person. There is no timer: the sweep runs when the dashboard is entered and before any
    screen draws, so the first eyes on a role past the line see it already cleared. */
 function retentionNear(job){
-  return job.status === "active" && !jobExpired(job) && jobAppCount(job) > 0 && retentionLeft(job) <= RET_WARN_DAYS;
+  /* no status gate: the sweep deletes a settled role's records on the same day it deletes a
+     live one's, and the warning that cannot be silenced must not be silent for either */
+  return !jobExpired(job) && jobAppCount(job) > 0 && retentionLeft(job) <= RET_WARN_DAYS;
 }
 function retentionNearJobs(){ return visibleJobs().filter(retentionNear); }
 /* the counts a role held, read once before the people are gone. Every count on every surface
@@ -7838,6 +7847,8 @@ function retentionKeepCid(job){
 }
 function clearJobDetails(job){
   var keep = retentionKeepCid(job);
+  /* the cohort clear is the event; the kept person's later deletion is its tail, not a second one */
+  var firstClear = !job.cleared;
   if (job.cleared && !job.cleared.kept) return false;        /* nothing left to clear */
   if (job.cleared && job.cleared.kept && keep) return false;  /* the window still runs */
   var c = jobCounts(job);
@@ -7865,8 +7876,8 @@ function clearJobDetails(job){
   });
   /* candidates minted for this role alone exist nowhere else: they go with it */
   ids.forEach(function(cid){ var cand = CANDS[cid]; if (cand && cand.cloneOf) delete CANDS[cid]; });
-  pushLog(job.id, "act_cleared", { count: c.total });
-  notify("nf_cleared", job.id, {});
+  if (firstClear){ pushLog(job.id, "act_cleared", { count: c.total }); notify("nf_cleared", job.id, {}); }
+  else persistWorkspace();   /* pushLog is what saves; the tail deletion still has to stick */
   return true;
 }
 function retentionSweep(){
@@ -8087,6 +8098,8 @@ var LEDGER = {
 };
 /* Serious abuses (pipeline-building, ignoring a posting) are not shielded by the provisional grace. */
 var SERIOUS_CODES = ["code_pipeline","code_inactive"];
+/* the rules whose hit() reads the pipeline and the per-candidate maps clearJobDetails deletes */
+var STAGE_EVIDENCE_CODES = ["code_pipeline","code_inactive","code_disp"];
 var BANDS = [
   { id:"trusted",   min:85 },
   { id:"monitored", min:70 },
@@ -9007,8 +9020,12 @@ function reconcileLedger(){
     if (!m.engine || m.status === "cured" || m.status === "waived") return;
     if (!live[m.auto]){
       /* a role whose details were cleared is silent, not resolved: nobody may sit out a
-         deduction by waiting for the evidence to be deleted */
-      var mj = jobById(m.job); if (mj && mj.cleared) return;
+         deduction by waiting for the evidence to be deleted. Only the rules that READ that
+         evidence go silent, though: an obligation carried on job.outcome survives the clear
+         and must still be allowed to cure when it is met. */
+      if (STAGE_EVIDENCE_CODES.indexOf(m.code) >= 0){
+        var mj = jobById(m.job); if (mj && mj.cleared) return;
+      }
       m.status = "cured";
       m.note = { en:"Resolved \u2014 the engine cleared it", ar:"عولجت — ورفعها المحرك" };
       changed = true;
@@ -9030,7 +9047,14 @@ function appealVerdict(tid, rowId){
   var isSerious = row.serious || SERIOUS_CODES.indexOf(row.code) >= 0;
   var disputesFact = row.justification && row.justification.reason === "jm_r_dispute";
   /* the breach ended (or the role did): grant and waive, citing the state that proves it */
-  var breachEnded = !job || job.status !== "active" || !rule || !rule.hit(job);
+  /* "the engine no longer scans this role" is reconcileLedger's scope test, not job.status:
+     a settled role with an overdue start is still scanned, so its row is still a live breach */
+  /* the mirror of the cure guard: for the rules that read the pipeline, a cleared role
+     has no evidence LEFT to show the breach — that is silence, not innocence, and it must
+     not become a permanent waiver through the appeal route the cure route already refuses */
+  var evidenceGone = job && job.cleared && STAGE_EVIDENCE_CODES.indexOf(row.code) >= 0;
+  var breachEnded = !evidenceGone && (!job || !rule ||
+    (!startOverdue(job) && (job.status !== "active" || jobExpired(job))) || !rule.hit(job));
   if (breachEnded && !disputesFact){
     row.status = "waived"; row.appealed = false; row.waivedBy = "engine";
     row.note = { en: "Appeal granted \u2014 the state no longer shows the breach",
@@ -9586,6 +9610,9 @@ function enter(tenantId){
     }
   } catch(e){}
   state.intWarnedOnce = false;
+  /* the once-per-role guards live exactly as long as the bell seedNotifs() just emptied:
+     a workspace switch must not mark a notice delivered into a bell that no longer has it */
+  state.ocNotified = {}; state.retNotified = {}; state.startNotified = {};
   /* a sign-out can strand a mid-flight batch release — resume it. The start window needs
      no resuming: it is a due date on the record, not a timer someone has to re-arm. */
   tenantJobs().forEach(function(j){
@@ -10014,11 +10041,13 @@ function homeTiles(reviewN, invQ, due, acts){
   /* 2 · can this dashboard publish at all */
   var owed = outcomesBlocking();
   if (owed.length) add(0, "ht_h_pub", t("ht_p_paused"), t("oc_report"), 'data-recout="'+esc(owed[0].id)+'"');
+  /* before the slots line, not after it: a blocked board that is also full would otherwise sell
+     a slot to someone whose next posting the free action is what actually unblocks */
+  else if (startsOverdue().length) add(0, "ht_h_pub", t("ht_p_start"), t("start_btn"),
+    'data-openrole="'+esc(startsOverdue()[0].id)+'"');
   else if (!isViewer() && slotsFree() <= 0) add(1, "ht_h_pub", tf("ht_p_full",{u:slotsUsed(), n:slotsTotal()}), t("slot_add"), "data-slots");
   /* owed but not yet blocking: a STATE, not a countdown. The interval belongs at the posting
      door, where it is read once in the moment it is true, not on a tile read every morning. */
-  else if (startsOverdue().length) add(0, "ht_h_pub", t("ht_p_start"), t("start_btn"),
-    'data-openrole="'+esc(startsOverdue()[0].id)+'"');
   else if (outcomesDue().length) add(1, "ht_h_pub", t("ht_p_owed"), t("oc_report"),
     'data-recout="'+esc(outcomesDue()[0].id)+'"');
   else quiet("ht_h_pub", t("ht_p_open"));
@@ -10867,8 +10896,9 @@ function jobRow(j){
   var apps = jobAppCount(j), review = jobReviewN(j);
   var fn = FUNCS.filter(function(f){ return f.id === j.func; })[0];
   var md = MODES.filter(function(m){ return m.id === j.mode; })[0];
-  var stCls = (j.status === "active" || j.status === "hired") ? "chip-green" : j.status === "approval" ? "chip-amber" : "chip-plain";
-  var subChips = ['<span class="chip '+stCls+'">'+t("r_"+j.status)+'</span>'];
+  var accNS = acceptedNotStarted(j);
+  var stCls = accNS ? "chip-amber" : (j.status === "active" || j.status === "hired") ? "chip-green" : j.status === "approval" ? "chip-amber" : "chip-plain";
+  var subChips = ['<span class="chip '+stCls+'">'+(accNS ? t("r_accepted") : t("r_"+j.status))+'</span>'];
   if (fn) subChips.push('<span class="chip chip-soft">'+esc(fn[LANG])+'</span>');
   if (md) subChips.push('<span class="chip chip-soft">'+esc(md[LANG])+'</span>');
   if (jobExpired(j) && j.status === "active") subChips.push('<span class="chip chip-plain">'+ICONS.lock+t("expired_chip")+'</span>');
@@ -11126,6 +11156,9 @@ function repostJob(job){
   /* outcomeOwed is false the instant an acceptance exists, so it does not cover the start the
      acceptance promised. Reposting would null job.outcome and take the obligation with it. */
   if (startPending(job)){ toast(t("start_repost_block"), "error"); return; }
+  /* and no reopening while any OTHER role owes a start: a repost is a posting */
+  var lateS = startsOverdue();
+  if (lateS.length){ go("role", lateS[0].id); toast(t("start_block_toast"), "error"); return; }
   /* reposting puts the role back on the board, so it needs a free slot again */
   if (slotsFree() <= 0){ openSlotsModal(); return; }
   job.expired = false; job.days = 0; job.postedAt = boardNow(); job.status = "active";
@@ -11181,12 +11214,13 @@ function renderWorkspace(){
      Everything else (exclusivity, retention, conf/sealed, ATS, project) lives in Role details. */
   /* "Hired" is earned when someone starts. Until the employer confirms it, the role wears
      the state it is actually in: an offer that was accepted. */
-  var acceptedNotStarted = job.status === "hired" && startPending(job);
-  var chips = ['<span class="chip '+(acceptedNotStarted ? "chip-amber" : stChipCls)+'">'+
-    (acceptedNotStarted ? t("r_accepted") : t("r_"+job.status))+'</span>'];
+  var accNS = acceptedNotStarted(job);
+  var chips = ['<span class="chip '+(accNS ? "chip-amber" : stChipCls)+'">'+
+    (accNS ? t("r_accepted") : t("r_"+job.status))+'</span>'];
   if (job.status === "hired" && startPending(job))
     chips.push('<span class="chip '+(startOverdue(job) ? "chip-red" : "chip-amber")+'">'+ICONS.clock+
-      (startOverdue(job) ? t("start_late_chip") : tf("start_due_chip",{d:cdaysHTML(startLeft(job))}))+'</span>');
+      (startOverdue(job) ? t("start_late_chip") : startLeft(job) === 0 ? t("start_due_today")
+        : tf("start_due_chip",{d:cdaysHTML(startLeft(job))}))+'</span>');
   else if (job.status === "hired" && startConfirm(job) && startConfirm(job).status === "confirmed")
     chips.push('<span class="chip chip-green">'+ICONS.check+t("hire_conf_chip")+'</span>');
   /* the time chip: first true wins — hold > paused > the posting's closing window */
@@ -14122,7 +14156,8 @@ function startStripHTML(job){
   var late = startOverdue(job);
   return '<div class="oc-strip'+(late ? " late" : "")+'">'+ICONS.clock+
     '<span class="oc-tx"><b>'+t(late ? "start_late_h" : "start_h")+'</b>'+
-    '<span>'+(late ? t("start_late_s") : tf("start_s",{d:cdaysHTML(startLeft(job))}))+'</span></span>'+
+    '<span>'+(late ? t("start_late_s") : startLeft(job) === 0 ? t("start_s_today")
+      : tf("start_s",{d:cdaysHTML(startLeft(job))}))+'</span></span>'+
     '<button class="btn btn-pri" id="startGo" type="button">'+t("start_btn")+'</button></div>';
 }
 function outcomeStripHTML(job){
@@ -15195,13 +15230,19 @@ function consumeEditingDraft(){
 }
 /* materialize the composer's current state as a draft record (the ONE draft machinery:
    Save as draft, Save & exit and the nav-away auto-draft all pass through here) */
+/* postedSeq is session state and a rehydrated board is not: mint past anything already there,
+   or a reload hands the next role an id the saved workspace already owns */
+function mintJobId(prefix){
+  var id;
+  do { id = prefix + (++state.postedSeq); } while (JOBS.some(function(j){ return j.id === id; }));
+  return id;
+}
 function materializeDraft(){
   var f = state.form;
   if (!f || !f.title.trim()) return null;
   consumeEditingDraft();
-  state.postedSeq++;
   var job = {
-    id:"draft" + state.postedSeq, tenant: state.tenant.id, title:{en:f.title, ar:f.title},
+    id: mintJobId("draft"), tenant: state.tenant.id, title:{en:f.title, ar:f.title},
     func:f.func || "", sen:f.sen, mode: modeFromForm(f), etype:f.etype, jd: clampJd(f.jdText),
     dept: (DEPTS[state.tenant.id] || [])[f.dept] || null,
     status:"draft", conf:f.conf, seal:f.seal, posted:{en:"draft",ar:"مسودة"}, band:[f.bmin,f.bmax],
@@ -15467,6 +15508,9 @@ function publish(){
 /* ===== maker-checker: the admin is the checker on every posting when the policy is on ===== */
 function approvePosting(job){
   if (!canApprove() || job.status !== "approval") return;
+  /* the checker's route is a go-live too: the hold is on the dashboard, not on the posting */
+  var lateS = startsOverdue();
+  if (lateS.length){ go("role", lateS[0].id); toast(t("start_block_toast"), "error"); return; }
   /* the slot commitment happens here, where the checker can also buy one */
   if (slotsFree() <= 0){ openSlotsModal(1, { title: job.title[LANG] }); return; }
   job.status = "active";
@@ -15516,8 +15560,7 @@ function doPublish(){
   /* a live posting needs a free slot; the role can always be kept as a draft instead */
   if (!needsApproval && slotsFree() <= 0){ closeModal(); openSlotsModal(1, { title: state.form.title || "", draftable: true }); return; }
   var f = state.form;
-  state.postedSeq++;
-  var id = "new" + state.postedSeq;
+  var id = mintJobId("new");
   var reqs = f.must.map(function(s){ return {en:s, ar:skillAr(s)}; });
   var team = activeTeam().filter(function(m){ return m.role !== "viewer"; });
   var owner = team[f.owner] || team[0] || {en:"", ar:""};
@@ -16283,7 +16326,7 @@ function packRows(){
       title: j.title[LANG],
       dept: (j.dept && j.dept[LANG]) || "",
       owner: jobOwnerSet(j) ? jobOwner(j)[LANG] : t("own_none"),
-      status: t("r_" + j.status) + (j.conf ? " · " + t("r_conf") : "") + (j.poolOpen && j.status === "active" ? " · " + t("pool_strip_h") : ""),
+      status: (acceptedNotStarted(j) ? t("r_accepted") : t("r_" + j.status)) + (j.conf ? " · " + t("r_conf") : "") + (j.poolOpen && j.status === "active" ? " · " + t("pool_strip_h") : ""),
       posted: cdaysHTMLPlain(jobDays(j)),
       closes: j.status === "active" && j.win ? winLabel(j) : "—",
       applied: jobAppCount(j),
@@ -16297,7 +16340,7 @@ function packRows(){
 function cdaysHTMLPlain(d){ return String(cdaysHTML(d)).replace(/<[^>]*>/g, ""); }
 /* what the role is waiting on, in the words the dashboard already uses */
 function packWaiting(j){
-  if (j.status === "hired") return t("snap_hired");
+  if (j.status === "hired") return acceptedNotStarted(j) ? t("start_h") : t("snap_hired");
   if (j.status === "approval") return t("r_approval");
   if (outcomeDue(j)) return t("oc_strip_h");
   var rn = jobReviewN(j), vn = jobInviteN(j);
