@@ -5094,7 +5094,9 @@ mod_out_s:"Contact candidates directly from the dashboard. Ships separately.",
   appeal_toast:"Review requested. A named Uptal reviewer responds within 2 business days. The score is held until then.",
   cured_toast:"Cleared. The pending deduction was voided.",
   code_disp:"Candidates left without an answer",
-  code_stale:"Invites with no outcome recorded",
+  code_stale:"Invites with no outcome recorded",code_start:"A hire never confirmed",
+  iw_start:"{job} — the start date you gave has passed and the hire is still unconfirmed.",
+  nf_start:"A start you recorded is due to be confirmed. Confirm it, or the board stops accepting new postings.",
   code_pipeline:"Pipeline-building: shortlisted, never invited",
   code_inactive:"Posting ignored: no decisions taken",
   code_lapse:"Posting closed with no verdicts",
@@ -6872,7 +6874,9 @@ mod_out_s:"تواصل مع المرشحين مباشرة من اللوحة. تص
   appeal_toast:"طُلبت المراجعة. يرد مراجع من أبتال باسمه خلال يومي عمل. وتُجمَّد الدرجة حتى ذلك الحين.",
   cured_toast:"تم التدارك. أُلغي الخصم المعلّق.",
   code_disp:"مرشحون تُركوا دون رد",
-  code_stale:"دعوات دون تسجيل نتيجة",
+  code_stale:"دعوات دون تسجيل نتيجة",code_start:"تعيين لم يُؤكَّد",
+  iw_start:"{job} — مضى تاريخ المباشرة الذي حدّدته والتعيين ما زال دون تأكيد.",
+  nf_start:"مباشرة سجّلتها يقترب موعد تأكيدها. أكّدها، وإلا توقفت اللوحة عن قبول إعلانات جديدة.",
   code_pipeline:"بناء قاعدة مرشحين: قائمة مختصرة دون دعوة",
   code_inactive:"إهمال الإعلان: لا قرارات متخذة",
   code_lapse:"أُغلق الإعلان دون قرارات",
@@ -7676,6 +7680,7 @@ var RET_WARN_DAYS = 7;   /* forewarning, in the same calendar days RETENTION_DAY
    confirmation by then. Past it, publishing stops, exactly as an unanswered outcome does. */
 var START_MAX_DAYS = 90;
 var START_CHOICES = [30, 60, 90];   /* notice periods, in the pill idiom the window picker uses */
+var START_WARN_DAYS = 7;            /* the board says so before the date, not only after it */
 var JOB_META = {
   /* own = index into TEAM[tenant]: the accountable owner rides the seed so a list can name
      somebody real. Without it jobOwner() falls back to the first admin and every row lies. */
@@ -7794,6 +7799,7 @@ function startLeft(job){
 /* the window has run out and the board still does not know whether the person started */
 function startOverdue(job){ var c = startConfirm(job); return !!(c && c.status === "pending" && dayStart(boardNow()) > c.due); }
 function startsOverdue(){ return tenantJobs().filter(startOverdue); }
+function startsNear(){ return tenantJobs().filter(function(j){ return startPending(j) && !startOverdue(j) && startLeft(j) <= START_WARN_DAYS; }); }
 function retentionLeft(job){ return Math.max(0, RETENTION_DAYS - jobDays(job)); }
 function jobExpired(job){ return !!job.expired || jobDays(job) >= RETENTION_DAYS; }
 /* ===== retention that deletes =====
@@ -8902,6 +8908,9 @@ function bandId(){
 function computeIntWarnings(){
   var warns = [];
   visibleJobs().forEach(function(j){
+    /* a settled role is out of scope — unless it owes a start nobody confirmed. That is the
+       one obligation that outlives "active", because accepting the offer is what ended it. */
+    if (startOverdue(j)){ warns.push({ k:"iw_start", jobId:j.id }); return; }
     if (j.status !== "active" || jobExpired(j)) return;
     var st = jobStages(j);
     var sealed = st.short.length + st.applied.length + st.screened.length;
@@ -8933,6 +8942,12 @@ var INT_RULES = [
     hit:function(j){ return outcomeOwed(j); },
     note:function(j){ var st = jobStages(j), n = st.invited.length + st.offer.length;
       return { en:n+" invited with no outcome recorded", ar:n+" مدعوّون دون تسجيل نتيجة" }; } },
+  /* Publishing blocks only bite an employer who wants to publish. A dashboard that accepted
+     an offer, took its slot back and went quiet feels nothing — so the obligation reaches it
+     here, where every other unanswered promise is counted. */
+  { code:"code_start", pts:10, days:0,
+    hit:function(j){ return startOverdue(j); },
+    note:function(j){ return { en:"The start date given has passed", ar:"مضى تاريخ المباشرة المحدد" }; } },
   { code:"code_disp", pts:8, days:0, pending:true,
     hit:function(j){ var st = jobStages(j), bad = false;
       st.fit.forEach(function(cid){ if (dispRunning(ck(j.id, cid)) && dispLeft(ck(j.id, cid)) <= 0) bad = true; });
@@ -8958,7 +8973,7 @@ function reconcileLedger(){
   /* the engine reads tenant truth, not the current viewer's scoped visibility —
      a role-scoped HM must never cause confidential roles' deductions to auto-cure */
   tenantJobs().forEach(function(j){
-    if (j.status !== "active" || jobExpired(j)) return;
+    if (!startOverdue(j) && (j.status !== "active" || jobExpired(j))) return;
     INT_RULES.forEach(function(r){
       if (jobDays(j) < r.days || !r.hit(j)) return;
       live[r.code + "~" + j.id] = { rule:r, job:j };
@@ -9066,6 +9081,13 @@ function integrityScan(){
     state.retNotified = state.retNotified || {};
     state.retNotified[j.id] = true;
     notify("nf_retention", j.id, {});
+  });
+  /* the start the employer promised, said once while there is still time to say it */
+  startsNear().forEach(function(j){
+    if (state.startNotified && state.startNotified[j.id]) return;
+    state.startNotified = state.startNotified || {};
+    state.startNotified[j.id] = true;
+    notify("nf_start", j.id, {});
   });
   /* band transitions are announced by the engine, never discovered by surprise */
   try {
@@ -11103,6 +11125,7 @@ function repostJob(job){
   delete job.startDaysPick;
   job.outcome = null;              /* a new run owes its own answer */
   if (state.ocNotified) delete state.ocNotified[job.id];
+  if (state.startNotified) delete state.startNotified[job.id];
   job.posted = { en:"just now", ar:"الآن" };
   if (JOB_META[job.id]){ JOB_META[job.id].expired = false; JOB_META[job.id].days = 0; }
   var st = jobStages(job);
@@ -16502,14 +16525,14 @@ function openLegalModal(kind){
    the real product mirrors every entry to email (simulated — the prototype takes no mail). */
 var NF_ICONS = {
   nf_applicants:"people", nf_applicants_all:"people", nf_seatreq:"people", nf_outcome:"clock", nf_retention:"clock", nf_cleared:"clock", nf_sla:"people", nf_int_warn:"clock", nf_int_justify:"clock", nf_band_down:"clock", nf_band_up:"check", nf_batch:"check", nf_due:"clock", nf_paused:"clock",
-  nf_pool:"people", nf_contact:"check", nf_window:"clock",
+  nf_pool:"people", nf_contact:"check", nf_window:"clock", nf_start:"clock",
   nf_approval:"clock", nf_approved:"check", nf_declined:"clock",
   nf_verified:"check", nf_verif_needinfo:"clock"
 };
 /* every kind belongs to a preference category; a switched-off category is silent */
 var NF_CAT = {
   nf_applicants:"applicants", nf_applicants_all:"applicants", nf_seatreq:"standing", nf_outcome:"standing", nf_sla:"applicants", nf_int_warn:"standing", nf_int_justify:"standing", nf_band_down:"standing", nf_band_up:"standing", nf_batch:"applicants", nf_contact:"applicants",
-  nf_due:"clocks", nf_window:"clocks", nf_pool:"clocks",
+  nf_due:"clocks", nf_window:"clocks", nf_pool:"clocks", nf_start:"standing",
   nf_paused:"standing", nf_approval:"standing", nf_approved:"standing", nf_declined:"standing",
   nf_verified:"standing", nf_verif_needinfo:"standing"
 };
@@ -16539,6 +16562,7 @@ var NF_ROUTES = {
   nf_approval: function(n){ go("role", n.jobId); },
   nf_outcome: function(n){ go("role", n.jobId); },
   nf_retention: function(n){ go("role", n.jobId); },
+  nf_start: function(n){ go("role", n.jobId); },
   nf_cleared: function(n){ go("role", n.jobId); },
   /* verified: there is nothing left to do — the bell entry is the receipt, no route.
      needs-info routes back into the sheet with the flagged field carrying its reason. */
@@ -16549,6 +16573,8 @@ var NF_ROUTES = {
 var NF_LIVE = {
   /* the warning retires itself the moment the role clears or is answered; the receipt stays */
   nf_retention: function(n){ var j = jobById(n.jobId); return !!j && retentionNear(j); },
+  /* it retires itself the moment the start is confirmed; while it is late it stays */
+  nf_start: function(n){ var j = jobById(n.jobId); return !!j && startPending(j); },
   nf_paused: function(n){ var j = jobById(n.jobId); return !!(j && j.paused && j.status === "active"); },
   nf_due: function(n){ var j = jobById(n.jobId); return !!j && j.status === "active" && opMinLeft(j) <= 2; },
   nf_window: function(n){
