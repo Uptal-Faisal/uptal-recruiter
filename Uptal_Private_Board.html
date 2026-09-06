@@ -4793,7 +4793,8 @@ mod_out_s:"Contact candidates directly from the dashboard. Ships separately.",
   attest_ref_ph:"Approval reference, optional",
   need_attest:"Sign the hiring attestation first",
   pub_commit:"Commitment",pub_commit_v:"Closes after {d} days, attested by {o}",
-  win_left:"Closes in {d}",
+  win_left:"Closes in {d}",win_shut:"Close date passed",
+  ext_cap:"This posting is already at the sixty-day limit.",
   retention_left:"Details clear in {d}",
   expired_h:"Candidate details cleared",
   expired_kept:"The record stays: {n} and every decision in the trail.",
@@ -6578,7 +6579,8 @@ mod_out_s:"تواصل مع المرشحين مباشرة من اللوحة. تص
   attest_ref_ph:"مرجع الاعتماد، اختياري",
   need_attest:"وقّع إقرار التوظيف أولاً",
   pub_commit:"الالتزام",pub_commit_v:"يُغلق بعد {d} يوماً، بإقرار {o}",
-  win_left:"يُغلق خلال {d}",
+  win_left:"يُغلق خلال {d}",win_shut:"مضى موعد الإغلاق",
+  ext_cap:"بلغ هذا الإعلان الحد الأقصى: ستون يوماً.",
   retention_left:"تُمحى البيانات خلال {d}",
   expired_h:"مُحيت بيانات المرشحين",
   expired_kept:"يبقى السجل: {n} وكل قرار في سجل التدقيق.",
@@ -7694,24 +7696,24 @@ var START_WARN_DAYS = 7;            /* the board says so before the date, not on
 var JOB_META = {
   /* own = index into TEAM[tenant]: the accountable owner rides the seed so a list can name
      somebody real. Without it jobOwner() falls back to the first admin and every row lies. */
-  q1:{ win:{en:"21 days left",ar:"باقي 21 يوماً"}, due:{en:"3 days",ar:"3 أيام"}, days:6, own:1 },
+  q1:{ win:27, due:{en:"3 days",ar:"3 أيام"}, days:6, own:1 },
   /* Head of Risk is the sample dashboard’s ask: 38 days is eight past OUTCOME_DAYS, which
      makes the outcome due, and six short of OUTCOME_GRACE, which leaves publishing open. A
      visitor sees the promise enforced and can still post. The role keeps its whole pipeline;
      draining it to make the ask tidier would have cost six of the review queue for nothing. */
-  q2:{ win:{en:"9 days left",ar:"باقي 9 أيام"}, due:{en:"2 days",ar:"يومين"}, days:38, own:0 },
-  q3:{ win:{en:"27 days left",ar:"باقي 27 يوماً"}, days:3, own:1 },
-  q4:{ win:{en:"14 days left",ar:"باقي 14 يوماً"}, days:7, own:0 },
+  q2:{ win:47, due:{en:"2 days",ar:"يومين"}, days:38, own:0 },
+  q3:{ win:30, days:3, own:1 },
+  q4:{ win:21, days:7, own:0 },
   /* the after-state, with real numbers under the cleared card. invited and offer stay 0 so
      the cleared role owes nothing and the Repost demo is never blocked by an answer it
      could no longer name. */
   q6:{ days:64, expired:true, cleared:{ sealed:24, fit:2, invited:0, offer:0, total:26 } },
-  q7:{ win:{en:"19 days left",ar:"باقي 19 يوماً"}, days:11, own:1 },
-  n1:{ win:{en:"26 days left",ar:"باقي 26 يوماً"}, due:{en:"2 days",ar:"يومين"}, days:4, own:1 },
-  n2:{ win:{en:"18 days left",ar:"باقي 18 يوماً"}, days:7, own:0 },
-  n3:{ win:{en:"28 days left",ar:"باقي 28 يوماً"}, paused:true, days:2, own:1 }
+  q7:{ win:30, days:11, own:1 },
+  n1:{ win:30, due:{en:"2 days",ar:"يومين"}, days:4, own:1 },
+  n2:{ win:25, days:7, own:0 },
+  n3:{ win:30, paused:true, days:2, own:1 }
 };
-JOBS.forEach(function(j){ var m = JOB_META[j.id]; if (m){ j.win = m.win; j.due = m.due; j.paused = !!m.paused; j.days = m.days || 0; j.expired = !!m.expired;
+JOBS.forEach(function(j){ var m = JOB_META[j.id]; if (m){ j.windowDays = m.win || 0; j.due = m.due; j.paused = !!m.paused; j.days = m.days || 0; j.expired = !!m.expired;
   if (m.own !== undefined){ var mem = (TEAM[j.tenant] || [])[m.own]; if (mem) j.owner = { en: mem.en, ar: mem.ar }; }
   if (m.cleared) j.cleared = JSON.parse(JSON.stringify(m.cleared)); } });
 /* ===== the day substrate =====
@@ -7830,6 +7832,30 @@ function retentionNear(job){
   return !jobExpired(job) && jobAppCount(job) > 0 && retentionLeft(job) <= RET_WARN_DAYS;
 }
 function retentionNearJobs(){ return visibleJobs().filter(retentionNear); }
+/* ---- the posting's closing window ----
+   The window is a commitment made at publish: this posting closes after N days. It used to
+   be stored as bilingual prose with the number baked in, so it never counted down and three
+   different scrapers dug the digits back out of it with two different parsers. It is a number
+   now, and the days left are derived from the posting clock the way every other clock here is
+   — which is also what makes a sanctioned hold stop spending it, as the hold comment above
+   has always claimed. One state, read by every surface: none | open | closing | shut. */
+var WIN_CHOICES = [30, 45, 60];
+var WIN_WARN_DAYS = 3;
+function winLeft(job){ return job && job.windowDays ? Math.max(0, job.windowDays - jobLiveDays(job)) : 0; }
+function winState(job){
+  if (!job || !job.windowDays || job.status !== "active" || jobExpired(job)) return "none";
+  var left = winLeft(job);
+  return left <= 0 ? "shut" : left <= WIN_WARN_DAYS ? "closing" : "open";
+}
+/* the one phrasing, so no surface invents its own. A role with no window returns nothing
+   rather than a plausible "Closes in 0 days" — a helper must not be safe only because every
+   caller happens to guard it. */
+function winChipHTML(job){
+  var st = winState(job);
+  if (st === "none") return "";
+  return st === "shut" ? t("win_shut") : tf("win_left", { d: cdaysHTML(winLeft(job)) });
+}
+function winChipText(job){ return String(winChipHTML(job)).replace(/<[^>]*>/g, ""); }
 /* the counts a role held, read once before the people are gone. Every count on every surface
    routes through here, so a cleared role prints the numbers it kept instead of zeros. */
 function jobCounts(job){
@@ -9726,7 +9752,7 @@ function jobCardHTML(j){
       ? '<span class="pill-count match"><span class="ms-dot sm"></span>'+t("match_pill")+'</span>'
       : '<span class="pill-count ok">'+ICONS.check+t("home_uptodate")+'</span>';
   }
-  var dl = (!expired && j.win) ? '<span class="jbc-dl">'+ICONS.clock+tf("win_left",{d:esc(winLabel(j))})+'</span>' : "";
+  var dl = winState(j) !== "none" ? '<span class="jbc-dl">'+ICONS.clock+winChipHTML(j)+'</span>' : "";
   return '<button class="jbcard" data-jobcard="'+j.id+'" type="button">'+
     '<span class="jbc-head"><span class="jbc-nm">'+esc(j.title[LANG])+'</span>'+tags+'<span class="jbc-arr">'+CHEV+'</span></span>'+
     '<span class="jbc-meta">'+ICONS.brief+'<span>'+esc(j.dept?j.dept[LANG]:"—")+' · '+esc(md?md[LANG]:"—")+'</span></span>'+
@@ -9823,12 +9849,6 @@ function funnelHTML(j){
     return '<span class="fl"><i class="fl-dot '+s.cls+'"></i><span class="num" dir="ltr">'+fmt(s.n)+'</span> '+s.lab+'</span>'; }).join("")+'</span>';
   return '<span class="op-funnel">'+bar+labs+'</span>';
 }
-/* seed win strings carry their own "left"/«باقي»: strip them so "Closes in {d}"
-   never reads "Closes in 21 days left" */
-function winLabel(j){
-  var s = (j.win && j.win[LANG]) || "";
-  return LANG === "ar" ? s.replace(/^\u0628\u0627\u0642\u064a\s*/, "") : s.replace(/\s*left\s*$/i, "");
-}
 function opMinLeft(j){
   var st = jobStages(j), m = Infinity;
   st.fit.forEach(function(cid){ if (dispRunning(ck(j.id, cid))) m = Math.min(m, dispLeft(ck(j.id, cid))); });
@@ -9839,7 +9859,7 @@ function opRowHTML(j){
   var minLeft = opMinLeft(j);
   var newN = 0; STAGES.forEach(function(k){ st[k].forEach(function(cid){ if (state.newIds[cid]) newN++; }); });
   /* ONE status chip, first true wins */
-  var chip;
+  var chip, winInChip = false;   /* explicit, so the meta line never sniffs generated HTML for a class */
   if (jobExpired(j)) chip = '<span class="op-chip c-grey">'+ICONS.lock+t("expired_chip")+'</span>';
   else if (j.status === "approval") chip = '<span class="op-chip c-amber">'+ICONS.clock+t("r_approval")+'</span>';
   else if (j.paused || j.hold) chip = '<span class="op-chip c-amber">'+t("paused_chip")+'</span>';
@@ -9856,14 +9876,14 @@ function opRowHTML(j){
   else if (vn > 0) chip = '<span class="op-chip c-match">'+ICONS.people+tf("op_chip_invite",{n:'<span class="num" dir="ltr">'+fmt(vn)+'</span>'})+'</span>';
   else if (newN > 0) chip = '<span class="op-chip c-new">'+(newN === 1 ? t("op_new_1") : newN === 2 ? t("op_new_2") : tf("op_new_n",{n:'<span class="num" dir="ltr">'+fmt(newN)+'</span>'}))+'</span>';
   else if (j.matching) chip = '<span class="op-chip c-match"><span class="ms-dot sm"></span>'+t("match_pill")+'</span>';
-  else if (j.win) chip = '<span class="op-chip c-win">'+ICONS.clock+tf("win_left",{d:esc(winLabel(j))})+'</span>';
+  else if (winState(j) !== "none") { chip = '<span class="op-chip c-win">'+ICONS.clock+winChipHTML(j)+'</span>'; winInChip = true; }
   else chip = "";
   var tags = "";
   if (j.conf) tags += '<span class="chip chip-blue jbc-tag">'+ICONS.lock+t("r_conf")+'</span>';
   if (j.seal) tags += '<span class="chip chip-blue jbc-tag">'+ICONS.lock+t("r_sealed")+'</span>';
   /* quiet meta under the title + THE one action */
   var meta = "";
-  if (j.win && chip.indexOf("c-win") < 0 && !jobExpired(j)) meta += '<span>'+tf("win_left",{d:esc(winLabel(j))})+'</span>';
+  if (!winInChip && winState(j) !== "none") meta += '<span>'+winChipHTML(j)+'</span>';
   /* on a team of five, a count with no name is nobody's job */
   meta += '<span class="op-own">'+tf("own_by",{o:ownerLabel(j)})+'</span>';
   if (j.poolOpen && j.status === "active") meta += '<span>'+tf("pool_open_meta",{d:'<span class="num" dir="ltr">'+poolLeft(j)+'</span>', u:'<span class="num" dir="ltr">'+poolUnlocksLeft(j)+'</span>'})+'</span>';
@@ -10844,7 +10864,7 @@ function renderJobsBulk(){
   var bo = $("#jbOwn"); if (bo) bo.addEventListener("click", openBulkOwnModal);
 }
 function openBulkExtModal(){
-  var jobs = jobSelJobs(), able = jobs.filter(function(j){ return (j.exts || 0) < EXT_MAX; });
+  var jobs = jobSelJobs(), able = jobs.filter(extEligible);
   openModal(
     '<div class="modal-head"><h3>'+t("ext_h")+'</h3><button class="x" id="mX" type="button" aria-label="'+esc(t("pub_cancel"))+'"><svg viewBox="0 0 24 24" stroke-linecap="round"><path d="m6 6 12 12M18 6 6 18"/></svg></button></div>'+
     '<div class="modal-body"><p class="sub mbe10">'+tf("jb_ext_sub",{n:nn(fmt(able.length))})+'</p>'+
@@ -10921,7 +10941,7 @@ function jobRow(j){
       '<span class="ow-nm">'+ownerLabel(j)+'</span></span>'+
     '<span class="jt-apps"><b>'+appsLabel(apps)+'</b>'+(review?'<span class="rev">'+tf("job_review",{n:review})+'</span>':"")+'</span>'+
     '<span class="jt-posted">'+esc(j.posted[LANG])+
-    (j.win && j.status === "active" ? '<span style="display:block;font-size:10.5px;color:var(--muted)">'+tf("win_left",{d:esc(winLabel(j))})+'</span>' : "")+'</span>'+
+    (winState(j) !== "none" ? '<span style="display:block;font-size:10.5px;color:var(--muted)">'+winChipHTML(j)+'</span>' : "")+'</span>'+
     '<span class="jt-arrow">'+ICONS.arrow+'</span></button>';
 }
 
@@ -11226,7 +11246,7 @@ function renderWorkspace(){
   /* the time chip: first true wins — hold > paused > the posting's closing window */
   if (job.hold && job.status === "active") chips.push('<span class="chip chip-amber">'+ICONS.clock+t("hold_chip")+' · '+t(job.hold)+'</span>');
   else if (job.paused && job.status === "active") chips.push('<span class="chip chip-red">'+t("paused_chip")+'</span>');
-  else if (job.win && job.status === "active" && !jobExpired(job)) chips.push('<span class="chip chip-soft">'+ICONS.clock+tf("win_left",{d:esc(winLabel(job))})+'</span>');
+  else if (winState(job) !== "none") chips.push('<span class="chip '+(winState(job) === "open" ? "chip-soft" : "chip-amber")+'">'+ICONS.clock+winChipHTML(job)+'</span>');
   var metaBits = [];
   if (fn) metaBits.push(esc(fn[LANG]));
   if (md) metaBits.push(esc(md[LANG]));
@@ -11801,7 +11821,7 @@ function renderRoleDetail(job){
   var reqs = (job.reqs||[]).map(function(r){ return '<div class="rd-reqrow"><svg viewBox="0 0 24 24" fill="none" stroke="var(--flash-tag)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5 9.5 18 20 6.5"/></svg><span>'+esc(r[LANG])+'</span></div>'; }).join("");
   function field(lab, val, wide){ return '<div class="rd-field'+(wide?" rd-wide":"")+'"><span class="rd-lab">'+lab+'</span><span class="rd-val">'+val+'</span></div>'; }
   var g = field(t("rd_sen"), esc(sn?sn[LANG]:"-")) + field(t("rd_workplace"), esc(md?md[LANG]:"-")) +
-    field(t("rd_dept"), esc(job.dept?job.dept[LANG]:"-")) + field(t("rd_window"), job.win?esc(winLabel(job)):"-") +
+    field(t("rd_dept"), esc(job.dept?job.dept[LANG]:"-")) + field(t("rd_window"), job.windowDays ? cdaysHTML(job.windowDays) : "-") +
     field(t("rd_comp"), comp, true) +
     (function(){
       var ms = marketStats(job.func, job.sen, job.mode);
@@ -13905,21 +13925,25 @@ function openHoldModal(job){
    same rule, so it moved here rather than being copied — an extension signed two different
    ways is how an audit trail starts disagreeing with itself. Returns false at the cap. */
 var EXT_DAYS = 21, EXT_MAX = 2;
+/* a posting may not outlive its own records: retention deletes the pipeline at
+   RETENTION_DAYS, and a role still advertised as open over an emptied pipeline is a
+   promise the board cannot keep. The cap is the same sixty days, not a second number. */
+function extLeft(job){ return Math.max(0, RETENTION_DAYS - (job.windowDays || 0)); }
+function extEligible(job){ return (job.exts || 0) < EXT_MAX && extLeft(job) > 0; }
 function extendJob(job){
   job.exts = job.exts || 0;
-  if (job.exts >= EXT_MAX) return false;
+  if (!extEligible(job)) return false;
   job.exts++;
   /* ext_note promises the extension is signed by the accountable owner: sign it with them */
   var owner = jobOwner(job);
-  var m = (job.win && job.win.en || "").match(/\d+/);
-  var d = (m ? parseInt(m[0], 10) : 30) + EXT_DAYS;
-  job.win = { en: d + " days left", ar: "باقي " + d + " يوماً" };
+  job.windowDays = Math.min(RETENTION_DAYS, (job.windowDays || 30) + EXT_DAYS);
   pushLog(job.id, "act_ext", { oEn: owner.en, oAr: owner.ar });
   return true;
 }
 function openExtModal(job){
   job.exts = job.exts || 0;
-  if (job.exts >= 2){ toast(t("ext_used")); return; }
+  if (job.exts >= EXT_MAX){ toast(t("ext_used")); return; }
+  if (extLeft(job) <= 0){ toast(t("ext_cap")); return; }
   openModal(
     '<div class="modal-head"><h3>'+t("ext_h")+'</h3><button class="x" id="mX" type="button" aria-label="Close"><svg viewBox="0 0 24 24" stroke-linecap="round"><path d="m6 6 12 12M18 6 6 18"/></svg></button></div>'+
     '<div class="modal-body"><p class="sub mbe10">'+t("ext_sub")+'</p>'+
@@ -14873,7 +14897,7 @@ function buildPostForm(){
   $("#fGender").innerHTML = [["","gen_any"],["m","gen_m"],["f","gen_f"]].map(function(g){
     return '<button class="opt'+(f.gender===g[0]?" on":"")+'" type="button" data-gender="'+g[0]+'">'+t(g[1])+'</button>';
   }).join("");
-  $("#fWindow").innerHTML = [30,45,60].map(function(d){
+  $("#fWindow").innerHTML = WIN_CHOICES.map(function(d){
     return '<button class="opt'+(f.window===d?" on":"")+'" type="button" data-window="'+d+'"><span class="num">'+tf("wnd_d",{d:d})+'</span></button>';
   }).join("");
   var team = TEAM[state.tenant.id] || [];
@@ -15572,7 +15596,7 @@ function doPublish(){
     postedAt: boardNow(),   /* the role starts ageing the moment it is published */
     status: needsApproval ? "approval" : "active", conf:f.conf, seal:f.seal, posted:{en:"just now",ar:"الآن"},
     band: f.bandOff ? null : [f.bmin, f.bmax],
-    win:{en:f.window+" days left", ar:"باقي "+f.window+" يوماً"},
+    windowDays: f.window,
     reqs:reqs, stages:{short:[],applied:[],screened:[],fit:[],invited:[],offer:[]},
     owner:{ en:owner.en, ar:owner.ar },
     matching: !needsApproval /* the engine screens the network only once the posting is live */
@@ -16328,7 +16352,7 @@ function packRows(){
       owner: jobOwnerSet(j) ? jobOwner(j)[LANG] : t("own_none"),
       status: (acceptedNotStarted(j) ? t("r_accepted") : t("r_" + j.status)) + (j.conf ? " · " + t("r_conf") : "") + (j.poolOpen && j.status === "active" ? " · " + t("pool_strip_h") : ""),
       posted: cdaysHTMLPlain(jobDays(j)),
-      closes: j.status === "active" && j.win ? winLabel(j) : "—",
+      closes: winState(j) === "none" ? "—" : winChipText(j),
       applied: jobAppCount(j),
       review: jobReviewN(j),
       shortlisted: jobCounts(j).fit + jobCounts(j).invited + jobCounts(j).offer,
@@ -16655,8 +16679,7 @@ var NF_LIVE = {
   nf_window: function(n){
     var j = jobById(n.jobId);
     if (!j || j.status !== "active" || jobExpired(j)) return false;
-    var wd = j.win && j.win.en ? parseInt(j.win.en, 10) : NaN;
-    return !isNaN(wd) && wd <= 3;
+    return winState(j) === "closing";
   },
   nf_pool: function(n){ var j = jobById(n.jobId); return !!(j && j.poolOpen && j.status === "active"); },
   nf_applicants: function(n){ var j = jobById(n.jobId); return !!j && j.status === "active" && jobReviewN(j) > 0; },
@@ -16681,8 +16704,7 @@ function seedNotifs(){
     st.fit.forEach(function(cid){ if (dispRunning(ck(j.id, cid))) minLeft = Math.min(minLeft, dispLeft(ck(j.id, cid))); });
     if (minLeft !== Infinity && minLeft <= 2) seeds.push({ k:"nf_due", jobId:j.id, p:{ d:minLeft }, tm:{en:"today",ar:"اليوم"} });
     /* the posting window itself: warn while there is still time to act, not after the lapse */
-    var wd = j.win && j.win.en ? parseInt(j.win.en, 10) : NaN;
-    if (!isNaN(wd) && wd <= 3) seeds.push({ k:"nf_window", jobId:j.id, p:{ n:wd }, tm:{en:"today",ar:"اليوم"} });
+    if (winState(j) === "closing") seeds.push({ k:"nf_window", jobId:j.id, p:{ n:nn(fmt(winLeft(j))) }, tm:{en:"today",ar:"اليوم"} });
     if (j.paused) seeds.push({ k:"nf_paused", jobId:j.id, p:{}, tm:{en:"today",ar:"اليوم"} });
     if (j.poolOpen) seeds.push({ k:"nf_pool", jobId:j.id, p:{}, tm:{en:"today",ar:"اليوم"} });
     var rn = jobReviewN(j);
