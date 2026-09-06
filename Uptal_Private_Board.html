@@ -4501,6 +4501,9 @@ pg1_years:"Minimum years of experience",
   start_late_s:"The start date you gave has passed. New postings are on hold for this dashboard until you confirm what happened.",
   start_btn:"Confirm the start",start_done:"Start confirmed. The hiring record is closed.",
   start_block_toast:"Confirm the start on this role before publishing anything new.",
+  start_already:"This offer is already recorded. Confirm the start instead — restating it does not answer it.",
+  start_settled:"This role is settled. Amend the record if something changed.",
+  start_repost_block:"Confirm the start before reposting. Reposting would close the record without answering it.",
   post_start_h:"Confirm the start for {r} to post again",
   post_start_s:"The date you gave has passed and the record is still open.",
   ht_p_start:"A start is unconfirmed",
@@ -6281,6 +6284,9 @@ pg1_years:"الحد الأدنى لسنوات الخبرة",
   start_late_s:"مضى التاريخ الذي حدّدته والسجل ما زال مفتوحاً. نشر أي إعلان جديد من هذه اللوحة موقوف حتى تؤكد ما حدث.",
   start_btn:"أكّد المباشرة",start_done:"تأكّدت المباشرة. أُغلق سجل التوظيف.",
   start_block_toast:"أكّد المباشرة في هذا الدور قبل نشر أي إعلان جديد.",
+  start_already:"هذا العرض مسجَّل بالفعل. أكّد المباشرة بدلاً من ذلك، فإعادة تسجيله ليست إجابة عنه.",
+  start_settled:"هذا الدور مُغلق. عدّل السجل إن تغيّر شيء.",
+  start_repost_block:"أكّد المباشرة قبل إعادة النشر. إعادة النشر تُغلق السجل دون الإجابة عنه.",
   post_start_h:"أكّد المباشرة في {r} لتتمكن من النشر مجدداً",
   post_start_s:"مضى التاريخ الذي حدّدته والسجل ما زال مفتوحاً.",
   ht_p_start:"مباشرة غير مؤكدة",
@@ -11117,6 +11123,9 @@ function stageList(job){
 function repostJob(job){
   /* the same rule on the way back in: no reopening while the last run owes an answer */
   if (outcomeOwed(job)){ toast(t("oc_repost_block"), "error"); openOutcomeModal(job, { forced: true }); return; }
+  /* outcomeOwed is false the instant an acceptance exists, so it does not cover the start the
+     acceptance promised. Reposting would null job.outcome and take the obligation with it. */
+  if (startPending(job)){ toast(t("start_repost_block"), "error"); return; }
   /* reposting puts the role back on the board, so it needs a free slot again */
   if (slotsFree() <= 0){ openSlotsModal(); return; }
   job.expired = false; job.days = 0; job.postedAt = boardNow(); job.status = "active";
@@ -11235,17 +11244,24 @@ function renderWorkspace(){
     syncJwManage();
     $("#stageTabs").innerHTML = "";
     var kept = jobCounts(job);
-    $("#intStrip").innerHTML = '<div class="expired-card"><span class="ex-ic">'+ICONS.lock+'</span>'+
+    /* the details are gone; the obligation is not. The block names this verb, so the screen
+       the block sends you to has to carry it. */
+    $("#intStrip").innerHTML = startStripHTML(job) + '<div class="expired-card"><span class="ex-ic">'+ICONS.lock+'</span>'+
       '<div class="ex-mid"><h4>'+t("expired_h")+'</h4><p>'+tf("expired_s",{d:nn(RETENTION_DAYS)})+'</p>'+
       '<p class="ex-kept">'+tf("expired_kept",{n:appsLabel(kept.total)})+'</p>'+
       (owedStill ? '<p class="ex-owed">'+t("expired_owed")+'</p>' : "")+'</div>'+
       (isViewer() ? "" : (owedStill
         ? '<button class="btn btn-pri" id="ocOpenX" type="button">'+t("oc_report")+'</button>'
+        : startPending(job) ? ''   /* the strip above carries the only verb this state allows */
         : '<button class="btn btn-pri" id="jwRepost" type="button">'+ICONS.refresh+'<span>'+t("repost_btn")+'</span></button>'))+'</div>';
     $("#bulkWrap").innerHTML = "";
     $("#clist").innerHTML = "";
     var rb = $("#jwRepost"); if (rb) rb.addEventListener("click", function(){ repostJob(job); });
     var ox = $("#ocOpenX"); if (ox) ox.addEventListener("click", function(){ openOutcomeModal(job, { forced: outcomeOverdueBy(job) >= OUTCOME_GRACE }); });
+    var sgx = $("#startGo");
+    if (sgx) sgx.addEventListener("click", function(){
+      if (confirmStart(job)){ renderWorkspace(); renderJobsBadge(); toast(t("start_done")); }
+    });
     return;
   }
   /* the wider pool opens once every matched applicant is reviewed and none is shortlisted */
@@ -11384,6 +11400,13 @@ function renderWorkspace(){
   $("#intStrip").innerHTML = startStripHTML(job) + outcomeStripHTML(job) + strips.join("");
   var ocb = $("#ocOpen");
   if (ocb) ocb.addEventListener("click", function(){ openOutcomeModal(job, { forced: outcomeOverdueBy(job) >= OUTCOME_GRACE }); });
+  /* bound HERE, where the strip is written. It lived in renderPanel, which never draws this
+     strip — so the one verb that discharges the start obligation did nothing on every route
+     the product offers to it. */
+  var sgo = $("#startGo");
+  if (sgo) sgo.addEventListener("click", function(){
+    if (confirmStart(job)){ renderWorkspace(); renderJobsBadge(); toast(t("start_done")); }
+  });
   var apA = $("#apApprove");
   if (apA) apA.addEventListener("click", function(){ approvePosting(job); });
   var apD = $("#apDecline");
@@ -12243,6 +12266,9 @@ function renderPanel(){
   } else if (stage){
     var job = jobById(state.jobId);
     var left = job ? invitesLeft(job) : 0;
+    /* the header door closes on a settled role (canAct); the drawer’s must close with it,
+       or the same two buttons erase the record from the other side of the screen */
+    var settled = !job || job.status !== "active";
     if (stage === "short" || stage === "screened" || stage === "applied"){
       /* applicants are decided ONLY in the swipe deck. Outside a deck the drawer stays read-only
          for them — but read-only is not dead-end: the foot routes INTO the deck, which still
@@ -12308,7 +12334,7 @@ function renderPanel(){
                '<button class="btn-text" id="drPass" type="button">'+t("dr_pass")+'</button>'+
                (connectedATS() ? '<button class="btn-text" id="drPush" type="button">'+tf("push_ats",{a:connectedATS()})+'</button>' : '')+
              '</span>'+
-             '<span class="df-r"><button class="btn btn-ghost" id="drRecOut" type="button">'+t("oc_rec_what")+'</button>'+
+             '<span class="df-r">'+(settled ? '' : '<button class="btn btn-ghost" id="drRecOut" type="button">'+t("oc_rec_what")+'</button>')+
                '<button class="btn btn-pri" id="drIntv" type="button">'+t("iv_btn")+'</button></span>';
     } else if (stage === "offer"){
       /* the offer itself lives outside the board; these record its outcome so the role
@@ -12317,7 +12343,7 @@ function renderPanel(){
          are quiet, never rivals */
       foot = '<span class="df-l"><button class="btn-text" id="drOffDecl" type="button">'+t("off_decl")+'</button>'+
                '<button class="btn-text" id="drOffWdrn" type="button">'+t("off_wdrn")+'</button></span>'+
-             '<span class="df-r"><button class="btn btn-pri" id="drRecHire" type="button">'+t("oc_rec_hire")+'</button></span>';
+             (settled ? '' : '<span class="df-r"><button class="btn btn-pri" id="drRecHire" type="button">'+t("oc_rec_hire")+'</button></span>');
     } else {
       foot = '<span class="ma chip chip-green">'+ICONS.check+t(c.verdict==="str"?"verdict_str":"verdict_rec")+'</span>';
     }
@@ -12336,11 +12362,6 @@ function renderPanel(){
   });
   var ivBtn = $("#drIntv");
   if (ivBtn) ivBtn.addEventListener("click", function(){ openIntvModal(cid); });
-  var sg = $("#startGo");
-  if (sg) sg.addEventListener("click", function(){
-    var sj = jobById(state.jobId);
-    if (sj && confirmStart(sj)){ renderWorkspace(); renderJobsBadge(); toast(t("start_done")); }
-  });
   var roBtn = $("#drRecOut");
   if (roBtn) roBtn.addEventListener("click", function(){
     var oj = jobById(state.jobId);
@@ -13063,6 +13084,14 @@ function propagateHire(hiredJob, cid){
 function recordOutcome(job, kind, cid, reason){
   MODAL_ONABORT = null;   /* the decision path: recording is never a deferral */
   closeModal();
+  /* re-stating an acceptance is not answering it. Without this the employer re-records the
+     same person every time the date passes: the wholesale overwrite below destroys the
+     confirm record, so startWindowBegin’s "settled stays settled" guard never sees it and
+     mints a fresh window — unblocking publishing and curing the deduction, for ever. */
+  if (kind === "hired" && job.outcome && job.outcome.kind === "hired" && job.outcome.confirm){
+    toast(t(startPending(job) ? "start_already" : "start_settled"), "error");
+    return;
+  }
   job.outcome = { kind: kind, cid: cid || null, reason: reason || null };
   if (kind === "hired"){
     job.status = "hired";
@@ -13084,6 +13113,9 @@ function recordOutcome(job, kind, cid, reason){
     toast(t("oc_done_closed"));
   }
   job.batchPending = false;
+  /* the start window is created after the last logged act, and pushLog is what persists.
+     Without this a reload turns "confirm in 60 days" into a settled hire owing nothing. */
+  persistWorkspace();
   integrityScan();
   render(state.screen); renderJobsBadge(); renderBell();
   /* answering the block must never silently eat a finished publish: the forced answer
