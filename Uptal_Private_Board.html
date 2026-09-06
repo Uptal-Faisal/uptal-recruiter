@@ -2582,7 +2582,6 @@
   .slots-strip.hard{background:var(--red-tint);border-color:rgba(201,64,60,.3)}
   .slots-strip.hard>svg{stroke:var(--red-ink)}
   .slots-strip.hard .ss-tx b{color:var(--red-ink)}
-  .oc-strip.ret{border-inline-start-color:var(--persian)}
   .ex-kept{margin-block-start:6px;font-size:var(--fs-2);color:var(--slate)}
   .ex-owed{margin-block-start:6px;font-size:var(--fs-2);color:var(--red-ink);font-weight:600}
   .qty-row{display:flex;align-items:center;justify-content:space-between;gap:12px}
@@ -4783,9 +4782,6 @@ mod_out_s:"Contact candidates directly from the dashboard. Ships separately.",
   expired_kept:"The record stays: {n} and every decision in the trail.",
   expired_owed:"This role still owes an answer. Record it — the people you invited are still waiting, and this dashboard cannot publish until it is given.",
   rd_ret_done:"Cleared; the hiring record remains",
-  ret_strip_h:"Candidate details clear in {d}",
-  ret_strip_s:"After that this posting keeps its numbers and its audit trail, and nothing that names a person. Export the record first, and name your hire while the board can still record it.",
-  ret_strip_btn:"Export the record",
   nf_retention:"Candidate details on a posting clear within days. Export the record if you need it.",
   nf_cleared:"Candidate details were cleared for privacy. The posting keeps its hiring record.",
   act_cleared:"Candidate details cleared for privacy: {n}. The hiring record and this trail remain.",
@@ -6552,9 +6548,6 @@ mod_out_s:"تواصل مع المرشحين مباشرة من اللوحة. تص
   expired_kept:"يبقى السجل: {n} وكل قرار في سجل التدقيق.",
   expired_owed:"لا يزال هذا الدور مديناً بإجابة. سجّلها — فمن دعوتهم ما زالوا ينتظرون، ولن تنشر هذه اللوحة قبل ذلك.",
   rd_ret_done:"مُحيت؛ ويبقى سجل التوظيف",
-  ret_strip_h:"تُمحى بيانات المرشحين خلال {d}",
-  ret_strip_s:"بعدها يحتفظ هذا الإعلان بأرقامه وسجل تدقيقه، ولا يبقى فيه ما يدل على شخص. صدّر السجل أولاً، وسمِّ من وظّفته ما دامت اللوحة قادرة على تسجيله.",
-  ret_strip_btn:"تصدير السجل",
   nf_retention:"تُمحى بيانات المرشحين في أحد الإعلانات خلال أيام. صدّر السجل إن كنت تحتاجه.",
   nf_cleared:"مُحيت بيانات المرشحين للخصوصية. ويحتفظ الإعلان بسجل التوظيف.",
   act_cleared:"مُحيت بيانات المرشحين للخصوصية: {n}. ويبقى سجل التوظيف وهذا السجل.",
@@ -11291,7 +11284,7 @@ function renderWorkspace(){
     }
   }
   /* the outcome ask leads the strips: it is the only one someone else is waiting on */
-  $("#intStrip").innerHTML = outcomeStripHTML(job) + retentionStripHTML(job) + strips.join("");
+  $("#intStrip").innerHTML = outcomeStripHTML(job) + strips.join("");
   var ocb = $("#ocOpen");
   if (ocb) ocb.addEventListener("click", function(){ openOutcomeModal(job, { forced: outcomeOverdueBy(job) >= OUTCOME_GRACE }); });
   var apA = $("#apApprove");
@@ -12246,8 +12239,6 @@ function renderPanel(){
   });
   var ivBtn = $("#drIntv");
   if (ivBtn) ivBtn.addEventListener("click", function(){ openIntvModal(cid); });
-  var rx = $("#retExport");
-  if (rx) rx.addEventListener("click", exportWorkspaceData);
   var roBtn = $("#drRecOut");
   if (roBtn) roBtn.addEventListener("click", function(){
     var oj = jobById(state.jobId);
@@ -13973,14 +13964,6 @@ function openJustifyModal(rowId){
   });
 }
 /* the outcome strip rides the role itself: the answer is asked where the work happened */
-/* seven days before a role’s details clear: one strip, one verb, after the outcome ask */
-function retentionStripHTML(job){
-  if (!retentionNear(job)) return "";
-  return '<div class="oc-strip ret">'+ICONS.lock+
-    '<span class="oc-tx"><b>'+tf("ret_strip_h",{d:cdaysHTML(retentionLeft(job))})+'</b>'+
-    '<span>'+t("ret_strip_s")+'</span></span>'+
-    (isAdmin() ? '<button class="btn btn-ghost" id="retExport" type="button">'+t("ret_strip_btn")+'</button>' : "")+'</div>';
-}
 function outcomeStripHTML(job){
   /* the courtesy ask: the 10-working-day clock named at the invite has run out, so the
      question appears — guidance tone, nothing blocked, enforcement math untouched */
