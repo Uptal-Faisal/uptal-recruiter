@@ -20,10 +20,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Uptal Recruiter · Qualified candidates who want the job</title>
-<meta name="description" content="Hiring in Saudi Arabia: write the role and Uptal matches it in seconds against a live network of candidates - people who meet your requirements, confirmed they want your job, and can start when you need them. 1 job slot and 2 seats free forever.">
-<meta property="og:title" content="Uptal Recruiter · Qualified candidates who want the job">
-<meta property="og:description" content="Hiring in Saudi Arabia. Stop screening CVs: get candidates who match your requirements, want your job, and are ready to start. Free forever: 1 job slot, 2 seats.">
+<title>Uptal Recruiter · Recruit from a million qualified people, in seconds without a public posting</title>
+<meta name="description" content="Your private job board. Publish the role and reach a million qualified people in seconds. Uptal returns only those who meet your requirements, want the job, and can start.">
+<meta property="og:title" content="Uptal Recruiter · Recruit from a million qualified people, in seconds without a public posting">
+<meta property="og:description" content="Your private job board, on Uptal's network. Publish the role and reach a million qualified people in seconds. Free forever: 1 job slot, 2 seats.">
 <meta property="og:type" content="website">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 412 412'%3E%3Crect width='412' height='412' rx='92' fill='%23061430'/%3E%3Cpolygon points='294,114 224,114 265,73 335,73 335,143 294,184' fill='%234CEA63'/%3E%3Cpath d='M118 155v94c0 23 14 39 37 39h18c6-2 13-6 24-15 13-12 30-29 44-44l14-14 41 27c-22 22-42 41-59 52-16 10-27 12-36 12h-31c-52 0-85-30-85-82v-47z' fill='%23fff'/%3E%3C/svg%3E">
 <script>
@@ -263,9 +263,9 @@ html[dir=rtl] .ksa-badge{padding:5px 8px 5px 12px}
 .hero-copy{position:relative;z-index:2;display:flex;flex-direction:column;justify-content:space-between;min-height:0}
 .hero h1{
   color:#fff;font-size:clamp(32px,3.9vw,54px);line-height:1.08;font-weight:800;
-  letter-spacing:-0.028em;margin-block:26px 0;max-width:none;white-space:nowrap;
+  letter-spacing:-0.028em;margin-block:26px 0;max-width:none;
 }
-html[lang=ar] .hero h1{line-height:1.35;letter-spacing:0;max-width:none;white-space:nowrap}
+html[lang=ar] .hero h1{line-height:1.35;letter-spacing:0;max-width:none}
 .hero .sub{
   color:var(--on-dark-soft);font-size:clamp(16px,1.6vw,18px);line-height:1.72;
   margin-block-start:24px;max-width:52ch;
@@ -278,7 +278,7 @@ html[lang=ar] .hero h1{line-height:1.35;letter-spacing:0;max-width:none;white-sp
 
 /* sealed word inside H1: ink bar wipes off to reveal */
 /* the highlight on the hero's key phrase: an ink bar wipes off to reveal it */
-.hl-wipe{position:relative;display:inline-block;white-space:nowrap}
+.hl-wipe{position:relative;display:inline-block}
 .hl-wipe .hl-tx{background:linear-gradient(92deg,var(--flash) 0%,#9BF0AC 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
 .hl-wipe::after{
   content:"";position:absolute;inset:2% -2% 0;border-radius:6px;
@@ -702,8 +702,9 @@ html[lang=ar] .hero .sub{line-height:1.9}
 <script>
 /* ============================================================
    Uptal Recruiter landing - vanilla JS, no libraries, no network.
-   Positioning: the value is the CANDIDATES, not the channel.
-   Qualified · wants your job · available to start · in seconds.
+   Positioning (founder direction 2026-09-14): a private job board with a
+   million qualified people behind it, reached in seconds, no public posting.
+   The sub keeps the three candidate promises: fit · confirmed interest · can start.
    ============================================================ */
 "use strict";
 function $(s, r){ return (r || document).querySelector(s); }
@@ -756,9 +757,9 @@ en: {
   gc_2: "Confirmed interested",
   gc_3: "Available to start",
   hero_eyebrow: "Hiring in Saudi Arabia",
-  hero_h: "Qualified people who<br><span class=\"hl-wipe\"><span class=\"hl-tx\">want your job.</span></span>",
+  hero_h: "Recruit from a million qualified people,<br><span class=\"hl-wipe\"><span class=\"hl-tx\">in seconds without a public posting.</span></span>",
   hero_note: "Full demo + your own dashboard · 1 job slot and 2 seats free forever · No credit card",
-  hero_s: "Publish the role. Uptal matches it in seconds against a live network of screened candidates, and returns only the ones who meet your requirements, have <b>confirmed they want this job</b>, and can start when you need them.",
+  hero_s: "Your private job board, on Uptal's network. Publish the role and <b>reach a million qualified people in seconds</b>. Uptal matches it against screened professionals across the Kingdom and returns only the ones who meet your requirements, have confirmed they want this job, and can start when you need them.",
   ksa_made: "صُنع في السعودية",
   ksa_made_aria: "Made in Saudi Arabia",
   lang_aria: "التبديل إلى العربية",
@@ -770,7 +771,7 @@ en: {
   mc_screen_by: "Generated by the matching engine",
   mc_screen_h: "Uptal screening",
   mc_why_h: "Why they fit this job",
-  meta: "Hiring in Saudi Arabia: write the role and Uptal matches it in seconds against a live network of candidates - people who meet your requirements, confirmed they want your job, and can start when you need them. 1 job slot and 2 seats free forever.",
+  meta: "Your private job board. Publish the role and reach a million qualified people in seconds. Uptal returns only those who meet your requirements, want the job, and can start.",
   mo: "/mo",
   mp_aria: "Interactive demo: a role is matched against the candidate network. Sample data only.",
   mp_city: "· Riyadh",
@@ -789,7 +790,7 @@ en: {
   skip: "Skip to content",
   t_no: "passed",
   t_yes: "shortlisted",
-  title: "Uptal Recruiter · Qualified candidates who want the job",
+  title: "Uptal Recruiter · Recruit from a million qualified people, in seconds without a public posting",
   wm: "Recruiter",
   yrs: "{n} yrs",
   yrs11: "{n} yrs",
@@ -829,9 +830,9 @@ ar: {
   gc_2: "مؤكَّدو الرغبة",
   gc_3: "جاهزون للمباشرة",
   hero_eyebrow: "التوظيف في السعودية",
-  hero_h: "مؤهلون،<br><span class=\"hl-wipe\"><span class=\"hl-tx\">ويريدون وظيفتك.</span></span>",
+  hero_h: "استقطب من بين مليون كفاءة مؤهلة،<br><span class=\"hl-wipe\"><span class=\"hl-tx\">خلال ثوانٍ وبدون إعلان وظيفي.</span></span>",
   hero_note: "عرض كامل ولوحة تحكم خاصة بك · شاغر نشط ومقعدان مجاناً للأبد · دون بطاقة ائتمانية",
-  hero_s: "انشر الدور. يطابقه أبتال خلال ثوانٍ مع شبكة حيّة من المرشحين، فلا يصلك إلا من تنطبق عليه متطلباتك و<b>أكّد رغبته في هذه الوظيفة</b> ويستطيع المباشرة حين تحتاجه.",
+  hero_s: "لوحة وظائفك الخاصة على شبكة أبتال ريكروتر. انشر الشاغر <b>لتصل إلى مليون كفاءة مؤهلة خلال ثوانٍ</b>. يطابقه أبتال مع كفاءات مفحوصة، ولا يعرض عليك إلا من تنطبق عليه متطلباتك، وأكّد رغبته في هذه الوظيفة، ويستطيع المباشرة حين تحتاجه.",
   ksa_made: "صُنع في السعودية",
   ksa_made_aria: "صُنع في السعودية",
   lang_aria: "Switch to English",
@@ -843,7 +844,7 @@ ar: {
   mc_screen_by: "من إعداد محرك المطابقة",
   mc_screen_h: "فحص أبتال",
   mc_why_h: "لماذا يناسب هذه الوظيفة",
-  meta: "اكتب الدور، ويطابقه أبتال خلال ثوانٍ مع شبكة حيّة من المرشحين المفحوصين، فلا يصلك إلا من تنطبق عليه متطلباتك وأكّد رغبته في هذه الوظيفة وجاهزيته للمباشرة. شاغر نشط ومقعدان مجاناً للأبد.",
+  meta: "لوحة وظائفك الخاصة. انشر الشاغر وصِل إلى مليون كفاءة مؤهلة خلال ثوانٍ، ولا يعرض عليك أبتال إلا من تنطبق عليه متطلباتك ويريد الوظيفة ويستطيع المباشرة.",
   mo: "/شهرياً",
   mp_aria: "عرض تفاعلي: مطابقة دور مع شبكة المرشحين. بيانات تجريبية فقط.",
   mp_city: "· الرياض",
@@ -862,7 +863,7 @@ ar: {
   skip: "تخطَّ إلى المحتوى",
   t_no: "متجاوَز",
   t_yes: "في القائمة",
-  title: "أبتال Recruiter · مرشحون مؤهلون يريدون وظيفتك",
+  title: "Uptal Recruiter · استقطب من بين مليون كفاءة مؤهلة، خلال ثوانٍ وبدون إعلان وظيفي",
   wm: "Recruiter",
   yrs: "{n} سنوات",
   yrs11: "{n} سنة",
