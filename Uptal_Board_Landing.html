@@ -1,7 +1,7 @@
 <!doctype html>
 <!--
   Uptal Recruiter - landing page v3 "The Match" (EN + AR, live RTL).
-  One conversion goal: create the free dashboard (1 slot + 2 seats, free forever).
+  One conversion goal: create the free dashboard (1 slot + 1 seat, free; the second seat opens on verification).
   - The value sold is the CANDIDATES, not the channel: qualified against the stated
     requirements, confirmed they want the role, and available to start.
   - The hero IS the product: a role goes in, and matched people come back with the
@@ -23,7 +23,7 @@
 <title>Uptal Recruiter · Recruit in seconds, without a public posting</title>
 <meta name="description" content="Your private job board. Publish the role and reach 1M+ qualified people in seconds. Uptal returns only those who meet your requirements, want the job, and can start.">
 <meta property="og:title" content="Uptal Recruiter · Recruit in seconds, without a public posting">
-<meta property="og:description" content="Your private job board, on Uptal's network. Publish the role and reach 1M+ qualified people in seconds. Free forever: 1 job slot, 2 seats.">
+<meta property="og:description" content="Your private job board, on Uptal's network. Publish the role and reach 1M+ qualified people in seconds. Free: 1 job slot, 1 seat.">
 <meta property="og:type" content="website">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 412 412'%3E%3Crect width='412' height='412' rx='92' fill='%23061430'/%3E%3Cpolygon points='294,114 224,114 265,73 335,73 335,143 294,184' fill='%234CEA63'/%3E%3Cpath d='M118 155v94c0 23 14 39 37 39h18c6-2 13-6 24-15 13-12 30-29 44-44l14-14 41 27c-22 22-42 41-59 52-16 10-27 12-36 12h-31c-52 0-85-30-85-82v-47z' fill='%23fff'/%3E%3C/svg%3E">
 <script>
@@ -51,7 +51,7 @@
 {"@context":"https://schema.org","@type":"SoftwareApplication","name":"Uptal Recruiter",
  "applicationCategory":"BusinessApplication","operatingSystem":"Web",
  "description":"A hiring channel for Saudi enterprise and government employers. Uptal matches a written role against a live network of screened candidates and returns the ones who meet the requirements, have confirmed interest in the role, and are available to start.",
- "offers":{"@type":"Offer","price":"0","priceCurrency":"SAR","description":"Free plan: 1 job slot and 2 user seats, free forever."},
+ "offers":{"@type":"Offer","price":"0","priceCurrency":"SAR","description":"Free plan: 1 job slot and 1 user seat, free. A second seat opens when the company is verified."},
  "provider":{"@type":"Organization","name":"Uptal Information Technology Company","address":{"@type":"PostalAddress","addressLocality":"Riyadh","addressCountry":"SA"}}}
 </script>
 <style>
@@ -400,12 +400,14 @@ html[dir=rtl] .sk::after{animation-name:shimmerRtl}
   opacity:0;pointer-events:none;background:rgba(255,255,255,.9);z-index:4;
   transition:opacity .26s ease}
 html[lang=ar] .stamp{font-family:var(--font-ar);letter-spacing:0;font-size:14px}
-.stamp-yes{inset-inline-start:14px;color:var(--flash-tag);border-color:var(--flash-tag);transform:rotate(-11deg)}
-.stamp-no{inset-inline-end:14px;color:#B23C39;border-color:#B23C39;transform:rotate(11deg)}
-html[dir=rtl] .stamp-yes{transform:rotate(11deg)}
-html[dir=rtl] .stamp-no{transform:rotate(-11deg)}
+.stamp-yes{left:14px;color:var(--flash-tag);border-color:var(--flash-tag);transform:rotate(-11deg)}
+.stamp-no{right:14px;color:#B23C39;border-color:#B23C39;transform:rotate(11deg)}
 /* the deck's own action bar */
 .mp-acts{flex:none;display:flex;align-items:center;gap:9px;padding:0 14px 10px}
+/* The action row is a physical control surface, so it does not flip with the text: Pass stays
+   on the left and Shortlist on the right, matching the swipe in both languages. In an RTL flex
+   container `row` runs right-to-left, so row-reverse is what restores physical order. */
+html[dir=rtl] .mp-acts{flex-direction:row-reverse}
 .mp-acts .da{flex:1;display:inline-flex;align-items:center;justify-content:center;gap:7px;
   border-radius:var(--r-pill);padding:9px 14px;font-size:12.5px;font-weight:700;border:1px solid var(--hair-2);
   background:#fff;color:var(--slate);transition:transform .15s,background .15s,border-color .15s,box-shadow .15s}
@@ -692,6 +694,7 @@ html[lang=ar] .hero .sub{line-height:1.9}
     </span>
     <div class="foot-links">
       <a href="Uptal_Board_Legal.html#terms" data-legal="terms" data-i18n="ft_terms"></a>
+      <a href="Uptal_Board_Legal.html#refund" data-legal="refund" data-i18n="ft_refund"></a>
       <a href="Uptal_Board_Legal.html#privacy" data-legal="privacy" data-i18n="ft_privacy"></a>
       <a href="mailto:help@uptal.com">help@uptal.com</a>
     </div>
@@ -750,6 +753,7 @@ en: {
   f_exp: "Experience",
   f_exp_sal: "Expected salary",
   f_notice: "Notice period",
+  ft_refund: "Refunds",
   ft_privacy: "Privacy",
   ft_rights: "© 2026 Uptal Information Technology Company, Riyadh.",
   ft_terms: "Terms",
@@ -758,7 +762,7 @@ en: {
   gc_3: "Available to start",
   hero_eyebrow: "Hiring in Saudi Arabia",
   hero_h: "Recruit in seconds<br><span class=\"hl-wipe\"><span class=\"hl-tx\">without a public posting.</span></span>",
-  hero_note: "Full demo + your own dashboard · 1 job slot and 2 seats free forever · No credit card",
+  hero_note: "Full demo + your own dashboard · 1 job slot and 1 seat free forever · No credit card",
   hero_s: "Your private job board, on Uptal's network. Publish the role and <b>reach 1M+ qualified people in seconds</b>. Uptal matches it against screened professionals across the Kingdom and returns only the ones who meet your requirements, have confirmed they want this job, and can start when you need them.",
   ksa_made: "صُنع في السعودية",
   ksa_made_aria: "Made in Saudi Arabia",
@@ -823,6 +827,7 @@ ar: {
   f_exp: "الخبرة",
   f_exp_sal: "الراتب المتوقع",
   f_notice: "فترة الإشعار",
+  ft_refund: "الاسترداد",
   ft_privacy: "الخصوصية",
   ft_rights: "© 2026 شركة أبتال لتقنية المعلومات، الرياض.",
   ft_terms: "الشروط",
@@ -831,7 +836,7 @@ ar: {
   gc_3: "جاهزون للمباشرة",
   hero_eyebrow: "التوظيف في السعودية",
   hero_h: "وظّف خلال ثوانٍ<br><span class=\"hl-wipe\"><span class=\"hl-tx\">وبدون إعلان وظيفي.</span></span>",
-  hero_note: "عرض تجريبي كامل ولوحة تحكم خاصة بك · شاغر نشط واحد ومقعدان مجاناً دائماً · دون بطاقة ائتمانية",
+  hero_note: "عرض تجريبي كامل ولوحة تحكم خاصة بك · شاغر نشط واحد ومقعد واحد مجاناً دائماً · دون بطاقة ائتمانية",
   hero_s: "لوحة وظائفك الخاصة على شبكة أبتال ريكروتر. انشر الشاغر <b>لتصل إلى مليون كفاءة مؤهلة خلال ثوانٍ</b>. يطابقه أبتال مع كفاءات مفحوصة، ولا يعرض عليك إلا من تنطبق عليه متطلباتك، وأكّد رغبته في هذه الوظيفة، ويستطيع المباشرة حين تحتاجه.",
   ksa_made: "صُنع في السعودية",
   ksa_made_aria: "صُنع في السعودية",
@@ -1243,19 +1248,21 @@ function demoLoop(){
   var el = topCard();
   if (!el || el.dataset.decided) return;
   demo.on = true;
-  /* the verdict follows the LOGICAL direction, so RTL mirrors the whole show */
-  var rtl = document.documentElement.dir === "rtl";
-  var out = (rtl ? -1 : 1) * 78;
+  /* PHYSICAL, not logical: right is shortlist in both languages. Swiping is a hand gesture
+     and the hand does not read right-to-left — mirroring it in Arabic taught the opposite
+     reflex to the same person switching languages. The whole deck is physical: the demo, the
+     drag, the buttons and the stamps. */
+  var out = 78;
   function at(ms, fn){ mp.timers.push(setTimeout(function(){ if (demo.on) fn(); }, ms)); }
   function glide(x, deg){
     el.classList.add("demo");
     el.style.transform = "translate(" + x + "px,0) rotate(" + deg + "deg)";
   }
   var t = 0;
-  at(t,          function(){ glide(out, (rtl ? -1 : 1) * 5); });      /* toward shortlist */
+  at(t,          function(){ glide(out, 5); });                       /* right: shortlist */
   at(t += 480,   function(){ setStamp(el, "yes"); });
   at(t += 1050,  function(){ setStamp(el, ""); glide(0, 0); });       /* hold, then settle */
-  at(t += 880,   function(){ glide(-out, (rtl ? 1 : -1) * 5); });     /* toward pass */
+  at(t += 880,   function(){ glide(-out, -5); });                     /* left: pass */
   at(t += 480,   function(){ setStamp(el, "no"); });
   at(t += 1050,  function(){ setStamp(el, ""); glide(0, 0); });
   at(t += 1450,  function(){ demoLoop(); });                          /* breathe, then again */
@@ -1303,8 +1310,7 @@ function decide(kind){
   el.dataset.decided = "1";
   demoStop();
   setStamp(el, kind);
-  var rtl = document.documentElement.dir === "rtl";
-  var endX = (kind === "yes" ? 1 : -1) * (rtl ? -1 : 1) * 560;
+  var endX = (kind === "yes" ? 1 : -1) * 560;   /* physical: yes flies right, always */
   el.classList.remove("snap");
   el.classList.add("flyout");
   el.style.transform = "translate(" + endX + "px,-30px) rotate(" + (endX > 0 ? 16 : -16) + "deg)";
@@ -1318,7 +1324,7 @@ function decide(kind){
     updateDeck();
   }, 300));
 }
-/* drag: the verdict follows the LOGICAL direction, so inline-end always means shortlist */
+/* drag: the verdict follows the PHYSICAL direction. Right is shortlist in both languages. */
 (function(){
   var stage = $("#mpResults");
   var drag = null, raf = null;
@@ -1327,12 +1333,10 @@ function decide(kind){
     if (!drag) return;
     var el = drag.el, dx = drag.dx, dy = drag.dy;
     el.style.transform = "translate(" + dx + "px," + (dy * 0.22) + "px) rotate(" + (dx * 0.05) + "deg)";
-    var rtl = document.documentElement.dir === "rtl";
-    var logical = dx * (rtl ? -1 : 1);
     var a = Math.min(Math.abs(dx) / 105, 1);
     var y = $(".stamp-yes", el), n = $(".stamp-no", el);
-    if (y) y.style.opacity = logical > 10 ? a : 0;
-    if (n) n.style.opacity = logical < -10 ? a : 0;
+    if (y) y.style.opacity = dx > 10 ? a : 0;
+    if (n) n.style.opacity = dx < -10 ? a : 0;
   }
   stage.addEventListener("pointerdown", function(e){
     if (window.__ceOn) return;              /* copy edit mode: text selection, not swiping */
@@ -1364,9 +1368,7 @@ function decide(kind){
     if (!drag.locked){ drag = null; return; }    /* a tap or a scroll decides nothing */
     var el = drag.el, dx = drag.dx;
     el.classList.remove("grabbing");
-    var rtl = document.documentElement.dir === "rtl";
-    var logical = dx * (rtl ? -1 : 1);
-    if (Math.abs(dx) > 88) decide(logical > 0 ? "yes" : "no");
+    if (Math.abs(dx) > 88) decide(dx > 0 ? "yes" : "no");
     else springBack(el);
     drag = null;
   }
