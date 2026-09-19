@@ -1763,7 +1763,7 @@ document.getElementById("docNav").addEventListener("click", function(e){
 });
 
 /* arriving from the landing page: honour the requested document and language.
-   The hash is validated against ORDER first — show() only toggles ids it knows,
+   The hash is validated against ORDER first: show() only toggles ids it knows,
    so an unrecognized key would hide every document and leave a blank page. */
 (function(){
   var h = (location.hash || "").replace(/^#/, "");
