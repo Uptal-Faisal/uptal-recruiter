@@ -2462,6 +2462,7 @@
   .nf-pref{display:flex;gap:10px;align-items:center;padding:9px 0;font-size:var(--fs-3);color:var(--slate);cursor:pointer}
   .nf-pref + .nf-pref{border-top:1px dashed var(--hair)}
   .nf-pref input{flex:none;width:16px;height:16px;accent-color:var(--persian)}
+  .nf-note{margin:10px 0 0;padding-top:10px;border-top:1px solid var(--hair);font-size:var(--fs-2);color:var(--muted)}
 
   /* ==================== HOME: OPERATIONS BOARD ==================== */
   /* the workload notification bar: strong when action is needed, quiet otherwise */
@@ -3405,6 +3406,7 @@
             <label class="nf-pref"><input type="checkbox" data-nfpref="applicants" checked><span data-i18n="nf_pref_1"></span></label>
             <label class="nf-pref"><input type="checkbox" data-nfpref="clocks" checked><span data-i18n="nf_pref_2"></span></label>
             <label class="nf-pref"><input type="checkbox" data-nfpref="standing" checked><span data-i18n="nf_pref_3"></span></label>
+            <p class="nf-note" data-i18n="nf_pref_note"></p>
           </div>
       </div>
       <div class="set-pane" data-pane="integr">
@@ -3711,7 +3713,7 @@ nav_settings:"Settings",
   feed_h:"Latest activity",feed_none:"No activity yet.",
   nf_h:"Notifications", nf_markall:"Mark all read",
   nf_none:"Nothing yet. Applicants, clocks and standing updates appear here.",
-  nf_email_note:"Every notification is also delivered to your work email.",
+  nf_email_note:"Notifications that need you are also sent to your work email.",
   nf_applicants:"{n} pre-screened applicants are waiting for your review.",
   nf_applicants_all:"{n} pre-screened applicants are waiting for your review, across {e} roles.",
   nf_batch:"Verdicts received — your next applicants have arrived.",
@@ -4384,10 +4386,11 @@ nav_settings:"Settings",
   act_appr_req:"Posting submitted for admin approval",
   act_appr_ok:"Posting approved and published",
   act_appr_no:"Posting returned with a note",
-  nf_pref_h:"Notifications", nf_pref_s:"Delivered in-app, and by email to your work address.",
+  nf_pref_h:"Notifications", nf_pref_s:"Shown in the dashboard, and sent to your work email while switched on.",
   nf_pref_1:"New applicants and arriving batches",
   nf_pref_2:"Decision-clock and window reminders",
   nf_pref_3:"Standing and integrity changes",
+  nf_pref_note:"Approvals, answers owed to candidates, verification, billing, security and legal messages are always sent.",
   fr_hero_h:"Your dashboard is ready.",
   fr_slot:"Your free plan is live: one job slot and two seats, no credit card needed. Postings go to the matching engine only, never to a public board.",
   fr_slot_unv:"Your free plan is live: one job slot and one seat, no credit card needed. Postings go to the matching engine only, never to a public board.",
@@ -5331,8 +5334,8 @@ rep_first_s:"After publishing",
   vs_sub:"The details below confirm the company behind this dashboard. We usually complete review within one business day, and the wider network opens the moment it clears.",
   vs_submit:"Submit for verification",
   vs_submitted_toast:"Verification submitted. Your role keeps matching while Uptal reviews.",
-  vs_verified_toast:"Verification complete. Contact, intro calls and additional roles are open.",
-  nf_verified:"Verification complete — contact, intro calls and additional roles are open.",
+  vs_verified_toast:"Verification complete. Everything that was waiting on verification is now open.",
+  nf_verified:"Verification complete. Everything that was waiting on verification is now open.",
   nf_verif_needinfo:"Verification needs one more detail.",
   ga_verif_submit:"Submitted company verification",
   ga_verif_done:"Company verification completed",
@@ -5520,7 +5523,7 @@ nav_settings:"الإعدادات",
   feed_h:"آخر التحديثات",feed_none:"لا نشاط حتى الآن.",
   nf_h:"الإشعارات", nf_markall:"تحديد الكل مقروءاً",
   nf_none:"لا شيء حتى الآن. تظهر هنا تحديثات المتقدمين والمهل والتصنيف.",
-  nf_email_note:"يُرسل كل إشعار أيضاً إلى بريد عملكم.",
+  nf_email_note:"تُرسل الإشعارات التي تتطلب إجراءً منكم إلى بريد العمل أيضاً.",
   nf_applicants:"{n} من المتقدمين المفروزين بانتظار مراجعتكم.",
   nf_applicants_all:"{n} من المتقدمين المفروزين بانتظار مراجعتكم، عبر {e} من الوظائف.",
   nf_batch:"تم استلام القرارات، ووصل المتقدمون التاليون.",
@@ -6193,10 +6196,11 @@ nav_settings:"الإعدادات",
   act_appr_req:"تم تقديم الإعلان لاعتماد مسؤول الحساب",
   act_appr_ok:"تم اعتماد الإعلان ونشره",
   act_appr_no:"تم إرجاع الإعلان مع ملاحظة",
-  nf_pref_h:"الإشعارات", nf_pref_s:"تُرسل داخل اللوحة وعبر البريد الإلكتروني إلى بريد عملكم.",
+  nf_pref_h:"الإشعارات", nf_pref_s:"تظهر في لوحة التحكم، وتُرسل إلى بريد العمل ما دامت مفعّلة.",
   nf_pref_1:"المتقدمون الجدد والدفعات الواصلة",
   nf_pref_2:"تذكيرات مهلة القرار والمواعيد",
   nf_pref_3:"تغييرات التصنيف والنزاهة",
+  nf_pref_note:"تُرسل دائماً رسائل الاعتماد، والردود المستحقة للمرشحين، والتحقق، والفوترة، والأمان، والرسائل النظامية.",
   fr_hero_h:"لوحة التحكم جاهزة.",
   fr_slot:"باقتكم المجانية مفعّلة: شاغر نشط واحد ومقعدان، دون الحاجة إلى بطاقة ائتمانية. تُوجَّه الإعلانات إلى محرك المطابقة فقط ولا تُعرض في أي لوحة عامة.",
   fr_slot_unv:"باقتكم المجانية مفعّلة: شاغر نشط واحد ومقعد واحد، دون الحاجة إلى بطاقة ائتمانية. تُوجَّه الإعلانات إلى محرك المطابقة فقط ولا تُعرض في أي لوحة عامة.",
@@ -7140,8 +7144,8 @@ rep_first_s:"بعد النشر",
   vs_sub:"تؤكد التفاصيل أدناه الجهة خلف لوحة التحكم هذه. تُكمل أبتال المراجعة عادةً خلال يوم عمل واحد، وتُفتح الشبكة الموسّعة فور اجتيازها.",
   vs_submit:"إرسال للتحقق",
   vs_submitted_toast:"تم إرسال طلب التحقق. تستمر مطابقة الوظيفة أثناء مراجعة أبتال.",
-  vs_verified_toast:"اكتمل التحقق. التواصل ومكالمات التعارف والوظائف الإضافية متاحة.",
-  nf_verified:"اكتمل التحقق؛ التواصل ومكالمات التعارف والوظائف الإضافية متاحة.",
+  vs_verified_toast:"اكتمل التحقق، وأصبح كل ما كان بانتظار التحقق متاحاً الآن.",
+  nf_verified:"اكتمل التحقق، وأصبح كل ما كان بانتظار التحقق متاحاً الآن.",
   nf_verif_needinfo:"يتطلب التحقق معلومة واحدة إضافية.",
   ga_verif_submit:"إرسال طلب التحقق من الجهة",
   ga_verif_done:"اكتمال التحقق من الجهة",
@@ -17246,12 +17250,14 @@ var NF_ICONS = {
   nf_approval:"clock", nf_approved:"check", nf_declined:"clock",
   nf_verified:"check", nf_verif_needinfo:"clock"
 };
-/* every kind belongs to a preference category; a switched-off category is silent */
+/* a kind listed here belongs to a preference category and a switched-off category is silent.
+   Everything else is always on: approvals, answers owed to candidates, starts and outcomes,
+   explanations, seat requests, verification, retention and merges. Their emails are service
+   messages that ignore preferences too (emails/README.md, send rule 1). */
 var NF_CAT = {
-  nf_applicants:"applicants", nf_applicants_all:"applicants", nf_seatreq:"standing", nf_outcome:"standing", nf_sla:"applicants", nf_int_warn:"standing", nf_int_justify:"standing", nf_band_down:"standing", nf_band_up:"standing", nf_batch:"applicants", nf_contact:"applicants",
-  nf_due:"clocks", nf_window:"clocks", nf_pool:"clocks", nf_start:"standing",
-  nf_paused:"standing", nf_approval:"standing", nf_approved:"standing", nf_declined:"standing",
-  nf_verified:"standing", nf_verif_needinfo:"standing"
+  nf_applicants:"applicants", nf_applicants_all:"applicants", nf_batch:"applicants", nf_sla:"applicants", nf_contact:"applicants",
+  nf_due:"clocks", nf_window:"clocks", nf_pool:"clocks",
+  nf_band_down:"standing", nf_band_up:"standing", nf_int_warn:"standing", nf_paused:"standing"
 };
 function nfAllowed(k){
   var cat = NF_CAT[k];
